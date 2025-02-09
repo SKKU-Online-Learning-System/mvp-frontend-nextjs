@@ -1,0 +1,18 @@
+/* PlaylistBox.module.css */
+.scrollbar {
+  /* 스크롤바 스타일 */
+  overflow-y: scroll; /* 세로 스크롤 활성화 */
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 8px; /* 스크롤바 너비 */
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background: transparent; /* 트랙 배경 투명 */
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background: #f3f3f3; /* thumb 배경색 */
+  border-radius: 4px; /* 둥근 모서리 */
+}
