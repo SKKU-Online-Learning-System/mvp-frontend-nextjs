@@ -19,7 +19,8 @@ export function VideoInfo() {
   const view_count = 1000;
   const student_count = 103;
   return (
-    <div className="w-[60vw]">
+    <div className="w-full">
+      {/* 추후 변경 예정 w-[60vw] */}
       <p className="py-4 text-2xl font-bold">{title}</p>
       <div className="flex flex-row items-center justify-between">
         <div className="flex flex-row items-center">
