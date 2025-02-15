@@ -16,11 +16,10 @@ export function MainContentCard({ content }: Props) {
   const time = 3;
   const heart_count = 123;
 
-  const youtubeId = content.link.split("v=")[1];
   const getLink = () => {
     switch (content.type) {
       case "YOUTUBE":
-        return `/video?youtubeId=${youtubeId}`;
+        return `/video?id=${content.id}`;
       case "INFLEARN":
         return content.link;
       default:
