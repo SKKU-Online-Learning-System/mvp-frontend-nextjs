@@ -10,7 +10,7 @@ import mrdang_logo from "@/asset/mrdang_logo.svg";
 export default async function Video({
   searchParams,
 }: {
-  searchParams: { [key: string]: string };
+  searchParams: Promise<{ youtubeId: string }>;
 }) {
   const youtubeId = (await searchParams).youtubeId; // _yoKvywDpE0
 
