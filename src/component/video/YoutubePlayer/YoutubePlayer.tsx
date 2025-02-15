@@ -3,7 +3,7 @@
 import YouTube from "react-youtube";
 
 type Props = {
-  youtubeId: string;
+  youtubeId: string | undefined;
 };
 
 export function YoutubePlayer({ youtubeId }: Props) {
