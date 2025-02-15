@@ -7,10 +7,7 @@ import { MdFileUpload } from "react-icons/md";
 
 import { Header, SearchBar, LoginButton } from "@/component/common/Header";
 import { SideBar, SideBarButton } from "@/component/main/SideBar";
-import {
-  MainGridContainer,
-  MainContentCard,
-} from "@/component/main/MainContent";
+import { MainGridContainer } from "@/component/main/MainContent";
 import mrdang_logo from "@/asset/mrdang_logo.svg";
 
 export default async function Home() {
@@ -42,11 +39,7 @@ export default async function Home() {
             </>
           ) : null}
         </SideBar>
-        <MainGridContainer>
-          {Array.from({ length: 100 }, (_, index) => (
-            <MainContentCard key={index} />
-          ))}
-        </MainGridContainer>
+        <MainGridContainer />
       </div>
     </div>
   );
