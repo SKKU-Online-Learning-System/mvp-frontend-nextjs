@@ -1,5 +1,4 @@
-import Image from "next/image";
-import Link from "next/link";
+import { cookies } from "next/headers";
 
 import { Header, SearchBar, LoginButton } from "@/component/common/Header";
 
@@ -12,16 +11,14 @@ export default async function Video({
 }: {
   searchParams: Promise<{ id: number }>;
 }) {
+  const cookieStore = await cookies();
+  const refreshToken = cookieStore.get("refresh-token");
+  // const accessToken = cookieStore.get("access-token");
+
   const id = (await searchParams).id;
   return (
     <div>
-      <Header>
-        <Link href="/">
-          <Image src={mrdang_logo} alt="mrdang logo" />
-        </Link>
-        <SearchBar />
-        <LoginButton />
-      </Header>
+      <Header refreshToken={refreshToken} />
       <VideoContainer id={id} />
     </div>
   );
