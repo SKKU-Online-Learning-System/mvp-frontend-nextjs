@@ -46,7 +46,7 @@ export function MainContentCard({ content }: Props) {
           {content.title}
         </p>
       </div>
-      <p className="line-clamp-2 text-sm text-gray-700">
+      <p className="line-clamp-3 text-sm text-gray-700">
         {content.description}
       </p>
       <div className="my-1 flex flex-row justify-between">
