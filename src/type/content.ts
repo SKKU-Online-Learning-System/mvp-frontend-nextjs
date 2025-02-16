@@ -5,7 +5,7 @@ export type ContentType = {
   description: string;
   author: string;
   link: string;
-  thumbnail_url: string;
+  thumbnailUrl: string;
   tags: string[];
 };
 
@@ -16,6 +16,6 @@ export type ContentDetailType = {
   description: string;
   author: string;
   link: string;
-  thumbnail_url: string;
+  thumbnailUrl: string;
   tags: string[];
 };

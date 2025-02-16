@@ -37,7 +37,7 @@ export function MainContentCard({ content }: Props) {
         className="h-[10rem] w-full rounded-lg bg-slate-300"
         width={1000}
         height={1000}
-        src={content.thumbnail_url}
+        src={content.thumbnailUrl}
         alt="썸네일"
       ></Image>
       <div className="my-2 flex flex-row items-center justify-between">
@@ -56,7 +56,7 @@ export function MainContentCard({ content }: Props) {
           <p className="ml-1 text-sm text-gray-400">{heart_count}</p>
         </div>
       </div>
-      <div className="flex flex-row gap-1 text-[0.8rem]">
+      <div className="flex flex-row flex-wrap gap-1 text-[0.8rem]">
         {content.tags.map((tag) => (
           <TagIcon key={tag} text={tag} />
         ))}
