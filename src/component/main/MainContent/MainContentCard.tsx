@@ -30,7 +30,7 @@ export function MainContentCard({ content }: Props) {
   return (
     <Link
       href={getLink()}
-      className="flex w-full flex-col"
+      className="mb-12 flex w-full flex-col"
       target={`${content.type === "INFLEARN" ? "_blank" : ""}`}
     >
       <Image
