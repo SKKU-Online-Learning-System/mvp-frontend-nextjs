@@ -8,6 +8,7 @@ import {
 } from "@/component/common/Header";
 import mrdang_logo from "@/asset/mrdang_logo.svg";
 import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
+// import { PlaylistBox, PlaylistCard } from "@/component/video/PlaylistBox";
 
 type Props = {
   refreshToken?: RequestCookie;
