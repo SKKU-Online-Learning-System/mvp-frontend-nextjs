@@ -16,3 +16,10 @@ export const getContent = async (id: number) => {
   }
   return res.data;
 };
+
+export const createContent = async (content: ContentDetailType) => {
+  const res = await api.post("/contents", content);
+  if (res.status !== 201) {
+    throw new Error("createContent api 에러 발생");
+  }
+};
