@@ -1,5 +1,4 @@
 import { BsPersonCircle } from "react-icons/bs";
-import { FaRegHeart } from "react-icons/fa";
 
 import { TagIcon } from "@/component/main/TagIcon";
 import { VideoContentLike } from "@/component/video/VideoContent";
@@ -18,10 +17,6 @@ export function VideoInfo({ content }: Props) {
         <div className="flex flex-row items-center">
           <BsPersonCircle size={40} color="green" />
           <p className="ml-2 text-xl font-semibold">{content?.author}</p>
-        </div>
-        <div className="flex flex-row items-center">
-          <FaRegHeart color="green" size={35} />
-          <p className="ml-2 text-xl font-semibold">{content?.likeCount}</p>
         </div>
         <VideoContentLike
           id={content?.id}
