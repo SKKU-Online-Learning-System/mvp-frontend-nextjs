@@ -54,7 +54,11 @@ export function MainContentCard({ content }: Props) {
           약 {contentHour != 0 ? contentHour + "시간" : null} {contentMinute}분
           소요
         </p>
-        <MainContentLike id={content.id} likeCount={content.likeCount} />
+        <MainContentLike
+          id={content.id}
+          isLike={content.isLike}
+          likeCount={content.likeCount}
+        />
       </div>
       <div className="flex flex-row flex-wrap gap-1 text-[0.8rem]">
         {content.tags.map((tag) => (
