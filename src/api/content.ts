@@ -1,5 +1,9 @@
 import { api } from "@/api/axios";
-import { ContentResponseType, ContentDetailResponseType } from "@/type/content";
+import {
+  ContentResponseType,
+  ContentDetailResponseType,
+  ContentRequestType,
+} from "@/type/content";
 
 export const getContents = async () => {
   const res = await api.get<ContentResponseType[]>("/contents");
@@ -18,7 +22,7 @@ export const getContent = async (id: number) => {
   return res.data;
 };
 
-export const createContent = async (content: ContentDetailResponseType) => {
+export const createContent = async (content: ContentRequestType) => {
   const res = await api.post("/contents", content);
   if (res.status !== 201) {
     throw new Error("createContent api 에러 발생");

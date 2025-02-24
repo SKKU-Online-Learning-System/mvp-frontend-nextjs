@@ -6,6 +6,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { InputBox } from "./InputBox";
+
+import { ContentRequestType } from "@/type/content";
+
+import { createContent } from "@/api/content";
 import { searchContent } from "@/api/search";
 
 export function VideoUploadModal() {
@@ -18,12 +22,28 @@ export function VideoUploadModal() {
   const [tags, setTags] = useState("");
 
   const uploadVideo = async () => {
-    console.log(title, description, author, link, thumbnail, tags);
+    const content: ContentRequestType = {
+      type: "YOUTUBE", // INFLEARN 추가해야함..
+      title,
+      description,
+      author,
+      duration: 0,
+      link,
+      thumbnailUrl: thumbnail,
+      tags: tags.split(","),
+    };
+    console.log(content);
+    createContent(content);
   };
 
   const setContentData = async () => {
     try {
       const contentData = await searchContent(link);
+      setTitle(contentData.title);
+      setDescription(contentData.description);
+      setAuthor(contentData.author);
+      setThumbnail(contentData.thumbnailUrl);
+      setTags(contentData.tags.join(","));
       console.log(contentData);
     } catch (e) {
       console.error(e);
@@ -52,6 +72,7 @@ export function VideoUploadModal() {
             label="링크"
             placeholder="링크를 입력해주세요"
             setData={setLink}
+            data={link}
           />
           <button
             className="self-end rounded-xl bg-green-800 px-8 py-3 text-[1.2rem] text-white"
@@ -67,27 +88,32 @@ export function VideoUploadModal() {
             label="제목"
             placeholder="제목을 입력해주세요"
             setData={setTitle}
+            data={title}
           />
           <InputBox
             label="설명"
             placeholder="강의 설명을 입력해주세요"
             setData={setDescription}
+            data={description}
           />
           <InputBox
             label="저자"
             placeholder="저자를 입력해주세요"
             setData={setAuthor}
+            data={author}
           />
 
           <InputBox
             label="썸네일"
             placeholder="썸네일을 입력해주세요"
             setData={setThumbnail}
+            data={thumbnail}
           />
           <InputBox
             label="태그"
             placeholder="태그를 입력해주세요"
             setData={setTags}
+            data={tags}
           />
           <button
             className="self-end rounded-xl bg-green-800 px-8 py-3 text-[1.2rem] text-white"
