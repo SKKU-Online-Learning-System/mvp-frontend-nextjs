@@ -1,10 +1,7 @@
 import { cookies } from "next/headers";
 
-import { Header, SearchBar, LoginButton } from "@/component/common/Header";
-
-// import { PlaylistBox, PlaylistCard } from "@/component/video/PlaylistBox";
+import { Header } from "@/component/common/Header";
 import { VideoContainer } from "@/component/video/VideoContent";
-import mrdang_logo from "@/asset/mrdang_logo.svg";
 
 export default async function Video({
   searchParams,

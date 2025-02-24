@@ -2,10 +2,10 @@ import { BsPersonCircle } from "react-icons/bs";
 import { FaRegHeart } from "react-icons/fa";
 
 import { TagIcon } from "@/component/main/TagIcon";
-import { ContentDetailType } from "@/type/content";
+import { ContentDetailResponseType } from "@/type/content";
 
 type Props = {
-  content: ContentDetailType | undefined;
+  content: ContentDetailResponseType | undefined;
 };
 
 export function VideoInfo({ content }: Props) {

@@ -6,14 +6,14 @@ import { getContent } from "@/api/content";
 import { YoutubePlayer } from "@/component/video/YoutubePlayer";
 import { VideoInfo } from "@/component/video/VideoContent";
 
-import { ContentDetailType } from "@/type/content";
+import { ContentDetailResponseType } from "@/type/content";
 
 type Props = {
   id: number;
 };
 
 export function VideoContainer({ id }: Props) {
-  const [content, setContent] = useState<ContentDetailType>();
+  const [content, setContent] = useState<ContentDetailResponseType>();
   const youtubeId = content?.link.split("v=")[1];
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export function VideoContainer({ id }: Props) {
 
   return (
     <>
-      <div className="flex flex-row">
+      <div className="mb-12 flex flex-row">
         <div className="flex flex-col px-12">
           <YoutubePlayer youtubeId={youtubeId} />
           <VideoInfo content={content} />
