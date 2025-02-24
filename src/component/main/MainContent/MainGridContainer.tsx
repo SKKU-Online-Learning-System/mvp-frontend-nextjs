@@ -5,10 +5,10 @@ import { useState, useEffect } from "react";
 import { MainContentCard } from "@/component/main/MainContent";
 import { getContents } from "@/api/content";
 
-import { ContentType } from "@/type/content";
+import { ContentResponseType } from "@/type/content";
 
 export function MainGridContainer() {
-  const [contents, setContents] = useState<ContentType[]>();
+  const [contents, setContents] = useState<ContentResponseType[]>();
   useEffect(() => {
     const fetchContents = async () => {
       const contents = await getContents();

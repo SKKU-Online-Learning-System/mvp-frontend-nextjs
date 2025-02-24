@@ -6,10 +6,10 @@ import { BsPersonCircle } from "react-icons/bs";
 import { FaRegHeart } from "react-icons/fa";
 
 import { TagIcon } from "@/component/main/TagIcon";
-import { ContentType } from "@/type/content";
+import { ContentResponseType } from "@/type/content";
 
 type Props = {
-  content: ContentType;
+  content: ContentResponseType;
 };
 
 export function MainContentCard({ content }: Props) {

@@ -1,8 +1,8 @@
 import { api } from "@/api/axios";
-import { ContentDetailType } from "@/type/content";
+import { ContentDetailResponseType } from "@/type/content";
 
 export const searchContent = async (link: string) => {
-  const res = await api.get<ContentDetailType>(`/search?link=${link}`);
+  const res = await api.get<ContentDetailResponseType>(`/search?link=${link}`);
   if (res.status !== 200) {
     throw new Error("searchContent api 에러 발생");
   }
