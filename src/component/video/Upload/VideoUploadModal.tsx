@@ -34,6 +34,7 @@ export function VideoUploadModal() {
     };
     console.log(content);
     createContent(content);
+    router.back();
   };
 
   const setContentData = async () => {
