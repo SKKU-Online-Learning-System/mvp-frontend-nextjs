@@ -30,7 +30,7 @@ export const createContent = async (content: ContentRequestType) => {
 };
 
 export const patchContentLike = async (id: number) => {
-  const res = await api.patch(`/contents/${id}/like`);
+  const res = await api.patch(`/contents/${id}/likes`);
   if (res.status !== 200) {
     throw new Error("patchContentLike api 에러 발생");
   }
