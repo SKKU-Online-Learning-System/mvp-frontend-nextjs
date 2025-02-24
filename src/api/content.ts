@@ -28,3 +28,10 @@ export const createContent = async (content: ContentRequestType) => {
     throw new Error("createContent api 에러 발생");
   }
 };
+
+export const patchContentLike = async (id: number) => {
+  const res = await api.patch(`/contents/${id}/like`);
+  if (res.status !== 200) {
+    throw new Error("patchContentLike api 에러 발생");
+  }
+};
