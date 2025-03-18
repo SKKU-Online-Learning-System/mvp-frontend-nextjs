@@ -1,4 +1,4 @@
-import { api } from "@/api/axios";
+import { api, jwtApi } from "@/api/axios";
 import {
   ContentResponseType,
   ContentDetailResponseType,
@@ -26,5 +26,12 @@ export const createContent = async (content: ContentRequestType) => {
   const res = await api.post("/contents", content);
   if (res.status !== 201) {
     throw new Error("createContent api 에러 발생");
+  }
+};
+
+export const patchContentLike = async (id: number) => {
+  const res = await jwtApi.patch(`/contents/${id}/likes`);
+  if (res.status !== 200) {
+    throw new Error("patchContentLike api 에러 발생");
   }
 };
