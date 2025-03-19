@@ -17,7 +17,7 @@ type Props = {
 export function Header({ refreshToken }: Props) {
   return (
     <>
-      <div className="fixed top-0 z-10 flex w-full flex-wrap items-end justify-between gap-3 bg-white px-12 py-8">
+      <div className="fixed top-0 z-10 flex w-full flex-wrap items-end justify-between gap-3 bg-white px-12 py-8 max-sm:px-6">
         <Link href="/" className="max-md:w-1/2">
           <Image src={mrdang_logo} alt="mrdang logo" width={200} />
         </Link>
