@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "cdn.inflearn.com",
       },
+      {
+        protocol: "https",
+        hostname: "skb.skku.edu",
+      },
     ],
   },
 };
