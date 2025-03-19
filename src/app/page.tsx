@@ -11,7 +11,7 @@ export default async function Home() {
   return (
     <div>
       <Header refreshToken={refreshToken} />
-      <div className="flex pt-[8rem] max-[944px]:pt-[12rem]">
+      <div className="pt-logo flex">
         <LeftSideBar refreshToken={refreshToken} />
         <MainGridContainer />
       </div>
