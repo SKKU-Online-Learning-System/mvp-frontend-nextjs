@@ -8,7 +8,7 @@ type Props = {
 
 export function ContentCategory({ category }: Props) {
   return (
-    <div className="flex w-[calc(100vw-20rem)] flex-col gap-2 pr-12">
+    <div className="flex w-full flex-col gap-2">
       <div className="flex flex-row flex-wrap gap-4">
         <Link
           href={`/`}
