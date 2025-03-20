@@ -2,5 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+@layer components {
+  .my-container {
+    @apply mx-auto ml-[16rem] flex w-full flex-col gap-4 pr-12 max-sm:ml-[9rem] max-sm:pr-6;
+  }
+  .my-grid {
+    @apply mb-12 grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 4xl:grid-cols-8;
+  }
+}
+
+@layer utilities {
+  .pt-logo {
+    @apply pt-[8rem] max-[944px]:pt-[12rem];
+  }
 }

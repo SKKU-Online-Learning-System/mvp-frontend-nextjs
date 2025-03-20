@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import { BsPersonCircle } from "react-icons/bs";
 
-import { TagIcon } from "@/component/main/TagIcon";
+// import { TagIcon } from "@/component/main/TagIcon";
 import { MainContentLike } from "@/component/main/MainContent";
 import { ContentResponseType } from "@/type/content";
 
@@ -35,8 +35,8 @@ export function MainContentCard({ content }: Props) {
     >
       <Image
         className="h-[10rem] w-full rounded-lg bg-slate-300"
-        width={1000}
-        height={1000}
+        width={300}
+        height={300}
         src={content.thumbnailUrl}
         alt="썸네일"
       ></Image>
@@ -60,11 +60,11 @@ export function MainContentCard({ content }: Props) {
           likeCount={content.likeCount}
         />
       </div>
-      <div className="flex flex-row flex-wrap gap-1 text-[0.8rem]">
+      {/* <div className="flex flex-row flex-wrap gap-1 text-[0.8rem]">
         {content.tags.map((tag) => (
           <TagIcon key={tag} text={tag} />
         ))}
-      </div>
+      </div> */}
     </Link>
   );
 }

@@ -17,12 +17,14 @@ type Props = {
 export function Header({ refreshToken }: Props) {
   return (
     <>
-      <div className="sticky top-0 z-10 flex flex-row items-end justify-between bg-white px-12 py-8">
-        <Link href="/">
-          <Image src={mrdang_logo} alt="mrdang logo" />
+      <div className="fixed top-0 z-10 flex w-full flex-wrap items-end justify-between gap-3 bg-white px-12 py-8 max-sm:px-6">
+        <Link href="/" className="max-md:w-1/2">
+          <Image src={mrdang_logo} alt="mrdang logo" width={200} />
         </Link>
-        <SearchBar />
-        {refreshToken ? <LogoutButton /> : <LoginButton />}
+        <div className="flex w-3/4 justify-between gap-6 max-[944px]:w-full">
+          <SearchBar />
+          {refreshToken ? <LogoutButton /> : <LoginButton />}
+        </div>
       </div>
     </>
   );

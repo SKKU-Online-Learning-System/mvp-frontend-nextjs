@@ -26,7 +26,7 @@ export function VideoContainer({ id }: Props) {
 
   return (
     <>
-      <div className="mb-12 flex flex-row">
+      <div className="pt-logo mb-12 flex flex-row">
         <div className="flex w-full flex-col px-12">
           <YoutubePlayer youtubeId={youtubeId} />
           <VideoInfo content={content} />
