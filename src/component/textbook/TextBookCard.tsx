@@ -18,9 +18,9 @@ export function TextBookCard({ textbook }: Props) {
         alt="썸네일"
       ></Image>
       <p className="line-clamp-2 w-[85%] font-semibold">{textbook.title}</p>
-      <p className="line-clamp-3 text-sm text-gray-700">
+      <div className="line-clamp-3 break-all text-sm text-gray-700">
         {textbook.description}
-      </p>
+      </div>
       <div className="my-1 flex flex-row justify-between">
         <p className="text-sm text-gray-400">{textbook.author}</p>
         <p className="text-sm text-gray-400">조회수 {textbook.viewCount}</p>

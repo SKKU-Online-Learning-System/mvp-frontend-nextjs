@@ -20,7 +20,6 @@ export default function LeftSideBar({ refreshToken }: Props) {
       {/* <SideBarButton icon={IoPerson} text="내 페이지" /> */}
       {refreshToken ? (
         <>
-          <hr />
           <Link href="/upload">
             <SideBarButton icon={MdFileUpload} text="업로드" />
           </Link>

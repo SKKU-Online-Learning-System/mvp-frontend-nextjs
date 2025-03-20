@@ -3,7 +3,7 @@ import search_button from "@/asset/search_button.svg";
 
 export function SearchBar() {
   return (
-    <div className="flex h-12 w-full items-center rounded-xl border px-4">
+    <div className="flex h-12 w-[75%] items-center rounded-xl border px-4">
       <input
         type="text"
         placeholder="명륜당에서 원하는 강의를 찾아보세요!"
