@@ -34,23 +34,25 @@ export function MainContentCard({ content }: Props) {
       target={`${content.type === "INFLEARN" ? "_blank" : ""}`}
     >
       <Image
-        className="h-[10rem] w-full rounded-lg bg-slate-300"
+        className="w-full rounded-lg bg-slate-300"
         width={300}
         height={300}
         src={content.thumbnailUrl}
         alt="썸네일"
       ></Image>
+
       <div className="my-2 flex flex-row items-center justify-between">
         <BsPersonCircle size={35} color="gray" />
-        <p className="ml-2 line-clamp-2 w-[85%] font-semibold">
+        <p className="ml-2 line-clamp-2 w-[85%] break-words font-semibold">
           {content.title}
         </p>
       </div>
-      <p className="line-clamp-3 text-sm text-gray-700">
+      <div className="line-clamp-3 break-all text-sm text-gray-700">
         {content.description}
-      </p>
+      </div>
+
       <div className="my-1 flex flex-row justify-between">
-        <p className="text-sm text-gray-400">
+        <p className="break-words text-sm text-gray-400">
           약 {contentHour != 0 ? contentHour + "시간" : null} {contentMinute}분
           소요
         </p>
