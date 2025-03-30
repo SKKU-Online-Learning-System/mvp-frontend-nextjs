@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FaRegHeart } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
 
-import { patchContentLike } from "@/api/content";
+import { postContentLike } from "@/api/content";
 
 type Props = {
   id: number;
@@ -16,7 +16,7 @@ export function MainContentLike({ id, isLike, likeCount }: Props) {
   const [like, setLike] = useState(isLike);
   const onClickLike = async (event: React.MouseEvent) => {
     event.preventDefault();
-    await patchContentLike(id);
+    await postContentLike(id);
     setLike((prev) => !prev);
   };
   return (
