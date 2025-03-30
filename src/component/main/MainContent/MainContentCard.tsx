@@ -2,8 +2,6 @@ import Link from "next/link";
 
 import Image from "next/image";
 
-import { BsPersonCircle } from "react-icons/bs";
-
 // import { TagIcon } from "@/component/main/TagIcon";
 import { MainContentLike } from "@/component/main/MainContent";
 import { ContentResponseType } from "@/type/content";
@@ -42,8 +40,7 @@ export function MainContentCard({ content }: Props) {
       ></Image>
 
       <div className="my-2 flex flex-row items-center justify-between">
-        <BsPersonCircle size={35} color="gray" />
-        <p className="ml-2 line-clamp-2 w-[85%] break-words font-semibold">
+        <p className="ml-2 line-clamp-2 w-full break-words font-semibold">
           {content.title}
         </p>
       </div>
