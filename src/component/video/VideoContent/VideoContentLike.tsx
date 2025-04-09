@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 
-import { patchContentLike } from "@/api/content";
+import { postContentLike } from "@/api/content";
 
 type Props = {
   id: number | undefined;
@@ -16,7 +16,7 @@ export function VideoContentLike({ id, isLike, likeCount }: Props) {
   const onClickLike = async (event: React.MouseEvent) => {
     event.preventDefault();
     if (id) {
-      await patchContentLike(id);
+      await postContentLike(id);
     }
     setLike((prev) => !prev);
   };
