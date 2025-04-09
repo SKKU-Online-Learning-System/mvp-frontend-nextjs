@@ -14,7 +14,7 @@ export function ContentCategory({ category }: Props) {
           href={`/`}
           className={`${category == null ? "border-b-2 border-green-700 text-green-700" : ""} px-1 text-[1.1rem] font-semibold text-gray-500 hover:border-b-2 hover:border-green-700 hover:text-green-700`}
         >
-          #전체
+          전체
         </Link>
         {Object.keys(categoryInfo).map((key) => (
           <Link
@@ -22,7 +22,7 @@ export function ContentCategory({ category }: Props) {
             className={`${key == category ? "border-b-2 border-green-700 text-green-700" : ""} px-1 text-[1.1rem] font-semibold text-gray-500 hover:border-b-2 hover:border-green-700 hover:text-green-700`}
             key={key}
           >
-            #{key}
+            {key}
           </Link>
         ))}
       </div>
