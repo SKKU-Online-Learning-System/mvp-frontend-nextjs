@@ -12,16 +12,17 @@ import { ContentResponseType } from "@/type/content";
 
 export function MainGridContainer() {
   const searchParams = useSearchParams();
+  const query = searchParams.get("query");
   const category = searchParams.get("category") as CategoryKey | null;
 
   const [contents, setContents] = useState<ContentResponseType[]>();
   useEffect(() => {
     const fetchContents = async () => {
-      const contents = await getContents();
+      const contents = await getContents(query ?? "");
       setContents(contents);
     };
     fetchContents();
-  }, []);
+  }, [query]);
 
   return (
     <div className="my-container">

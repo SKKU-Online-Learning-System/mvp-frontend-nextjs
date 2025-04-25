@@ -1,31 +1,30 @@
 "use client";
 
-import { useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 
-import { patchContentLike } from "@/api/content";
-
 type Props = {
-  id: number | undefined;
+  onClickLike: () => Promise<void>;
   isLike: boolean | undefined;
   likeCount: number | undefined;
 };
 
-export function VideoContentLike({ id, isLike, likeCount }: Props) {
-  const [like, setLike] = useState(isLike);
-  const onClickLike = async (event: React.MouseEvent) => {
-    event.preventDefault();
-    if (id) {
-      await patchContentLike(id);
-    }
-    setLike((prev) => !prev);
-  };
+export function VideoContentLike({ onClickLike, isLike, likeCount }: Props) {
   return (
     <div className="flex flex-row items-center">
-      {like ? (
-        <FaHeart color="green" onClick={onClickLike} size={35} />
+      {isLike ? (
+        <FaHeart
+          color="green"
+          onClick={onClickLike}
+          size={35}
+          className="cursor-pointer"
+        />
       ) : (
-        <FaRegHeart color="gray" onClick={onClickLike} size={35} />
+        <FaRegHeart
+          color="gray"
+          onClick={onClickLike}
+          size={35}
+          className="cursor-pointer"
+        />
       )}
       <p className="ml-2 text-xl font-semibold">{likeCount}</p>
     </div>
