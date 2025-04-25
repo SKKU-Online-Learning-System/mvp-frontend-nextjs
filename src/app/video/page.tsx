@@ -16,7 +16,7 @@ export default async function Video({
   return (
     <div>
       <Header refreshToken={refreshToken} />
-      <VideoContainer id={id} />
+      <VideoContainer id={id} refreshToken={refreshToken} />
     </div>
   );
 }

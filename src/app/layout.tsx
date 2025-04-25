@@ -4,6 +4,9 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "온라인 명륜당",
   description: "성균관대학교 온라인 강의 플랫폼",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export const viewport: Viewport = {

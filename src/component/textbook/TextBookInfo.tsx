@@ -1,6 +1,5 @@
 import { TextBookDetailResponseType } from "@/type/textbook";
 import Image from "next/image";
-import { RxDividerVertical } from "react-icons/rx";
 import { IoMdDownload } from "react-icons/io";
 
 type Props = {
@@ -8,15 +7,8 @@ type Props = {
 };
 
 export default function TextBookInfo({ content }: Props) {
-  const {
-    title,
-    description,
-    author,
-    uploadDate,
-    viewCount,
-    thumbnailUrl,
-    fileName,
-  } = content;
+  const { title, description, author, uploadDate, thumbnailUrl, fileName } =
+    content;
   return (
     <div className="flex flex-col pb-20">
       <div className="flex flex-wrap justify-between">
@@ -26,8 +18,8 @@ export default function TextBookInfo({ content }: Props) {
         </div>
         <p>{description}</p>
         <div className="flex items-center gap-1">
-          <p>조회수 {viewCount}</p>
-          <RxDividerVertical />
+          {/* <p>조회수 {viewCount}</p> */}
+          {/* <RxDividerVertical /> */}
           <p>{uploadDate}</p>
         </div>
       </div>

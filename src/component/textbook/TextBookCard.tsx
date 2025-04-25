@@ -23,7 +23,7 @@ export function TextBookCard({ textbook }: Props) {
       </div>
       <div className="my-1 flex flex-row justify-between">
         <p className="text-sm text-gray-400">{textbook.author}</p>
-        <p className="text-sm text-gray-400">조회수 {textbook.viewCount}</p>
+        {/* <p className="text-sm text-gray-400">조회수 {textbook.viewCount}</p> */}
       </div>
     </Link>
   );
