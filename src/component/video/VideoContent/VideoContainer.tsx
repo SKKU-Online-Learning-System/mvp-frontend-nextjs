@@ -7,12 +7,14 @@ import { YoutubePlayer } from "@/component/video/YoutubePlayer";
 import { VideoInfo } from "@/component/video/VideoContent";
 
 import { ContentDetailResponseType } from "@/type/content";
+import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
 type Props = {
   id: number;
+  refreshToken?: RequestCookie;
 };
 
-export function VideoContainer({ id }: Props) {
+export function VideoContainer({ id, refreshToken }: Props) {
   const [content, setContent] = useState<ContentDetailResponseType>();
   const youtubeId = content?.link.split("v=")[1];
 
@@ -29,7 +31,7 @@ export function VideoContainer({ id }: Props) {
       <div className="pt-logo mb-12 flex flex-row">
         <div className="flex w-full flex-col px-12">
           <YoutubePlayer youtubeId={youtubeId} />
-          <VideoInfo content={content} />
+          <VideoInfo content={content} refreshToken={refreshToken} />
         </div>
         {/* <PlaylistBox>
     {Array.from({ length: 10 }, (_, index) => (

@@ -1,14 +1,32 @@
+"use client";
 import { BsPersonCircle } from "react-icons/bs";
 
 import { TagIcon } from "@/component/main/TagIcon";
 import { VideoContentLike } from "@/component/video/VideoContent";
 import { ContentDetailResponseType } from "@/type/content";
+import { useState } from "react";
+import { postContentLike } from "@/api/content";
+import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
 type Props = {
   content: ContentDetailResponseType | undefined;
+  refreshToken?: RequestCookie;
 };
 
-export function VideoInfo({ content }: Props) {
+export function VideoInfo({ content, refreshToken }: Props) {
+  const [like, setLike] = useState(content?.isLike);
+  const onClickLike = async () => {
+    if (!refreshToken) {
+      alert("로그인이 필요합니다!");
+      return;
+    }
+
+    if (content?.id) {
+      await postContentLike(content?.id);
+    }
+    setLike((prev) => !prev);
+  };
+
   return (
     <div className="w-full">
       {/* 추후 변경 예정 w-[60vw] */}
@@ -19,9 +37,9 @@ export function VideoInfo({ content }: Props) {
           <p className="ml-2 text-xl font-semibold">{content?.author}</p>
         </div>
         <VideoContentLike
-          id={content?.id}
+          onClickLike={onClickLike}
+          isLike={like}
           likeCount={content?.likeCount}
-          isLike={content?.isLike}
         />
       </div>
       <div className="my-4 flex flex-col rounded-lg bg-gray-100 p-3">

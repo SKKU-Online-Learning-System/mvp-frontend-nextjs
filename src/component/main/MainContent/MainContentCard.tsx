@@ -3,7 +3,6 @@ import Link from "next/link";
 import Image from "next/image";
 
 // import { TagIcon } from "@/component/main/TagIcon";
-import { MainContentLike } from "@/component/main/MainContent";
 import { ContentResponseType } from "@/type/content";
 
 type Props = {
@@ -32,9 +31,9 @@ export function MainContentCard({ content }: Props) {
       target={`${content.type === "INFLEARN" ? "_blank" : ""}`}
     >
       <Image
-        className="w-full rounded-lg bg-slate-300"
+        className="h-auto w-full rounded-lg bg-slate-300 object-cover object-center"
         width={300}
-        height={300}
+        height={169}
         src={content.thumbnailUrl}
         alt="썸네일"
       ></Image>
@@ -44,20 +43,15 @@ export function MainContentCard({ content }: Props) {
           {content.title}
         </p>
       </div>
-      <div className="line-clamp-3 break-all text-sm text-gray-700">
+      {/* <div className="line-clamp-3 break-all text-sm text-gray-700">
         {content.description}
-      </div>
+      </div> */}
 
       <div className="my-1 flex flex-row justify-between">
         <p className="break-words text-sm text-gray-400">
           약 {contentHour != 0 ? contentHour + "시간" : null} {contentMinute}분
           소요
         </p>
-        <MainContentLike
-          id={content.id}
-          isLike={content.isLike}
-          likeCount={content.likeCount}
-        />
       </div>
       {/* <div className="flex flex-row flex-wrap gap-1 text-[0.8rem]">
         {content.tags.map((tag) => (

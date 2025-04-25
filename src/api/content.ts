@@ -5,8 +5,8 @@ import {
   ContentRequestType,
 } from "@/type/content";
 
-export const getContents = async () => {
-  const res = await api.get<ContentResponseType[]>("/contents");
+export const getContents = async (query: string = '') => {
+  const res = await api.get<ContentResponseType[]>(query ? `/contents?search_query=${query}` : '/contents');
   if (res.status !== 200) {
     throw new Error("getContents api 에러 발생");
   }
