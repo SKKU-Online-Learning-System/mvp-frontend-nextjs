@@ -1,19 +1,20 @@
 import { cookies } from 'next/headers';
-import { Header } from './component/common/Header';
-import { MainGridContainer } from './component/main/MainContent';
-import LeftSideBar from './component/main/SideBar/LeftSideBar';
+import { Header } from '../component/common/Header';
+import LeftSideBar from '../component/main/SideBar/LeftSideBar';
 
-export default async function Home() {
+export default async function TextBookLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   const cookieStore = await cookies();
   const refreshToken = cookieStore.get('refresh-token');
-  // const accessToken = cookieStore.get("access-token");
-
   return (
     <div>
       <Header refreshToken={refreshToken} />
       <div className='pt-logo flex'>
         <LeftSideBar refreshToken={refreshToken} />
-        <MainGridContainer />
+        {children}
       </div>
     </div>
   );
