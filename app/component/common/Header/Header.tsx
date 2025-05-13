@@ -1,4 +1,4 @@
-import mrdang_logo from '@/asset/mrdang_logo.svg';
+import mrdang_logo from '@/app/asset/mrdang_logo.svg';
 import Image from 'next/image';
 import Link from 'next/link';
 import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';

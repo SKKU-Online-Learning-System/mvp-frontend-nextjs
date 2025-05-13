@@ -1,6 +1,6 @@
 'use client';
 
-import search_button from '@/asset/search_button.svg';
+import search_button from '@/app/asset/search_button.svg';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useRef } from 'react';
