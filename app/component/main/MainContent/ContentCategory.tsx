@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { CategoryKey, categoryInfo } from './category';
@@ -13,10 +14,12 @@ export function ContentCategory({ category }: Props) {
   const query = searchParams.get('query');
   return (
     <div className='flex w-full flex-col gap-3'>
-      <div className='flex flex-row flex-wrap gap-3 border-b-2'>
+      <div className='flex flex-row flex-wrap gap-3 border-b-2 border-gray-300'>
         <Link
           href={query ? `/?query=${query}` : '/'}
-          className={`${category == null ? 'border-b-2 border-green-700 text-green-700' : 'opacity-60'} px-1 text-[1.1rem] font-semibold text-gray-500 hover:border-b-2 hover:border-green-700 hover:text-green-700 hover:opacity-100`}
+          className={clsx(
+            `${category == null ? 'border-b-2 border-green-700 text-green-700' : 'opacity-60'} px-1 text-[1.1rem] font-semibold text-gray-500 hover:border-b-2 hover:border-green-700 hover:text-green-700 hover:opacity-100`
+          )}
         >
           전체
         </Link>
@@ -25,7 +28,9 @@ export function ContentCategory({ category }: Props) {
             href={
               query ? `/?query=${query}&category=${key}` : `/?category=${key}`
             }
-            className={`${key == category ? 'border-b-2 border-green-700 text-green-700' : 'opacity-60'} px-1 text-[1.1rem] font-semibold text-gray-500 hover:border-b-2 hover:border-green-700 hover:text-green-700 hover:opacity-100`}
+            className={clsx(
+              `${key == category ? 'border-b-2 border-green-700 text-green-700' : 'opacity-60'} px-1 text-[1.1rem] font-semibold text-gray-500 hover:border-b-2 hover:border-green-700 hover:text-green-700 hover:opacity-100`
+            )}
             key={key}
           >
             {key}
