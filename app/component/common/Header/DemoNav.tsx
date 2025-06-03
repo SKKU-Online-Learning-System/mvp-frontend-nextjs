@@ -64,9 +64,9 @@ const menuItems: {
     triggerName: '성대한활동',
     components: [
       {
-        title: '글로벌챌린지',
+        title: '글로벌 챌린지',
         href: '/docs/primitives/alert-dialog',
-        description: categoryInfo['글로벌챌린지'],
+        description: categoryInfo['글로벌 챌린지'],
       },
       {
         title: '인턴십 후기',
