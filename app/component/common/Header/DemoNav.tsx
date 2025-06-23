@@ -3,7 +3,7 @@
 import {
   NavigationMenu,
   NavigationMenuItem,
-  NavigationMenuLink,
+  NavigationMenuLinkAsChild,
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
@@ -95,11 +95,9 @@ export function NavigationMenuDemo() {
         ))}
 
         <NavigationMenuItem>
-          <Link href='/docs' legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              콘텐츠 업로드
-            </NavigationMenuLink>
-          </Link>
+          <NavigationMenuLinkAsChild className={navigationMenuTriggerStyle()}>
+            <Link href={'/docs'}>콘텐츠 업로드</Link>
+          </NavigationMenuLinkAsChild>
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
