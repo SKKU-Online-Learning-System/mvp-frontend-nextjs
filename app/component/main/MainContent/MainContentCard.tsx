@@ -1,7 +1,7 @@
 // import { TagIcon } from "@/component/main/TagIcon";
 import { ContentResponseType } from '@/app/type/content';
+import { CardContent, CardFooter, CardLink } from '@/components/ui/card';
 import Image from 'next/image';
-import Link from 'next/link';
 
 type Props = {
   content: ContentResponseType;
@@ -23,39 +23,34 @@ export function MainContentCard({ content }: Props) {
   };
 
   return (
-    <Link
+    <CardLink
       href={getLink()}
-      className='flex w-full flex-col'
       target={`${content.type === 'INFLEARN' ? '_blank' : ''}`}
+      className='cursor-pointer hover:bg-accent relative rounded-lg z-0'
     >
-      <Image
-        className='h-auto w-full rounded-lg bg-slate-300 object-cover object-center'
-        width={300}
-        height={169}
-        src={content.thumbnailUrl}
-        alt='썸네일'
-      ></Image>
-
-      <div className='my-2 flex flex-row items-center justify-between'>
-        <p className='ml-2 line-clamp-2 w-full break-words font-semibold'>
+      <div className='relative aspect-[16/9] w-full'>
+        <Image
+          src={content.thumbnailUrl}
+          alt='썸네일'
+          fill
+          sizes='100vw'
+          className='rounded-t-md bg-slate-300 object-cover object-center border-b-2'
+        />
+      </div>
+      <CardContent>
+        <p className='line-clamp-2 w-full break-words font-semibold text-sm'>
           {content.title}
         </p>
-      </div>
-      {/* <div className="line-clamp-3 break-all text-sm text-gray-700">
-        {content.description}
-      </div> */}
-
-      <div className='my-1 flex flex-row justify-between'>
-        <p className='break-words text-sm text-gray-400'>
-          약 {contentHour != 0 ? contentHour + '시간' : null} {contentMinute}분
-          소요
-        </p>
-      </div>
-      {/* <div className="flex flex-row flex-wrap gap-1 text-[0.8rem]">
-        {content.tags.map((tag) => (
-          <TagIcon key={tag} text={tag} />
-        ))}
-      </div> */}
-    </Link>
+      </CardContent>
+      <CardFooter>
+        <div className='flex flex-col gap-1'>
+          <p className='break-words text-sm text-gray-400'>{content.author}</p>
+          <p className='break-words text-sm text-gray-400'>
+            약 {contentHour != 0 ? contentHour + '시간' : null} {contentMinute}
+            분 소요
+          </p>
+        </div>
+      </CardFooter>
+    </CardLink>
   );
 }

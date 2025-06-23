@@ -13,6 +13,11 @@ type Category = {
   [key in CategoryKey]: string;
 };
 
+export type Filter = {
+  name: CategoryKey;
+  checked: boolean;
+};
+
 export const categoryInfo: Category = {
   'S-TOP':
     '소프트웨어융합대학 학생들이 참여한 산학과제, 창업작품 및 연구과제 소개',
