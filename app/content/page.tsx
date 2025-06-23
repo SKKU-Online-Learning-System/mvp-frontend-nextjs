@@ -10,7 +10,7 @@ export default async function Content() {
   return (
     <div>
       <Nav style='white' refreshToken={refreshToken} />
-      <div className='pt-logo flex'>
+      <div className='pt-logo w-full'>
         <MainGridContainer />
       </div>
     </div>

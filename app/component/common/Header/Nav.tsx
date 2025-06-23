@@ -12,7 +12,7 @@ type Props = {
 export default function Nav({ refreshToken, style = 'black' }: Props) {
   return (
     <nav
-      className={`flex w-full h-16 ${style == 'white' ? 'bg-white shadow-xl' : 'bg-black/40'} fixed justify-between items-center px-6`}
+      className={`flex w-full h-16 ${style == 'white' ? 'bg-white shadow-md' : 'bg-black/40'} fixed justify-between items-center px-6 z-50`}
     >
       <Logo />
       <NavigationMenuDemo style={style} />

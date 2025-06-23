@@ -6,7 +6,7 @@ type Props = Style;
 
 export function LoginButton({ style }: Props) {
   return (
-    <div className='flex flex-col justify-end h-full pb-2'>
+    <div className='flex flex-col justify-end items-end h-full pb-2 w-[150px]'>
       <Link
         href='https://login.skku.edu/?retUrl=i0u4a8g61ure5516k3z6'
         className={cn(
