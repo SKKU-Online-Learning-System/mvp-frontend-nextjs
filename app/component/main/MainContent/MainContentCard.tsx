@@ -33,7 +33,8 @@ export function MainContentCard({ content }: Props) {
           src={content.thumbnailUrl}
           alt='썸네일'
           fill
-          sizes='100vw'
+          sizes='100'
+          priority={true}
           className='rounded-t-md bg-slate-300 object-cover object-center border-b-2'
         />
       </div>

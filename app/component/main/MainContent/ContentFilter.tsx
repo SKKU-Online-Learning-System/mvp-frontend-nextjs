@@ -1,12 +1,13 @@
 import { Badge } from '@/components/ui/badge';
 import ContentSort from './ContentSort';
-import { Filter } from './category';
+import { CategoryKey, Filter } from './category';
 
 type Props = {
   filterList: Filter[];
+  filterToggle: (name: CategoryKey) => void;
 };
 
-export default function ContentFilter({ filterList }: Props) {
+export default function ContentFilter({ filterList, filterToggle }: Props) {
   return (
     <div className='flex flex-wrap gap-2 justify-between'>
       <div className='flex flex-wrap gap-3 justify-start'>
@@ -14,7 +15,8 @@ export default function ContentFilter({ filterList }: Props) {
           <Badge
             key={idx}
             variant={checked ? 'default' : 'secondary'}
-            className='cursor-pointer h-8'
+            className='cursor-pointer h-8 font-semibold'
+            onClick={() => filterToggle(name)}
           >
             {name}
           </Badge>

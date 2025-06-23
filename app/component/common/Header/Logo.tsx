@@ -5,7 +5,7 @@ import Link from 'next/link';
 export default function Logo() {
   return (
     <Link href='/' className='max-md:w-1/2'>
-      <Image src={mrdang_logo} alt='mrdang logo' width={150} />
+      <Image priority={true} src={mrdang_logo} alt='mrdang logo' width={150} />
     </Link>
   );
 }
