@@ -4,7 +4,6 @@ import { getContents } from '@/app/api/content';
 import { ContentResponseType } from '@/app/type/content';
 import { useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { ContentCategory } from './ContentCategory';
 import { MainContentCard } from './MainContentCard';
 import { CategoryKey } from './category';
 
@@ -24,7 +23,6 @@ export function MainGridContainer() {
 
   return (
     <div className='my-container'>
-      <ContentCategory category={category} />
       <div className='my-grid'>
         {contents
           ?.filter(

@@ -11,6 +11,8 @@ import Link from 'next/link';
 import { categoryInfo } from '../../main/MainContent/category';
 import DemoNavMenuItem from './DemoNavMenuItem';
 
+type Props = { style: 'black' | 'white' };
+
 const menuItems: {
   triggerName: string;
   components: { title: string; href: string; description: string }[];
@@ -82,20 +84,24 @@ const menuItems: {
   },
 ];
 
-export function NavigationMenuDemo() {
+export function NavigationMenuDemo({ style }: Props) {
   return (
-    <NavigationMenu>
+    <NavigationMenu style={style}>
       <NavigationMenuList className='h-16'>
         {menuItems.map(({ triggerName, components }, idx) => (
           <DemoNavMenuItem
             key={idx}
+            style={style}
             triggerName={triggerName}
             components={components}
           />
         ))}
 
         <NavigationMenuItem>
-          <NavigationMenuLinkAsChild className={navigationMenuTriggerStyle()}>
+          <NavigationMenuLinkAsChild
+            style={style}
+            className={navigationMenuTriggerStyle(style)}
+          >
             <Link href={'/docs'}>콘텐츠 업로드</Link>
           </NavigationMenuLinkAsChild>
         </NavigationMenuItem>

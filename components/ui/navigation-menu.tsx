@@ -4,14 +4,18 @@ import { ChevronDownIcon } from 'lucide-react';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
+export type Style = { style: 'black' | 'white' };
+
 function NavigationMenu({
+  style,
   className,
   children,
   viewport = true,
   ...props
-}: React.ComponentProps<typeof NavigationMenuPrimitive.Root> & {
-  viewport?: boolean;
-}) {
+}: Style &
+  React.ComponentProps<typeof NavigationMenuPrimitive.Root> & {
+    viewport?: boolean;
+  }) {
   return (
     <NavigationMenuPrimitive.Root
       data-slot='navigation-menu'
@@ -23,7 +27,7 @@ function NavigationMenu({
       {...props}
     >
       {children}
-      {viewport && <NavigationMenuViewport />}
+      {viewport && <NavigationMenuViewport style={style} />}
     </NavigationMenuPrimitive.Root>
   );
 }
@@ -57,19 +61,26 @@ function NavigationMenuItem({
   );
 }
 
-const navigationMenuTriggerStyle = cva(
-  'group inline-flex text-white h-9 w-max items-center justify-center rounded-md bg-my-background px-4 py-2 text-md font-bold hover:bg-black/40 hover:text-my-accent-foreground focus:bg-my-accent focus:text-my-accent-foreground disabled:pointer-events-none disabled:opacity-50 data-[state=open]:hover:bg-black/40 data-[state=open]:text-my-accent-foreground data-[state=open]:focus:bg-my-accent data-[state=open]:bg-black/40 focus-visible:ring-ring/50 outline-none transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1'
-);
+const navigationMenuTriggerStyle = (style: 'black' | 'white') =>
+  cva(
+    cn(
+      'group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-md font-bold disabled:pointer-events-none disabled:opacity-50 focus-visible:ring-ring/50 outline-none transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1',
+      style == 'white'
+        ? 'text-black bg-background hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[state=open]:hover:bg-accent data-[state=open]:text-accent-foreground data-[state=open]:focus:bg-accent data-[state=open]:bg-accent/50'
+        : 'text-white bg-my-background hover:bg-black/40 hover:text-my-accent-foreground focus:bg-my-accent focus:text-my-accent-foreground data-[state=open]:hover:bg-black/40 data-[state=open]:text-my-accent-foreground data-[state=open]:focus:bg-my-accent data-[state=open]:bg-black/40'
+    )
+  )();
 
 function NavigationMenuTrigger({
   className,
   children,
+  style,
   ...props
-}: React.ComponentProps<typeof NavigationMenuPrimitive.Trigger>) {
+}: Style & React.ComponentProps<typeof NavigationMenuPrimitive.Trigger>) {
   return (
     <NavigationMenuPrimitive.Trigger
       data-slot='navigation-menu-trigger'
-      className={cn(navigationMenuTriggerStyle(), 'group', className)}
+      className={cn(navigationMenuTriggerStyle(style), 'group', className)}
       {...props}
     >
       {children}{' '}
@@ -82,15 +93,19 @@ function NavigationMenuTrigger({
 }
 
 function NavigationMenuContent({
+  style,
   className,
   ...props
-}: React.ComponentProps<typeof NavigationMenuPrimitive.Content>) {
+}: Style & React.ComponentProps<typeof NavigationMenuPrimitive.Content>) {
   return (
     <NavigationMenuPrimitive.Content
       data-slot='navigation-menu-content'
       className={cn(
         'data-[motion^=from-]:animate-in data-[motion^=to-]:animate-out data-[motion^=from-]:fade-in data-[motion^=to-]:fade-out data-[motion=from-end]:slide-in-from-right-52 data-[motion=from-start]:slide-in-from-left-52 data-[motion=to-end]:slide-out-to-right-52 data-[motion=to-start]:slide-out-to-left-52 top-0 left-0 w-full p-1 md:absolute md:w-auto',
-        'group-data-[viewport=false]/navigation-menu:bg-black/40 group-data-[viewport=false]/navigation-menu:text-popover-foreground group-data-[viewport=false]/navigation-menu:data-[state=open]:animate-in group-data-[viewport=false]/navigation-menu:data-[state=closed]:animate-out group-data-[viewport=false]/navigation-menu:data-[state=closed]:zoom-out-95 group-data-[viewport=false]/navigation-menu:data-[state=open]:zoom-in-95 group-data-[viewport=false]/navigation-menu:data-[state=open]:fade-in-0 group-data-[viewport=false]/navigation-menu:data-[state=closed]:fade-out-0 group-data-[viewport=false]/navigation-menu:top-full group-data-[viewport=false]/navigation-menu:mt-1.5 group-data-[viewport=false]/navigation-menu:overflow-hidden group-data-[viewport=false]/navigation-menu:rounded-md group-data-[viewport=false]/navigation-menu:border group-data-[viewport=false]/navigation-menu:shadow group-data-[viewport=false]/navigation-menu:duration-200 **:data-[slot=navigation-menu-link]:focus:ring-0 **:data-[slot=navigation-menu-link]:focus:outline-none',
+        'group-data-[viewport=false]/navigation-menu:text-popover-foreground group-data-[viewport=false]/navigation-menu:data-[state=open]:animate-in group-data-[viewport=false]/navigation-menu:data-[state=closed]:animate-out group-data-[viewport=false]/navigation-menu:data-[state=closed]:zoom-out-95 group-data-[viewport=false]/navigation-menu:data-[state=open]:zoom-in-95 group-data-[viewport=false]/navigation-menu:data-[state=open]:fade-in-0 group-data-[viewport=false]/navigation-menu:data-[state=closed]:fade-out-0 group-data-[viewport=false]/navigation-menu:top-full group-data-[viewport=false]/navigation-menu:mt-1.5 group-data-[viewport=false]/navigation-menu:overflow-hidden group-data-[viewport=false]/navigation-menu:rounded-md group-data-[viewport=false]/navigation-menu:border group-data-[viewport=false]/navigation-menu:shadow group-data-[viewport=false]/navigation-menu:duration-200 **:data-[slot=navigation-menu-link]:focus:ring-0 **:data-[slot=navigation-menu-link]:focus:outline-none',
+        style === 'white'
+          ? 'group-data-[viewport=false]/navigation-menu:bg-white'
+          : 'group-data-[viewport=false]/navigation-menu:bg-black/40',
         className
       )}
       {...props}
@@ -99,9 +114,10 @@ function NavigationMenuContent({
 }
 
 function NavigationMenuViewport({
+  style,
   className,
   ...props
-}: React.ComponentProps<typeof NavigationMenuPrimitive.Viewport>) {
+}: Style & React.ComponentProps<typeof NavigationMenuPrimitive.Viewport>) {
   return (
     <div
       className={cn(
@@ -111,7 +127,10 @@ function NavigationMenuViewport({
       <NavigationMenuPrimitive.Viewport
         data-slot='navigation-menu-viewport'
         className={cn(
-          'origin-top-center bg-my-popover text-white data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90 relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-md shadow md:w-[var(--radix-navigation-menu-viewport-width)]',
+          'origin-top-center data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90 relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-md shadow md:w-[var(--radix-navigation-menu-viewport-width)]',
+          style === 'white'
+            ? 'bg-popover text-black'
+            : 'bg-my-popover text-white',
           className
         )}
         {...props}
@@ -121,14 +140,18 @@ function NavigationMenuViewport({
 }
 
 function NavigationMenuLink({
+  style,
   className,
   ...props
-}: React.ComponentProps<typeof NavigationMenuPrimitive.Link>) {
+}: Style & React.ComponentProps<typeof NavigationMenuPrimitive.Link>) {
   return (
     <NavigationMenuPrimitive.Link
       data-slot='navigation-menu-link'
       className={cn(
-        "data-[active=true]:focus:bg-black/40 data-[active=true]:hover:bg-black/40 data-[active=true]:bg-black/40 data-[active=true]:text-accent-foreground hover:bg-black/40 hover:text-white focus:bg-black/40 focus:text-white focus-visible:ring-ring/50 [&_svg:not([class*='text-'])]:text-white flex flex-col gap-1 rounded-sm p-2 text-sm transition-all outline-none focus-visible:ring-[3px] focus-visible:outline-1 [&_svg:not([class*='size-'])]:size-4",
+        " data-[active=true]:text-accent-foreground focus-visible:ring-ring/50 [&_svg:not([class*='text-'])]:text-white flex flex-col gap-1 rounded-sm p-2 text-sm transition-all outline-none focus-visible:ring-[3px] focus-visible:outline-1 [&_svg:not([class*='size-'])]:size-4",
+        style === 'white'
+          ? 'data-[active=true]:focus:bg-accent data-[active=true]:hover:bg-accent data-[active=true]:bg-accent/50 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground'
+          : 'data-[active=true]:focus:bg-black/40 data-[active=true]:hover:bg-black/40 data-[active=true]:bg-black/40 hover:bg-black/40 hover:text-white focus:bg-black/40 focus:text-white',
         className
       )}
       {...props}
@@ -137,15 +160,19 @@ function NavigationMenuLink({
 }
 
 function NavigationMenuLinkAsChild({
+  style,
   className,
   ...props
-}: React.ComponentProps<typeof NavigationMenuPrimitive.Link>) {
+}: Style & React.ComponentProps<typeof NavigationMenuPrimitive.Link>) {
   return (
     <NavigationMenuPrimitive.Link
       asChild
       data-slot='navigation-menu-link'
       className={cn(
-        "data-[active=true]:focus:bg-black/40 data-[active=true]:hover:bg-black/40 data-[active=true]:bg-black/40 data-[active=true]:text-accent-foreground hover:bg-black/40 hover:text-white focus:bg-black/40 focus:text-white focus-visible:ring-ring/50 [&_svg:not([class*='text-'])]:text-white flex flex-col gap-1 rounded-sm p-2 text-sm transition-all outline-none focus-visible:ring-[3px] focus-visible:outline-1 [&_svg:not([class*='size-'])]:size-4",
+        " data-[active=true]:text-accent-foreground focus-visible:ring-ring/50 [&_svg:not([class*='text-'])]:text-white flex flex-col gap-1 rounded-sm p-2 text-sm transition-all outline-none focus-visible:ring-[3px] focus-visible:outline-1 [&_svg:not([class*='size-'])]:size-4",
+        style === 'white'
+          ? 'data-[active=true]:focus:bg-accent data-[active=true]:hover:bg-accent data-[active=true]:bg-accent/50 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground'
+          : 'data-[active=true]:focus:bg-black/40 data-[active=true]:hover:bg-black/40 data-[active=true]:bg-black/40 hover:bg-black/40 hover:text-white focus:bg-black/40 focus:text-white',
         className
       )}
       {...props}

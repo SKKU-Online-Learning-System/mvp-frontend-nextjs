@@ -1,18 +1,16 @@
 import { cookies } from 'next/headers';
-import { Header } from '../component/common/Header';
+import Nav from '../component/common/Header/Nav';
 import { MainGridContainer } from '../component/main/MainContent';
-import LeftSideBar from '../component/main/SideBar/LeftSideBar';
 
-export default async function Home() {
+export default async function Content() {
   const cookieStore = await cookies();
   const refreshToken = cookieStore.get('refresh-token');
   // const accessToken = cookieStore.get("access-token");
 
   return (
     <div>
-      <Header refreshToken={refreshToken} />
+      <Nav style='white' refreshToken={refreshToken} />
       <div className='pt-logo flex'>
-        <LeftSideBar refreshToken={refreshToken} />
         <MainGridContainer />
       </div>
     </div>

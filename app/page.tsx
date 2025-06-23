@@ -1,7 +1,6 @@
 import { cookies } from 'next/headers';
-import { LoginButton, LogoutButton } from './component/common/Header';
-import { NavigationMenuDemo } from './component/common/Header/DemoNav';
-import Logo from './component/common/Header/Logo';
+import Nav from './component/common/Header/Nav';
+import MainVideo from './component/common/MainVideo';
 
 export default async function Main() {
   const cookieStore = await cookies();
@@ -9,22 +8,8 @@ export default async function Main() {
 
   return (
     <>
-      <nav className='flex w-full h-16 bg-black/40 fixed justify-between items-center px-6'>
-        <Logo />
-        <NavigationMenuDemo />
-        {refreshToken ? <LogoutButton /> : <LoginButton />}
-      </nav>
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        width='500'
-        className='w-full object-cover absolute z-[-1]'
-      >
-        <source src='/main_banner.mp4' type='video/mp4' />
-        브라우저가 비디오를 지원하지 않아요.
-      </video>
+      <Nav refreshToken={refreshToken} />
+      <MainVideo />
     </>
   );
 }
