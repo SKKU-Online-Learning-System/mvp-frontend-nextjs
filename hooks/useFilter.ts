@@ -1,7 +1,9 @@
-import { Topic } from '@/components/main/MainContent/MainGridContainer';
 import { CategoryKey, Filter } from '@/components/main/MainContent/category';
 import { Sort } from '@/types/content';
-import { useState } from 'react';
+import { ReadonlyURLSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
+type Topic = '성대한만남' | '기술교류회' | '공개형교육' | '성대한활동';
 
 const groupedFilterList: {
   [key in Topic]: Filter[];
@@ -23,7 +25,7 @@ const groupedFilterList: {
   ],
 };
 
-export default function useFilter() {
+export default function useFilter(searchParams: ReadonlyURLSearchParams) {
   const [filters, setFilters] = useState<Filter[]>();
   const [sort, setSort] = useState<Sort>('upload');
   const [year, setYear] = useState<number>();
@@ -52,6 +54,17 @@ export default function useFilter() {
   const changeYear = (year: string) => {
     setYear(+year);
   };
+
+  useEffect(() => {
+    const topic = (searchParams.get('topic') ?? '성대한만남') as Topic;
+
+    const category = (searchParams.get('category') ??
+      groupedFilterList[topic].at(0)?.name) as CategoryKey;
+
+    setFilters(groupedFilterList[topic]);
+
+    filterOn(category);
+  }, [searchParams]);
 
   return {
     filters,

@@ -1,20 +1,44 @@
+'use client';
+
 import { Badge } from '@/components/ui/badge';
-import { SelectItem } from '@/components/ui/select';
 import ContentFilterSkeleton from '../../common/ContentFilterSkeleton';
-import SelectBox from './SelectBox';
+import { ComboBox, Framework } from './ComboBox';
 import { CategoryKey, Filter } from './category';
 
 type Props = {
   filterList: Filter[] | undefined;
   filterToggle: (name: CategoryKey) => void;
+  sort: string;
   changeSort: (sortOption: string) => void;
+  year: string | undefined;
   changeYear: (year: string) => void;
 };
+
+const yearFrameworks: Framework[] = Array.from({ length: 6 }, (_, i) => {
+  const year = (2020 + i).toString();
+  return {
+    value: year,
+    label: year,
+  };
+});
+
+const sortFrameworks: Framework[] = [
+  {
+    value: 'upload',
+    label: '업로드순',
+  },
+  {
+    value: 'view',
+    label: '조회순',
+  },
+];
 
 export default function ContentFilter({
   filterList,
   filterToggle,
+  sort,
   changeSort,
+  year,
   changeYear,
 }: Props) {
   return (
@@ -36,17 +60,18 @@ export default function ContentFilter({
             ))}
       </div>
       <div className='flex gap-3'>
-        <SelectBox placeholder='연도' onValueChange={changeYear}>
-          {Array.from({ length: 6 }).map((_, idx) => (
-            <SelectItem value={(idx + 2020).toString()} key={idx}>
-              {idx + 2020}
-            </SelectItem>
-          ))}
-        </SelectBox>
-        <SelectBox placeholder='정렬기준' onValueChange={changeSort}>
-          <SelectItem value='upload'>업로드순</SelectItem>
-          <SelectItem value='view'>조회순</SelectItem>
-        </SelectBox>
+        <ComboBox
+          defaultName='연도'
+          frameworks={yearFrameworks}
+          value={year}
+          setValue={changeYear}
+        />
+        <ComboBox
+          defaultName='정렬기준'
+          frameworks={sortFrameworks}
+          value={sort}
+          setValue={changeSort}
+        />
       </div>
     </div>
   );

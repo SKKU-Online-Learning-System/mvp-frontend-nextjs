@@ -1,3 +1,4 @@
+import { Toaster } from 'sonner';
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
@@ -18,16 +19,14 @@ export const viewport: Viewport = {
 
 export default function RootLayout({
   children,
-  modal,
 }: Readonly<{
   children: React.ReactNode;
-  modal: React.ReactNode;
 }>) {
   return (
     <html lang='ko'>
-      <body className=''>
-        {modal}
-        {children}
+      <body>
+        <main>{children}</main>
+        <Toaster closeButton />
       </body>
     </html>
   );

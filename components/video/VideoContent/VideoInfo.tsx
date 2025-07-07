@@ -3,6 +3,7 @@
 import { postContentLike } from '@/app/api/content';
 import { ContentDetailResponseType } from '@/types/content';
 import { BsPersonCircle } from 'react-icons/bs';
+import { toast } from 'sonner';
 import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { useState } from 'react';
 import { TagIcon } from '../../main/TagIcon';
@@ -17,7 +18,7 @@ export function VideoInfo({ content, refreshToken }: Props) {
   const [like, setLike] = useState(content?.isLike);
   const onClickLike = async () => {
     if (!refreshToken) {
-      alert('로그인이 필요합니다!');
+      toast.error('로그인이 필요한 서비스입니다.');
       return;
     }
 

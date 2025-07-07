@@ -2,6 +2,10 @@
 @import 'tw-animate-css';
 @import 'pretendard/dist/web/variable/pretendardvariable.css';
 
+html {
+  overflow-y: scroll;
+}
+
 @layer components {
   .my-container {
     @apply px-48 flex w-full flex-col gap-4;
