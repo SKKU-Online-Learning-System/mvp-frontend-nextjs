@@ -36,7 +36,7 @@ export function MainGridContainer() {
       />
       {!filteredContents ? (
         <div className='my-grid'>
-          {Array.from({ length: 9 }).map((_, idx) => (
+          {Array.from({ length: 12 }).map((_, idx) => (
             <MainContentSkeleton key={idx} />
           ))}
         </div>
