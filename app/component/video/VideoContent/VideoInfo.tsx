@@ -16,14 +16,14 @@ type Props = {
 export function VideoInfo({ content, refreshToken }: Props) {
   const [like, setLike] = useState(content?.isLike);
   const onClickLike = async () => {
-    // if (!refreshToken) {
-    //   alert('로그인이 필요합니다!');
-    //   return;
-    // }
+    if (!refreshToken) {
+      alert('로그인이 필요합니다!');
+      return;
+    }
 
-    // if (content?.id) {
-    //   await postContentLike(content?.id);
-    // }
+    if (content?.id) {
+      await postContentLike(content?.id);
+    }
     setLike((prev) => !prev);
   };
 
