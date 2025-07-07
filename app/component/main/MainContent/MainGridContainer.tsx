@@ -44,7 +44,9 @@ export function MainGridContainer() {
   const filterToggle = (name: CategoryKey) => {
     setFilters((prev) =>
       prev.map((filter) =>
-        filter.name === name ? { ...filter, checked: !filter.checked } : filter
+        filter.name === name
+          ? { ...filter, checked: true }
+          : { ...filter, checked: false }
       )
     );
   };
