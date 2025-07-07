@@ -102,7 +102,7 @@ export function NavigationMenuDemo({ style }: Props) {
             style={style}
             className={navigationMenuTriggerStyle(style)}
           >
-            <Link href={'/docs'}>콘텐츠 업로드</Link>
+            <Link href={'/upload'}>콘텐츠 업로드</Link>
           </NavigationMenuLinkAsChild>
         </NavigationMenuItem>
       </NavigationMenuList>
