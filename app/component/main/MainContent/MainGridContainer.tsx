@@ -6,7 +6,7 @@ import useFilter from '@/hooks/useFilter';
 import { useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Error from '../../common/Error';
-import Loading from '../../common/Loading';
+import MainContentSkeleton from '../../common/MainContentSkeleton';
 import ContentFilter from './ContentFilter';
 import { MainContentCard } from './MainContentCard';
 import { CategoryKey } from './category';
@@ -43,7 +43,7 @@ export function MainGridContainer() {
   }, [query]);
 
   const filteredContents = contents?.filter((content) =>
-    filters.some(
+    filters?.some(
       ({ name, checked }) =>
         checked && new RegExp(name, 'i').test(content.title)
     )
@@ -53,7 +53,11 @@ export function MainGridContainer() {
     <div className='my-container'>
       <ContentFilter filterList={filters} filterToggle={filterToggle} />
       {!filteredContents ? (
-        <Loading />
+        <div className='my-grid'>
+          {Array.from({ length: 9 }).map((_, idx) => (
+            <MainContentSkeleton key={idx} />
+          ))}
+        </div>
       ) : filteredContents.length == 0 ? (
         <Error />
       ) : (

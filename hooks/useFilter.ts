@@ -23,13 +23,11 @@ const groupedFilterList: {
 };
 
 export default function useFilter() {
-  const [filters, setFilters] = useState<Filter[]>(
-    groupedFilterList['성대한만남']
-  );
+  const [filters, setFilters] = useState<Filter[]>();
 
   const filterToggle = (name: CategoryKey) => {
     setFilters((prev) =>
-      prev.map((filter) =>
+      prev?.map((filter) =>
         filter.name === name
           ? { ...filter, checked: true }
           : { ...filter, checked: false }
@@ -39,7 +37,7 @@ export default function useFilter() {
 
   const filterOn = (name: CategoryKey) => {
     setFilters((prev) =>
-      prev.map((filter) =>
+      prev?.map((filter) =>
         filter.name === name ? { ...filter, checked: true } : filter
       )
     );
