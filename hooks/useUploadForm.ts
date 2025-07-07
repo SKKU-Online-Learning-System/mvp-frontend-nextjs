@@ -11,22 +11,23 @@ export default function useUploadForm() {
   const [thumbnail, setThumbnail] = useState('');
   const [tags, setTags] = useState('');
 
-  const onChangeTitle = (e : ChangeEvent<HTMLInputElement>) => setTitle(e.currentTarget.value);
+  const onChangeLink = (e: ChangeEvent<HTMLInputElement>) =>
+    setLink(e.currentTarget.value);
 
-  const uploadVideo = async () => {
-    const content: ContentRequestType = {
-      type: 'YOUTUBE', // INFLEARN 추가해야함..
-      title,
-      description,
-      author,
-      duration: 0,
-      link,
-      thumbnailUrl: thumbnail,
-      tags: tags.split(','),
-    };
-    console.log(content);
-    createContent(content);
-  };
+  const onChangeTitle = (e: ChangeEvent<HTMLInputElement>) =>
+    setTitle(e.currentTarget.value);
+
+  const onChangeDescription = (e: ChangeEvent<HTMLInputElement>) =>
+    setDescription(e.currentTarget.value);
+
+  const onChangeAuthor = (e: ChangeEvent<HTMLInputElement>) =>
+    setAuthor(e.currentTarget.value);
+
+  const onChangeThumbnail = (e: ChangeEvent<HTMLInputElement>) =>
+    setThumbnail(e.currentTarget.value);
+
+  const onChangeTags = (e: ChangeEvent<HTMLInputElement>) =>
+    setTags(e.currentTarget.value);
 
   const setContentData = async () => {
     try {
@@ -42,13 +43,39 @@ export default function useUploadForm() {
     }
   };
 
+  const uploadVideo = async () => {
+    if (!title || !description || !author || !link || !thumbnail) {
+      alert('모든 필드를 입력해주세요.');
+      return;
+    }
+
+    const content: ContentRequestType = {
+      type: 'YOUTUBE', // INFLEARN 추가해야함..
+      title,
+      description,
+      author,
+      duration: 0,
+      link,
+      thumbnailUrl: thumbnail,
+      tags: tags.split(','),
+    };
+    console.log(content);
+    createContent(content);
+  };
+
   return {
+    link,
     title,
     description,
     author,
     thumbnail,
     tags,
-    link,
+    onChangeLink,
+    onChangeTitle,
+    onChangeDescription,
+    onChangeAuthor,
+    onChangeThumbnail,
+    onChangeTags,
     uploadVideo,
     setContentData,
   };

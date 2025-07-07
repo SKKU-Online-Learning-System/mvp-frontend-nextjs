@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -14,7 +16,22 @@ import {
 import useUploadForm from '@/hooks/useUploadForm';
 
 export default function VideoUploadSheet() {
-  const { setContentData, uploadVideo } = useUploadForm();
+  const {
+    link,
+    title,
+    description,
+    author,
+    thumbnail,
+    // tags,
+    onChangeLink,
+    onChangeTitle,
+    onChangeDescription,
+    onChangeAuthor,
+    onChangeThumbnail,
+    // onChangeTags,
+    setContentData,
+    uploadVideo,
+  } = useUploadForm();
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -29,44 +46,71 @@ export default function VideoUploadSheet() {
         <div className='grid flex-1 auto-rows-min gap-6 px-4'>
           <div className='grid gap-3'>
             <Label htmlFor='sheet-demo-name'>영상 URL</Label>
-            <Input id='sheet-demo-name' placeholder='URL을 입력해주세요' />
+            <Input
+              id='sheet-demo-name'
+              placeholder='URL을 입력해주세요'
+              value={link}
+              onChange={onChangeLink}
+            />
             <Button onClick={setContentData}>영상 정보 가져오기</Button>
           </div>
         </div>
 
         <div className='grid flex-1 auto-rows-min gap-6 px-4'>
           <div className='grid gap-3'>
-            <Label htmlFor='sheet-demo-name'>제목</Label>
-            <Input id='sheet-demo-name' placeholder='제목을 입력해주세요' />
-          </div>
-          <div className='grid gap-3'>
-            <Label htmlFor='sheet-demo-username'>설명</Label>
+            <Label htmlFor='sheet-title'>제목</Label>
             <Input
-              id='sheet-demo-username'
+              id='sheet-title'
+              placeholder='제목을 입력해주세요'
+              value={title}
+              onChange={onChangeTitle}
+            />
+          </div>
+
+          <div className='grid gap-3'>
+            <Label htmlFor='sheet-description'>설명</Label>
+            <Input
+              id='sheet-description'
               placeholder='강의 설명을 입력해주세요'
+              value={description}
+              onChange={onChangeDescription}
             />
           </div>
+
           <div className='grid gap-3'>
-            <Label htmlFor='sheet-demo-username'>게시자</Label>
+            <Label htmlFor='sheet-author'>게시자</Label>
             <Input
-              id='sheet-demo-username'
+              id='sheet-author'
               placeholder='게시자를 입력해주세요'
+              value={author}
+              onChange={onChangeAuthor}
             />
           </div>
+
           <div className='grid gap-3'>
-            <Label htmlFor='sheet-demo-username'>썸네일</Label>
+            <Label htmlFor='sheet-thumbnail'>썸네일</Label>
             <Input
-              id='sheet-demo-username'
+              id='sheet-thumbnail'
               placeholder='썸네일을 입력해주세요'
+              value={thumbnail}
+              onChange={onChangeThumbnail}
             />
           </div>
-          <div className='grid gap-3'>
-            <Label htmlFor='sheet-demo-username'>태그</Label>
-            <Input id='sheet-demo-username' placeholder='태그를 입력해주세요' />
-          </div>
+
+          {/* <div className='grid gap-3'>
+            <Label htmlFor='sheet-tags'>태그</Label>
+            <Input
+              id='sheet-tags'
+              placeholder='태그를 입력해주세요'
+              value={tags}
+              onChange={onChangeTags}
+            />
+          </div> */}
         </div>
         <SheetFooter>
-          <Button type='submit'>업로드</Button>
+          <Button type='submit' onClick={uploadVideo}>
+            업로드
+          </Button>
           <SheetClose asChild>
             <Button variant='outline'>취소</Button>
           </SheetClose>
