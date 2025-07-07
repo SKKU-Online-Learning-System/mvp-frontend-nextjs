@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
+@import 'pretendard/dist/web/variable/pretendardvariable.css';
 
 @layer components {
   .my-container {
@@ -153,6 +154,7 @@
     @apply border-border outline-ring/50;
   }
   body {
+    font-family: 'Pretendard', sans-serif;
     @apply bg-background text-foreground;
   }
 }

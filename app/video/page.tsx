@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers';
+import Nav from '../component/common/Header/Nav';
 // import { Header } from '../component/common/Header';
 import { VideoContainer } from '../component/video/VideoContent';
 
@@ -14,7 +15,7 @@ export default async function Video({
   const id = (await searchParams).id;
   return (
     <div>
-      {/* <Header refreshToken={refreshToken} /> */}
+      <Nav style='white' refreshToken={refreshToken} />
       <VideoContainer id={id} refreshToken={refreshToken} />
     </div>
   );
