@@ -1,5 +1,5 @@
-import { Sort } from '@/app/type/content';
 import { Badge } from '@/components/ui/badge';
+import { Sort } from '@/types/content';
 import ContentFilterSkeleton from '../../common/ContentFilterSkeleton';
 import ContentSort from './ContentSort';
 import { CategoryKey, Filter } from './category';

@@ -1,4 +1,4 @@
-import { TextBookResponseType } from '@/app/type/textbook';
+import { TextBookResponseType } from '@/types/textbook';
 import Image from 'next/image';
 import Link from 'next/link';
 

@@ -1,4 +1,4 @@
-import { TextBookContentContainer } from '@/app/component/textbook/TextBookContentContainer';
+import { TextBookContentContainer } from '@/components/textbook/TextBookContentContainer';
 
 export default async function TextBookDetail({
   params,

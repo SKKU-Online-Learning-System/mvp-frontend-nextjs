@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
-import Nav from '../component/common/Header/Nav';
-import { MainGridContainer } from '../component/main/MainContent';
+import Nav from '../../components/common/Header/Nav';
+import { MainGridContainer } from '../../components/main/MainContent';
 
 export default async function Content() {
   const cookieStore = await cookies();

@@ -1,6 +1,6 @@
 'use client';
 
-import { logout } from '@/app/action/auth';
+import { logout } from '@/actions/auth';
 import { Style } from '@/components/ui/navigation-menu';
 import { cn } from '@/lib/utils';
 

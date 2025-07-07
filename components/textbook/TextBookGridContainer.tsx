@@ -1,6 +1,6 @@
 'use client';
 
-import { TextBookResponseType } from '@/app/type/textbook';
+import { TextBookResponseType } from '@/types/textbook';
 import { useState } from 'react';
 import { TextBookCard } from './TextBookCard';
 

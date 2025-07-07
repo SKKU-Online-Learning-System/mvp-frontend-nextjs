@@ -1,6 +1,6 @@
 import { createContent } from '@/app/api/content';
 import { searchContent } from '@/app/api/search';
-import { ContentRequestType } from '@/app/type/content';
+import { ContentRequestType } from '@/types/content';
 import { ChangeEvent, useState } from 'react';
 
 export default function useUploadForm() {

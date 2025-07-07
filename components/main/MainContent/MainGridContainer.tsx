@@ -1,8 +1,8 @@
 'use client';
 
 import { getContents } from '@/app/api/content';
-import { ContentResponseType } from '@/app/type/content';
 import useFilter from '@/hooks/useFilter';
+import { ContentResponseType } from '@/types/content';
 import { useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Error from '../../common/Error';

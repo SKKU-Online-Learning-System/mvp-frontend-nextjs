@@ -1,4 +1,4 @@
-import { TextBookDetailResponseType } from '@/app/type/textbook';
+import { TextBookDetailResponseType } from '@/types/textbook';
 import { IoMdDownload } from 'react-icons/io';
 import Image from 'next/image';
 

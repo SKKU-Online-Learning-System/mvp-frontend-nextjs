@@ -1,4 +1,4 @@
-import { TextBookGridContainer } from '../component/textbook/TextBookGridContainer';
+import { TextBookGridContainer } from '../../components/textbook/TextBookGridContainer';
 
 export default async function TextBook() {
   return <TextBookGridContainer />;

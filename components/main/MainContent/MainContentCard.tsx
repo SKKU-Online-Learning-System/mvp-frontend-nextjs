@@ -1,6 +1,6 @@
 // import { TagIcon } from "@/component/main/TagIcon";
-import { ContentResponseType } from '@/app/type/content';
 import { CardContent, CardFooter, CardLink } from '@/components/ui/card';
+import { ContentResponseType } from '@/types/content';
 import Image from 'next/image';
 
 type Props = {

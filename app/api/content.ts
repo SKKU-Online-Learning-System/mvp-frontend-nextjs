@@ -2,7 +2,7 @@ import {
   ContentDetailResponseType,
   ContentRequestType,
   ContentResponseType,
-} from '../type/content';
+} from '../../types/content';
 import { api, jwtApi } from './axios';
 
 export const getContents = async (query: string = '') => {

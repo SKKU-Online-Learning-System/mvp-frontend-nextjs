@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
-import Nav from '../component/common/Header/Nav';
+import Nav from '../../components/common/Header/Nav';
 // import { Header } from '../component/common/Header';
-import { VideoContainer } from '../component/video/VideoContent';
+import { VideoContainer } from '../../components/video/VideoContent';
 
 export default async function Video({
   searchParams,

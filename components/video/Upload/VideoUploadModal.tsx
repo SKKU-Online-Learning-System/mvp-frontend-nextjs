@@ -2,7 +2,7 @@
 
 import { createContent } from '@/app/api/content';
 import { searchContent } from '@/app/api/search';
-import { ContentRequestType } from '@/app/type/content';
+import { ContentRequestType } from '@/types/content';
 import { IoClose } from 'react-icons/io5';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';

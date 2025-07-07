@@ -1,5 +1,5 @@
-import { VideoUploadModal } from '../component/video/Upload';
-import VideoUploadSheet from '../component/video/Upload/VideoUploadSheet';
+import { VideoUploadModal } from '../../components/video/Upload';
+import VideoUploadSheet from '../../components/video/Upload/VideoUploadSheet';
 
 export default function Upload() {
   return (

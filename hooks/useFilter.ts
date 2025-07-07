@@ -1,6 +1,6 @@
-import { Topic } from '@/app/component/main/MainContent/MainGridContainer';
-import { CategoryKey, Filter } from '@/app/component/main/MainContent/category';
-import { Sort } from '@/app/type/content';
+import { Topic } from '@/components/main/MainContent/MainGridContainer';
+import { CategoryKey, Filter } from '@/components/main/MainContent/category';
+import { Sort } from '@/types/content';
 import { useState } from 'react';
 
 const groupedFilterList: {

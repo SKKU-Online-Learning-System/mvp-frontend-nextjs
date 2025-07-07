@@ -1,7 +1,7 @@
 'use client';
 
 import { postContentLike } from '@/app/api/content';
-import { ContentDetailResponseType } from '@/app/type/content';
+import { ContentDetailResponseType } from '@/types/content';
 import { BsPersonCircle } from 'react-icons/bs';
 import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { useState } from 'react';

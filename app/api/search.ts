@@ -1,4 +1,4 @@
-import { ContentDetailResponseType } from '../type/content';
+import { ContentDetailResponseType } from '../../types/content';
 import { api } from './axios';
 
 export const searchContent = async (link: string) => {

@@ -1,7 +1,7 @@
 'use client';
 
 import { getContent } from '@/app/api/content';
-import { ContentDetailResponseType } from '@/app/type/content';
+import { ContentDetailResponseType } from '@/types/content';
 import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { useState, useEffect } from 'react';
 import { YoutubePlayer } from '../YoutubePlayer';

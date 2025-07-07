@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 // import { Header } from 's../component/common/Header';
-import LeftSideBar from '../component/main/SideBar/LeftSideBar';
+import LeftSideBar from '../../components/main/SideBar/LeftSideBar';
 
 export default async function TextBookLayout({
   children,
