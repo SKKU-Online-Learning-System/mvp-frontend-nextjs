@@ -25,7 +25,8 @@ const groupedFilterList: {
 
 export default function useFilter() {
   const [filters, setFilters] = useState<Filter[]>();
-  const [sort, setSort] = useState<Sort>('업로드순');
+  const [sort, setSort] = useState<Sort>('upload');
+  const [year, setYear] = useState<number>();
 
   const filterToggle = (name: CategoryKey) => {
     setFilters((prev) =>
@@ -45,8 +46,12 @@ export default function useFilter() {
     );
   };
 
-  const changeSort = (sortOption: Sort) =>
-    sortOption === '업로드순' ? setSort('업로드순') : setSort('조회순');
+  const changeSort = (sortOption: string) =>
+    sortOption === 'upload' ? setSort('upload') : setSort('view');
+
+  const changeYear = (year: string) => {
+    setYear(+year);
+  };
 
   return {
     filters,
@@ -56,5 +61,7 @@ export default function useFilter() {
     groupedFilterList,
     sort,
     changeSort,
+    year,
+    changeYear,
   };
 }

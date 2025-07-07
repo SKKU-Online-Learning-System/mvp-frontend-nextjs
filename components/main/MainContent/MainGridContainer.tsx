@@ -27,6 +27,8 @@ export function MainGridContainer() {
     groupedFilterList,
     sort,
     changeSort,
+    // year,
+    changeYear,
   } = useFilter();
 
   useEffect(() => {
@@ -62,6 +64,7 @@ export function MainGridContainer() {
         filterList={filters}
         filterToggle={filterToggle}
         changeSort={changeSort}
+        changeYear={changeYear}
       />
       {!filteredContents ? (
         <div className='my-grid'>
@@ -75,7 +78,7 @@ export function MainGridContainer() {
         <div className='my-grid'>
           {filteredContents
             ?.sort((a, b) => {
-              if (sort === '조회순') {
+              if (sort === 'view') {
                 return b.viewCount - a.viewCount;
               } else {
                 return 0;

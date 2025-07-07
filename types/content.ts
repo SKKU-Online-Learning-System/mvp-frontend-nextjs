@@ -41,4 +41,4 @@ export type ContentRequestType = {
   tags: string[];
 };
 
-export type Sort = '업로드순' | '조회순';
+export type Sort = 'upload' | 'view';
