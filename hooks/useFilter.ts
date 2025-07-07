@@ -1,5 +1,6 @@
 import { Topic } from '@/app/component/main/MainContent/MainGridContainer';
 import { CategoryKey, Filter } from '@/app/component/main/MainContent/category';
+import { Sort } from '@/app/type/content';
 import { useState } from 'react';
 
 const groupedFilterList: {
@@ -24,6 +25,7 @@ const groupedFilterList: {
 
 export default function useFilter() {
   const [filters, setFilters] = useState<Filter[]>();
+  const [sort, setSort] = useState<Sort>('업로드순');
 
   const filterToggle = (name: CategoryKey) => {
     setFilters((prev) =>
@@ -43,11 +45,16 @@ export default function useFilter() {
     );
   };
 
+  const changeSort = (sortOption: Sort) =>
+    sortOption === '업로드순' ? setSort('업로드순') : setSort('조회순');
+
   return {
     filters,
     setFilters,
     filterToggle,
     filterOn,
     groupedFilterList,
+    sort,
+    changeSort,
   };
 }

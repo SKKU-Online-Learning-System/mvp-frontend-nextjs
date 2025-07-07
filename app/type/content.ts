@@ -40,3 +40,5 @@ export type ContentRequestType = {
   thumbnailUrl: string;
   tags: string[];
 };
+
+export type Sort = '업로드순' | '조회순';

@@ -8,7 +8,7 @@ import {
 
 export default function ContentSort() {
   return (
-    <Select>
+    <Select onValueChange={() => {}}>
       <SelectTrigger size='sm'>
         <SelectValue placeholder='정렬기준' />
       </SelectTrigger>

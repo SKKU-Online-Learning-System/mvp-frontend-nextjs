@@ -1,3 +1,4 @@
+import { Sort } from '@/app/type/content';
 import { Badge } from '@/components/ui/badge';
 import ContentFilterSkeleton from '../../common/ContentFilterSkeleton';
 import ContentSort from './ContentSort';
@@ -6,6 +7,7 @@ import { CategoryKey, Filter } from './category';
 type Props = {
   filterList: Filter[] | undefined;
   filterToggle: (name: CategoryKey) => void;
+  changeSort: (sortOption: Sort) => void;
 };
 
 export default function ContentFilter({ filterList, filterToggle }: Props) {

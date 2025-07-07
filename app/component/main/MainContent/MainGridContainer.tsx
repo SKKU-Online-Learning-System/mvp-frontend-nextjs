@@ -19,8 +19,15 @@ export function MainGridContainer() {
 
   const [contents, setContents] = useState<ContentResponseType[]>();
 
-  const { filters, setFilters, filterToggle, filterOn, groupedFilterList } =
-    useFilter();
+  const {
+    filters,
+    setFilters,
+    filterToggle,
+    filterOn,
+    groupedFilterList,
+    sort,
+    changeSort,
+  } = useFilter();
 
   useEffect(() => {
     const topic = (searchParams.get('topic') ?? '성대한만남') as Topic;
@@ -51,7 +58,11 @@ export function MainGridContainer() {
 
   return (
     <div className='my-container'>
-      <ContentFilter filterList={filters} filterToggle={filterToggle} />
+      <ContentFilter
+        filterList={filters}
+        filterToggle={filterToggle}
+        changeSort={changeSort}
+      />
       {!filteredContents ? (
         <div className='my-grid'>
           {Array.from({ length: 9 }).map((_, idx) => (
@@ -62,9 +73,17 @@ export function MainGridContainer() {
         <Error />
       ) : (
         <div className='my-grid'>
-          {filteredContents?.map((content) => (
-            <MainContentCard key={content.id} content={content} />
-          ))}
+          {filteredContents
+            ?.sort((a, b) => {
+              if (sort === '조회순') {
+                return b.viewCount - a.viewCount;
+              } else {
+                return 0;
+              }
+            })
+            .map((content) => (
+              <MainContentCard key={content.id} content={content} />
+            ))}
         </div>
       )}
     </div>
