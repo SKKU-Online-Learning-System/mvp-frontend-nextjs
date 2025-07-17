@@ -29,7 +29,7 @@ export function VideoInfo({ content, refreshToken }: Props) {
   };
 
   return (
-    <div className='w-full'>
+    <div className='w-full px-8'>
       {/* 추후 변경 예정 w-[60vw] */}
       <p className='py-4 text-2xl font-bold'>{content?.title}</p>
       <div className='flex flex-row items-center justify-between'>
@@ -50,7 +50,7 @@ export function VideoInfo({ content, refreshToken }: Props) {
         </div>
         <p className='mt-2 text-gray-600'>{content?.description}</p>
       </div>
-      <div className='flex flex-row gap-2 text-[1.1rem]'>
+      <div className='flex flex-wrap gap-2 text-[1.1rem]'>
         {content?.tags.map((tag) => <TagIcon key={tag} text={tag} />)}
       </div>
     </div>

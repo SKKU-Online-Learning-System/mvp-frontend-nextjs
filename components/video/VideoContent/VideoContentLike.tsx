@@ -14,14 +14,14 @@ export function VideoContentLike({ onClickLike, isLike }: Props) {
         <FaHeart
           color='green'
           onClick={onClickLike}
-          size={30}
+          size={22}
           className='cursor-pointer'
         />
       ) : (
         <FaRegHeart
           color='gray'
           onClick={onClickLike}
-          size={30}
+          size={22}
           className='cursor-pointer'
         />
       )}

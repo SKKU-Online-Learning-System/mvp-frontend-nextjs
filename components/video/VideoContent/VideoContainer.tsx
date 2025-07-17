@@ -27,7 +27,7 @@ export function VideoContainer({ id, refreshToken }: Props) {
   return (
     <>
       <div className='pt-logo px-48 mb-12 flex flex-row'>
-        <div className='flex w-full flex-col px-12'>
+        <div className='flex w-full flex-col border shadow-sm pb-12 rounded-lg'>
           <YoutubePlayer youtubeId={youtubeId} />
           <VideoInfo content={content} refreshToken={refreshToken} />
         </div>
