@@ -1,16 +1,23 @@
-import { getContents } from '@/app/api/content';
+import { getPlaylists } from '@/app/api/content';
+import { Filter } from '@/components/main/MainContent/category';
 import { ContentResponseType } from '@/types/content';
 import { useEffect, useState } from 'react';
 
-export default function useContent(query: string | null) {
+export default function useContent(filters: Filter[] | undefined) {
   const [contents, setContents] = useState<ContentResponseType[]>();
 
   useEffect(() => {
+    const id = filters?.find(({ checked }) => checked)?.id;
+
     const fetchContents = async () => {
-      const contents = await getContents(query ?? '');
+      if (!id) {
+        return;
+      }
+
+      const { contents } = await getPlaylists(id);
       setContents(contents);
     };
     fetchContents();
-  }, [query]);
+  }, [filters]);
   return { contents };
 }

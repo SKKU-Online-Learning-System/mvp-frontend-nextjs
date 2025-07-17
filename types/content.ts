@@ -11,7 +11,15 @@ export type ContentResponseType = {
   viewCount: number;
   likeCount: number;
   isLike: boolean;
+  publishedAt: string;
   youtubeVideoId: string;
+};
+
+export type PlaylistResonseType = {
+  id: number;
+  name: string;
+  description: string;
+  contents: ContentResponseType[];
 };
 
 export type ContentDetailResponseType = {

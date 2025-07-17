@@ -2,12 +2,12 @@
 
 import {
   NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLinkAsChild,
+  // NavigationMenuItem,
+  // NavigationMenuLinkAsChild,
   NavigationMenuList,
-  navigationMenuTriggerStyle,
+  // navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
-import Link from 'next/link';
+// import Link from 'next/link';
 import { categoryInfo } from '../../main/MainContent/category';
 import DemoNavMenuItem from './DemoNavMenuItem';
 
@@ -55,11 +55,11 @@ const menuItems: {
         href: '/content?topic=공개형교육&category=공개형 온라인 강의',
         description: categoryInfo['공개형 온라인 강의'],
       },
-      {
-        title: '공개형 교재',
-        href: '/content?topic=공개형교육&category=공개형 교재',
-        description: categoryInfo['공개형 교재'],
-      },
+      // {
+      //   title: '공개형 교재',
+      //   href: '/content?topic=공개형교육&category=공개형 교재',
+      //   description: categoryInfo['공개형 교재'],
+      // },
     ],
   },
   {
@@ -97,14 +97,15 @@ export function NavigationMenuDemo({ style }: Props) {
           />
         ))}
 
-        <NavigationMenuItem>
+        {/* TODO: 콘텐츠 업로드 */}
+        {/* <NavigationMenuItem>
           <NavigationMenuLinkAsChild
             style={style}
             className={navigationMenuTriggerStyle(style)}
           >
             <Link href={'/upload'}>콘텐츠 업로드</Link>
           </NavigationMenuLinkAsChild>
-        </NavigationMenuItem>
+        </NavigationMenuItem> */}
       </NavigationMenuList>
     </NavigationMenu>
   );

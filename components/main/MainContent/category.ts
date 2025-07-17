@@ -14,6 +14,7 @@ type Category = {
 };
 
 export type Filter = {
+  id: number;
   name: CategoryKey;
   checked: boolean;
 };

@@ -1,6 +1,7 @@
 'use client';
 
 import { Badge } from '@/components/ui/badge';
+import { useRouter, useSearchParams } from 'next/navigation';
 import ContentFilterSkeleton from '../../common/ContentFilterSkeleton';
 import { ComboBox, Framework } from './ComboBox';
 import { CategoryKey, Filter } from './category';
@@ -12,6 +13,7 @@ type Props = {
   changeSort: (sortOption: string) => void;
   year: string | undefined;
   changeYear: (year: string) => void;
+  setDefaultSortYear: () => void;
 };
 
 const yearFrameworks: Framework[] = Array.from({ length: 6 }, (_, i) => {
@@ -40,7 +42,24 @@ export default function ContentFilter({
   changeSort,
   year,
   changeYear,
+  setDefaultSortYear,
 }: Props) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const changeCategory = (newCategory: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('category', newCategory); // 기존 쿼리 유지하면서 category만 수정
+
+    router.push(`?${params.toString()}`);
+  };
+
+  const onClick = (name: CategoryKey) => {
+    setDefaultSortYear();
+    filterToggle(name);
+    changeCategory(name);
+  };
+
   return (
     <div className='flex flex-wrap gap-2 justify-between'>
       <div className='flex flex-wrap gap-3 justify-start'>
@@ -50,7 +69,7 @@ export default function ContentFilter({
                 key={idx}
                 variant={checked ? 'default' : 'secondary'}
                 className='cursor-pointer h-8 font-semibold'
-                onClick={() => filterToggle(name)}
+                onClick={() => onClick(name)}
               >
                 {name}
               </Badge>
@@ -62,7 +81,7 @@ export default function ContentFilter({
       <div className='flex gap-3'>
         <ComboBox
           defaultName='연도'
-          frameworks={yearFrameworks}
+          frameworks={[{ value: 'all', label: '전체' }, ...yearFrameworks]}
           value={year}
           setValue={changeYear}
         />

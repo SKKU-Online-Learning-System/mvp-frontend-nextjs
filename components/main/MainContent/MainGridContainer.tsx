@@ -1,28 +1,45 @@
 'use client';
 
+import NoResult from '@/components/common/NoResult';
 import useContent from '@/hooks/useContent';
 import useFilter from '@/hooks/useFilter';
 import { useSearchParams } from 'next/navigation';
-import Error from '../../common/Error';
 import MainContentSkeleton from '../../common/MainContentSkeleton';
 import ContentFilter from './ContentFilter';
 import { MainContentCard } from './MainContentCard';
 
 export function MainGridContainer() {
   const searchParams = useSearchParams();
-  const query = searchParams.get('query');
+  // const query = searchParams.get('query');
 
-  const { filters, filterToggle, sort, changeSort, year, changeYear } =
-    useFilter(searchParams);
+  const {
+    filters,
+    filterToggle,
+    sort,
+    changeSort,
+    year,
+    changeYear,
+    setDefaultSortYear,
+  } = useFilter(searchParams);
 
-  const { contents } = useContent(query);
+  const { contents } = useContent(filters);
 
-  const filteredContents = contents?.filter((content) =>
-    filters?.some(
-      ({ name, checked }) =>
-        checked && new RegExp(name, 'i').test(content.title)
-    )
-  );
+  const filteredContents = contents
+    ?.slice()
+    ?.filter(({ publishedAt }) => {
+      if (!year || year === 'all') {
+        return true;
+      }
+
+      return new Date(publishedAt).getFullYear().toString() === year;
+    })
+    ?.sort((a, b) => {
+      if (sort === 'view') {
+        return b.viewCount - a.viewCount;
+      } else {
+        return 0;
+      }
+    });
 
   return (
     <div className='my-container'>
@@ -33,28 +50,21 @@ export function MainGridContainer() {
         changeSort={changeSort}
         year={year?.toString()}
         changeYear={changeYear}
+        setDefaultSortYear={setDefaultSortYear}
       />
-      {!filteredContents ? (
+      {!contents ? (
         <div className='my-grid'>
           {Array.from({ length: 12 }).map((_, idx) => (
             <MainContentSkeleton key={idx} />
           ))}
         </div>
-      ) : filteredContents.length == 0 ? (
-        <Error />
+      ) : !filteredContents?.length ? (
+        <NoResult />
       ) : (
         <div className='my-grid'>
-          {filteredContents
-            ?.sort((a, b) => {
-              if (sort === 'view') {
-                return b.viewCount - a.viewCount;
-              } else {
-                return 0;
-              }
-            })
-            .map((content) => (
-              <MainContentCard key={content.id} content={content} />
-            ))}
+          {filteredContents?.map((content) => (
+            <MainContentCard key={content.id} content={content} />
+          ))}
         </div>
       )}
     </div>

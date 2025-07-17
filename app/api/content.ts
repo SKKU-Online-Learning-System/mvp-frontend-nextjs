@@ -2,6 +2,7 @@ import {
   ContentDetailResponseType,
   ContentRequestType,
   ContentResponseType,
+  PlaylistResonseType,
 } from '../../types/content';
 import { api, jwtApi } from './axios';
 
@@ -11,6 +12,15 @@ export const getContents = async (query: string = '') => {
   );
   if (res.status !== 200) {
     throw new Error('getContents api 에러 발생');
+  }
+  console.log(res.data);
+  return res.data;
+};
+
+export const getPlaylists = async (id: number) => {
+  const res = await api.get<PlaylistResonseType>(`/playlists/${id}`);
+  if (res.status !== 200) {
+    throw new Error('getPlaylist api 에러 발생');
   }
   console.log(res.data);
   return res.data;
