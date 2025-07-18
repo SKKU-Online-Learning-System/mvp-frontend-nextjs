@@ -11,7 +11,7 @@ type Props = {
 
 export default function Nav({ refreshToken, style = 'black' }: Props) {
   return (
-    <nav
+    <div
       className={`flex w-full h-16 ${style == 'white' ? 'bg-white shadow-md' : 'bg-black/40'} fixed justify-between items-center px-6 z-50`}
     >
       <Logo />
@@ -21,6 +21,6 @@ export default function Nav({ refreshToken, style = 'black' }: Props) {
       ) : (
         <LoginButton style={style} />
       )}
-    </nav>
+    </div>
   );
 }

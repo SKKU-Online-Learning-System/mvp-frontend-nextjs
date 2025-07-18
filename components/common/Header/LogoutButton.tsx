@@ -8,7 +8,7 @@ type Props = Style;
 
 export function LogoutButton({ style }: Props) {
   return (
-    <div className='flex flex-col justify-end items-end h-full pb-2 w-[150px]'>
+    <div className='flex flex-col justify-end items-end h-full pb-2 w-[150px] cursor-pointer'>
       <div
         onClick={logout}
         className={cn(
