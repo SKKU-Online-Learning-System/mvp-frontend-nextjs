@@ -15,7 +15,8 @@ type Props = {
 };
 
 export function VideoInfo({ content, refreshToken }: Props) {
-  const [like, setLike] = useState(content?.isLike);
+  const [like, setLike] = useState(content?.isLike ?? false);
+
   const onClickLike = async () => {
     if (!refreshToken) {
       toast.error('로그인이 필요한 서비스입니다.');
