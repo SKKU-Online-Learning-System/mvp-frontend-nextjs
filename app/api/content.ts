@@ -43,7 +43,7 @@ export const createContent = async (content: ContentRequestType) => {
 
 export const postContentLike = async (id: number) => {
   const res = await jwtApi.post(`/contents/${id}/likes`);
-  if (res.status !== 200) {
+  if (res.status !== 200 && res.status !== 204) {
     throw new Error('postContentLike api 에러 발생');
   }
 };
