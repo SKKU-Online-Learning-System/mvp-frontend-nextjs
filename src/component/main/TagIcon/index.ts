@@ -1,1 +1,0 @@
-export { TagIcon } from "./TagIcon";
