@@ -36,6 +36,9 @@ export function VideoUploadModal() {
   const setContentData = async () => {
     try {
       const contentData = await searchContent(link);
+      if (!contentData) {
+        return;
+      }
       setTitle(contentData.title);
       setDescription(contentData.description);
       setAuthor(contentData.author);

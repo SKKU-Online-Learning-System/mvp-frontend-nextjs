@@ -2,12 +2,12 @@
 
 import {
   NavigationMenu,
-  // NavigationMenuItem,
-  // NavigationMenuLinkAsChild,
+  NavigationMenuItem,
+  NavigationMenuLinkAsChild,
   NavigationMenuList,
-  // navigationMenuTriggerStyle,
+  navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
-// import Link from 'next/link';
+import Link from 'next/link';
 import { categoryInfo } from '../../main/MainContent/category';
 import DemoNavMenuItem from './DemoNavMenuItem';
 
@@ -55,21 +55,16 @@ const menuItems: {
         href: '/content?topic=공개형교육&category=공개형 온라인 강의',
         description: categoryInfo['공개형 온라인 강의'],
       },
-      // {
-      //   title: '공개형 교재',
-      //   href: '/content?topic=공개형교육&category=공개형 교재',
-      //   description: categoryInfo['공개형 교재'],
-      // },
+      {
+        title: '공개형 교재',
+        href: '/content?topic=공개형교육&category=공개형 교재',
+        description: categoryInfo['공개형 교재'],
+      },
     ],
   },
   {
     triggerName: '성대한활동',
     components: [
-      {
-        title: '글로벌 챌린지',
-        href: '/content?topic=성대한활동&category=글로벌 챌린지',
-        description: categoryInfo['글로벌 챌린지'],
-      },
       {
         title: '인턴십 후기',
         href: '/content?topic=성대한활동&category=인턴십 후기',
@@ -79,6 +74,16 @@ const menuItems: {
         title: 'IT 해외봉사',
         href: '/content?topic=성대한활동&category=IT 해외봉사',
         description: categoryInfo['IT 해외봉사'],
+      },
+      {
+        title: '글로벌 챌린지',
+        href: '/content?topic=성대한활동&category=글로벌 챌린지',
+        description: categoryInfo['글로벌 챌린지'],
+      },
+      {
+        title: '현직자 인터뷰',
+        href: '/content?topic=성대한활동&category=현직자 인터뷰',
+        description: categoryInfo['현직자 인터뷰'],
       },
     ],
   },
@@ -97,15 +102,14 @@ export function NavigationMenuDemo({ style }: Props) {
           />
         ))}
 
-        {/* TODO: 콘텐츠 업로드 */}
-        {/* <NavigationMenuItem>
+        <NavigationMenuItem>
           <NavigationMenuLinkAsChild
             style={style}
             className={navigationMenuTriggerStyle(style)}
           >
-            <Link href={'/upload'}>콘텐츠 업로드</Link>
+            <Link href={'/playground'}>콘텐츠 업로드</Link>
           </NavigationMenuLinkAsChild>
-        </NavigationMenuItem> */}
+        </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
   );

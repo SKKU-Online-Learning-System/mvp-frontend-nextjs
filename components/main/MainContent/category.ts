@@ -7,7 +7,8 @@ export type CategoryKey =
   | '인턴십 후기'
   | '글로벌 챌린지'
   | '공개형 교재'
-  | 'IT 해외봉사';
+  | 'IT 해외봉사'
+  | '현직자 인터뷰';
 
 type Category = {
   [key in CategoryKey]: string;
@@ -37,4 +38,5 @@ export const categoryInfo: Category = {
     '산업 현장 연계성과 융합적 사고를 강화하고 SW 교육의 질을 높이고 확산하는 데 기여하는 체계적인 학습 자료',
   'IT 해외봉사':
     'SW/ICT 역량을 활용하여 디지털 격차 해소 및 한국 문화 전파와 교류에 기여하는 봉사활동',
+  '현직자 인터뷰': '추가해야함',
 };

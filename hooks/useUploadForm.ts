@@ -32,6 +32,10 @@ export default function useUploadForm() {
   const setContentData = async () => {
     try {
       const contentData = await searchContent(link);
+      if (!contentData) {
+        return;
+      }
+
       setTitle(contentData.title);
       setDescription(contentData.description);
       setAuthor(contentData.author);
@@ -41,6 +45,15 @@ export default function useUploadForm() {
     } catch (e) {
       console.error(e);
     }
+  };
+
+  const clearContentData = () => {
+    setLink('');
+    setTitle('');
+    setDescription('');
+    setAuthor('');
+    setThumbnail('');
+    setTags('');
   };
 
   const uploadVideo = async () => {
@@ -78,5 +91,6 @@ export default function useUploadForm() {
     onChangeTags,
     uploadVideo,
     setContentData,
+    clearContentData,
   };
 }

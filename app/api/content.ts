@@ -1,3 +1,5 @@
+import axios from 'axios';
+import { toast } from 'sonner';
 import {
   ContentDetailResponseType,
   ContentRequestType,
@@ -27,23 +29,44 @@ export const getPlaylists = async (id: number) => {
 };
 
 export const getContent = async (id: number) => {
-  const res = await api.get<ContentDetailResponseType>(`/contents/${id}`);
-  if (res.status !== 200) {
-    throw new Error('getContent api 에러 발생');
+  try {
+    const res = await api.get<ContentDetailResponseType>(`/contents/${id}`);
+    return res.data;
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      if (err.response?.status === 401) {
+        toast.error('로그인이 필요한 서비스입니다.');
+      } else {
+        toast.error('오류가 발생하였습니다.');
+      }
+    }
   }
-  return res.data;
 };
 
 export const createContent = async (content: ContentRequestType) => {
-  const res = await api.post('/contents', content);
-  if (res.status !== 201) {
-    throw new Error('createContent api 에러 발생');
+  try {
+    await api.post('/contents', content);
+    toast.success('동영상 업로드에 성공하였습니다.');
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      if (err.response?.status === 401) {
+        toast.error('로그인이 필요한 서비스입니다.');
+      } else {
+        toast.error('오류가 발생하였습니다.');
+      }
+    }
   }
 };
 
 export const postContentLike = async (id: number) => {
-  const res = await jwtApi.post(`/contents/${id}/likes`);
-  if (res.status !== 200 && res.status !== 204) {
-    throw new Error('postContentLike api 에러 발생');
+  try {
+    await jwtApi.post(`/contents/${id}/likes`);
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      if (err.response?.status === 401) {
+        toast.error('로그인이 필요한 서비스입니다.');
+      }
+      throw new Error('postContentLike api 에러 발생');
+    }
   }
 };

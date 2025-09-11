@@ -7,8 +7,8 @@ import { ComboBox, Framework } from './ComboBox';
 import { CategoryKey, Filter } from './category';
 
 type Props = {
-  filterList: Filter[] | undefined;
-  filterToggle: (name: CategoryKey) => void;
+  filterList?: Filter[] | undefined;
+  filterToggle?: (name: CategoryKey) => void;
   sort: string;
   changeSort: (sortOption: string) => void;
   year: string | undefined;
@@ -55,6 +55,10 @@ export default function ContentFilter({
   };
 
   const onClick = (name: CategoryKey) => {
+    if (!filterList || !filterToggle) {
+      return;
+    }
+
     setDefaultSortYear();
     filterToggle(name);
     changeCategory(name);

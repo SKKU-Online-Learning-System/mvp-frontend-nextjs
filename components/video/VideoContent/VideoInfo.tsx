@@ -3,30 +3,28 @@
 import { postContentLike } from '@/app/api/content';
 import { ContentDetailResponseType } from '@/types/content';
 import { BsPersonCircle } from 'react-icons/bs';
-import { toast } from 'sonner';
-import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { useState } from 'react';
 import { TagIcon } from '../../main/TagIcon';
 import { VideoContentLike } from './VideoContentLike';
 
 type Props = {
   content: ContentDetailResponseType | undefined;
-  refreshToken?: RequestCookie;
 };
 
-export function VideoInfo({ content, refreshToken }: Props) {
+export function VideoInfo({ content }: Props) {
   const [like, setLike] = useState(content?.isLike ?? false);
 
   const onClickLike = async () => {
-    if (!refreshToken) {
-      toast.error('로그인이 필요한 서비스입니다.');
-      return;
-    }
-
     if (content?.id) {
-      await postContentLike(content?.id);
+      try {
+        await postContentLike(content?.id);
+        setLike((prev) => !prev);
+      } catch (err) {
+        if (err instanceof Error) {
+          console.debug(err);
+        }
+      }
     }
-    setLike((prev) => !prev);
   };
 
   return (

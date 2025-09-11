@@ -30,12 +30,13 @@ export default function VideoUploadSheet() {
     onChangeThumbnail,
     // onChangeTags,
     setContentData,
+    clearContentData,
     uploadVideo,
   } = useUploadForm();
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant='outline'>업로드</Button>
+        <Button variant='default'>동영상 업로드하기</Button>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
@@ -64,6 +65,7 @@ export default function VideoUploadSheet() {
               placeholder='제목을 입력해주세요'
               value={title}
               onChange={onChangeTitle}
+              readOnly
             />
           </div>
 
@@ -74,6 +76,7 @@ export default function VideoUploadSheet() {
               placeholder='강의 설명을 입력해주세요'
               value={description}
               onChange={onChangeDescription}
+              readOnly
             />
           </div>
 
@@ -84,6 +87,7 @@ export default function VideoUploadSheet() {
               placeholder='게시자를 입력해주세요'
               value={author}
               onChange={onChangeAuthor}
+              readOnly
             />
           </div>
 
@@ -94,6 +98,7 @@ export default function VideoUploadSheet() {
               placeholder='썸네일을 입력해주세요'
               value={thumbnail}
               onChange={onChangeThumbnail}
+              readOnly
             />
           </div>
 
@@ -112,7 +117,9 @@ export default function VideoUploadSheet() {
             업로드
           </Button>
           <SheetClose asChild>
-            <Button variant='outline'>취소</Button>
+            <Button variant='outline' onClick={clearContentData}>
+              취소
+            </Button>
           </SheetClose>
         </SheetFooter>
       </SheetContent>

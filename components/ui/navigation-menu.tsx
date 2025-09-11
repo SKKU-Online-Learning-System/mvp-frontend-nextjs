@@ -82,6 +82,7 @@ function NavigationMenuTrigger({
       data-slot='navigation-menu-trigger'
       className={cn(navigationMenuTriggerStyle(style), 'group', className)}
       {...props}
+      onClick={(e) => e.preventDefault()}
     >
       {children}{' '}
       <ChevronDownIcon

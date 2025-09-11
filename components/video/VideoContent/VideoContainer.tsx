@@ -12,7 +12,7 @@ type Props = {
   refreshToken?: RequestCookie;
 };
 
-export function VideoContainer({ id, refreshToken }: Props) {
+export function VideoContainer({ id }: Props) {
   const [content, setContent] = useState<ContentDetailResponseType>();
   const youtubeId = content?.link.split('v=')[1];
 
@@ -29,7 +29,7 @@ export function VideoContainer({ id, refreshToken }: Props) {
       <div className='pt-logo px-48 mb-12 flex flex-row'>
         <div className='flex w-full flex-col border shadow-sm pb-12 rounded-lg'>
           <YoutubePlayer youtubeId={youtubeId} />
-          <VideoInfo content={content} refreshToken={refreshToken} />
+          <VideoInfo content={content} />
         </div>
         {/* <PlaylistBox>
     {Array.from({ length: 10 }, (_, index) => (
