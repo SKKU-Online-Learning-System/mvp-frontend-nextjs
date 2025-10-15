@@ -22,6 +22,7 @@ export default function Playground() {
                   동영상을 업로드해보세요!
                 </p>
                 <VideoUploadSheet />
+                <span>교육 목적에 부합하는 동영상을 업로드 해주세요!</span>
               </div>
             </>
           </ShadowRoundBox>

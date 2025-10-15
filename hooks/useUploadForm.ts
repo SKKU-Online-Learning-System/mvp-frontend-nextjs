@@ -1,12 +1,14 @@
 import { createContent } from '@/app/api/content';
 import { searchContent } from '@/app/api/search';
 import { ContentRequestType } from '@/types/content';
+import { toast } from 'sonner';
 import { ChangeEvent, useState } from 'react';
 
 export default function useUploadForm() {
   const [link, setLink] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [duration, setDuration] = useState(0);
   const [author, setAuthor] = useState('');
   const [thumbnail, setThumbnail] = useState('');
   const [tags, setTags] = useState('');
@@ -38,6 +40,7 @@ export default function useUploadForm() {
 
       setTitle(contentData.title);
       setDescription(contentData.description);
+      setDuration(contentData.duration);
       setAuthor(contentData.author);
       setThumbnail(contentData.thumbnailUrl);
       setTags(contentData.tags.join(','));
@@ -50,6 +53,7 @@ export default function useUploadForm() {
   const clearContentData = () => {
     setLink('');
     setTitle('');
+    setDuration(0);
     setDescription('');
     setAuthor('');
     setThumbnail('');
@@ -57,8 +61,8 @@ export default function useUploadForm() {
   };
 
   const uploadVideo = async () => {
-    if (!title || !description || !author || !link || !thumbnail) {
-      alert('모든 필드를 입력해주세요.');
+    if (!title || !author || !link || !thumbnail) {
+      toast.error('모든 필드를 입력해주세요.');
       return;
     }
 
@@ -67,7 +71,7 @@ export default function useUploadForm() {
       title,
       description,
       author,
-      duration: 0,
+      duration,
       link,
       thumbnailUrl: thumbnail,
       tags: tags.split(','),
@@ -80,6 +84,7 @@ export default function useUploadForm() {
     link,
     title,
     description,
+    duration,
     author,
     thumbnail,
     tags,

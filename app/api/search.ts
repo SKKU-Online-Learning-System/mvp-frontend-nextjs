@@ -8,7 +8,7 @@ export const searchContent = async (link: string) => {
     const res = await api.get<ContentDetailResponseType>(
       `/search?link=${link}`
     );
-    toast.success('동영상 정보 가져오기 성공!');
+    // toast.success('동영상 정보 가져오기 성공!');
     return res.data;
   } catch (err) {
     if (axios.isAxiosError(err)) {

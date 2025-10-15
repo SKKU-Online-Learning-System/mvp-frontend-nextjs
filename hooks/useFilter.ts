@@ -16,7 +16,7 @@ const groupedFilterList: {
   기술교류회: [{ id: 2, name: 'S-TOP', checked: false }],
   공개형교육: [
     { id: 6, name: '공개형 온라인 강의', checked: false },
-    { id: 1, name: '공개형 교재', checked: false },
+    { id: 11, name: '공개형 교재', checked: false },
   ],
   성대한활동: [
     { id: 7, name: '인턴십 후기', checked: false },

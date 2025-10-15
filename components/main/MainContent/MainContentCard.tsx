@@ -17,6 +17,8 @@ export function MainContentCard({ content }: Props) {
         return `/video?id=${content.id}`;
       case 'INFLEARN':
         return content.link;
+      case 'BOOK':
+        return `/textbook?id=${content.id}`;
       default:
         return '/';
     }
@@ -46,10 +48,12 @@ export function MainContentCard({ content }: Props) {
       <CardFooter>
         <div className='flex flex-col gap-1'>
           <p className='break-words text-sm text-gray-400'>{content.author}</p>
-          <p className='break-words text-sm text-gray-400'>
-            약 {contentHour != 0 ? contentHour + '시간' : null} {contentMinute}
-            분 소요
-          </p>
+          {content.type != 'BOOK' && (
+            <p className='break-words text-sm text-gray-400'>
+              약 {contentHour != 0 ? contentHour + '시간' : null}{' '}
+              {contentMinute}분 소요
+            </p>
+          )}
         </div>
       </CardFooter>
     </CardLink>

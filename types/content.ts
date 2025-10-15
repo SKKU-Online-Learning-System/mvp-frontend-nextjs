@@ -1,6 +1,6 @@
 export type ContentResponseType = {
   id: number;
-  type: 'YOUTUBE' | 'INFLEARN';
+  type: 'YOUTUBE' | 'INFLEARN' | 'BOOK';
   title: string;
   description: string;
   author: string;

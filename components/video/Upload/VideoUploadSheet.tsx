@@ -113,9 +113,11 @@ export default function VideoUploadSheet() {
           </div> */}
         </div>
         <SheetFooter>
-          <Button type='submit' onClick={uploadVideo}>
-            업로드
-          </Button>
+          <SheetClose asChild>
+            <Button type='submit' onClick={uploadVideo}>
+              업로드
+            </Button>
+          </SheetClose>
           <SheetClose asChild>
             <Button variant='outline' onClick={clearContentData}>
               취소
