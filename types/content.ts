@@ -24,7 +24,7 @@ export type PlaylistResonseType = {
 
 export type ContentDetailResponseType = {
   id: number;
-  type: 'YOUTUBE' | 'INFLEARN';
+  type: 'YOUTUBE' | 'INFLEARN' | 'BOOK';
   title: string;
   description: string;
   author: string;

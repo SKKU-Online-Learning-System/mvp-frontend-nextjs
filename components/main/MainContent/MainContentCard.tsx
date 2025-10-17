@@ -18,7 +18,7 @@ export function MainContentCard({ content }: Props) {
       case 'INFLEARN':
         return content.link;
       case 'BOOK':
-        return `/textbook?id=${content.id}`;
+        return `/textbook/${content.id}`;
       default:
         return '/';
     }

@@ -1,6 +1,6 @@
+import '@/app/global.css';
 import { Toaster } from 'sonner';
 import type { Metadata, Viewport } from 'next';
-import './globals.css';
 
 export const metadata: Metadata = {
   title: '온라인 명륜당',
