@@ -12,8 +12,10 @@ export function PlayGroundGridContainer() {
   const searchParams = useSearchParams();
   // const query = searchParams.get('query');
 
-  const { sort, changeSort, year, changeYear, setDefaultSortYear } =
-    useFilter(searchParams);
+  const { sort, changeSort, year, changeYear, setDefaultSortYear } = useFilter({
+    topic: '성대한만남',
+    searchParams,
+  });
 
   const { contents } = useContentById(1);
 
