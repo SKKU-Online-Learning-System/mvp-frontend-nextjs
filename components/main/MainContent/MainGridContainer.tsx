@@ -2,13 +2,17 @@
 
 import NoResult from '@/components/common/NoResult';
 import useContent from '@/hooks/useContent';
-import useFilter from '@/hooks/useFilter';
+import useFilter, { Topic } from '@/hooks/useFilter';
 import { useSearchParams } from 'next/navigation';
 import MainContentSkeleton from '../../common/MainContentSkeleton';
 import ContentFilter from './ContentFilter';
 import { MainContentCard } from './MainContentCard';
 
-export function MainGridContainer() {
+type Props = {
+  topic: Topic;
+};
+
+export function MainGridContainer({ topic }: Props) {
   const searchParams = useSearchParams();
   // const query = searchParams.get('query');
 
@@ -20,7 +24,7 @@ export function MainGridContainer() {
     year,
     changeYear,
     setDefaultSortYear,
-  } = useFilter(searchParams);
+  } = useFilter({ topic, searchParams });
 
   const { contents } = useContent(filters);
 

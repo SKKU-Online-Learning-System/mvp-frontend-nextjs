@@ -3,7 +3,7 @@ import { Sort } from '@/types/content';
 import { ReadonlyURLSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-type Topic = '성대한만남' | '기술교류회' | '공개형교육' | '성대한활동';
+export type Topic = '성대한만남' | '기술교류회' | '공개형교육' | '성대한활동';
 
 const groupedFilterList: {
   [key in Topic]: Filter[];
@@ -26,7 +26,12 @@ const groupedFilterList: {
   ],
 };
 
-export default function useFilter(searchParams: ReadonlyURLSearchParams) {
+type Props = {
+  topic: Topic;
+  searchParams: ReadonlyURLSearchParams;
+};
+
+export default function useFilter({ topic, searchParams }: Props) {
   const [filters, setFilters] = useState<Filter[]>();
   const [sort, setSort] = useState<Sort>('upload');
   const [year, setYear] = useState<string>();
@@ -62,15 +67,13 @@ export default function useFilter(searchParams: ReadonlyURLSearchParams) {
   };
 
   useEffect(() => {
-    const topic = (searchParams.get('topic') ?? '성대한만남') as Topic;
-
     const category = (searchParams.get('category') ??
       groupedFilterList[topic].at(0)?.name) as CategoryKey;
 
     setFilters(groupedFilterList[topic]);
 
     filterOn(category);
-  }, [searchParams]);
+  }, [topic, searchParams]);
 
   return {
     filters,

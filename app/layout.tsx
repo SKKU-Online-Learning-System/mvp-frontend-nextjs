@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: '온라인 명륜당',
     description: '성균관대학교 온라인 강의 플랫폼',
-    url: 'https://mrdang.skku.edu',
+    url: 'https://mrdang.cs.skku.edu',
     siteName: '온라인 명륜당',
     images: [
       {
