@@ -44,7 +44,7 @@
 
 ## 🖥️ 서비스 화면  
 
-<img width="563" height="267" alt="image" src="https://github.com/user-attachments/assets/428b86a0-8f50-4054-8672-be8c3bf17a15" />
+<img width="568" height="270" alt="image" src="https://github.com/user-attachments/assets/551f7706-7564-4f45-bf9d-e336d456f48f" />
 <img width="563" height="265" alt="image" src="https://github.com/user-attachments/assets/083dea16-b355-4820-99d4-935938503270" />
 
 ---
