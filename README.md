@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+🎓 온라인 명륜당 — 교내 영상 학습 플랫폼
+=====================================
 
-## Getting Started
+🧭 개요  
+온라인 명륜당은 성균관대학교 학생들을 위한 **교내 영상 학습 플랫폼**입니다.  
+교내 강의, 세미나, 행사, 홍보 영상 등 다양한 콘텐츠를 한 곳에서 시청하고 관리할 수 있습니다.  
+Next.js와 TailwindCSS를 기반으로 구축되어 빠른 페이지 렌더링과 직관적인 사용자 경험을 제공합니다.  
 
-First, run the development server:
+단순한 영상 모음이 아닌, **지식과 경험을 연결하는 학습 허브**로서  
+학생들의 학습 효율과 콘텐츠 접근성을 높이는 것을 목표로 합니다.
 
+---
+
+🛠 기술 스택  
+| 구분 | 기술 |
+|------|------|
+| Framework | Next.js (TypeScript) |
+| Styling | TailwindCSS |
+| UI Library | Shadcn UI |
+| Package Manager | pnpm |
+| Deployment | Vercel / AWS S3 |
+
+---
+
+✨ 주요 기능  
+1. **카테고리별 영상 탐색**  
+   학습, 행사, 홍보 등 주제별 카테고리로 영상 콘텐츠를 분류하여 손쉽게 탐색할 수 있습니다.  
+
+2. **검색 기능**  
+   제목, 설명, 태그 기반 검색을 통해 원하는 영상을 빠르게 찾을 수 있습니다.  
+
+3. **정렬 기능**  
+   최신순, 조회순, 인기순 등 다양한 기준으로 영상 목록을 정렬할 수 있습니다.  
+
+4. **영상 업로드**  
+   사용자가 직접 영상을 업로드하고 카테고리 및 메타데이터(제목, 설명, 썸네일 등)를 설정할 수 있습니다.  
+
+---
+
+💡 개발 배경  
+교내 영상 자료가 여러 플랫폼에 분산되어 있어 접근이 불편한 점을 개선하고자,  
+학생들이 **모든 교내 영상을 한눈에 보고 쉽게 접근**할 수 있는 서비스를 개발했습니다.  
+SSR 기반 렌더링을 통해 로딩 속도를 개선하고, Shadcn UI를 적용하여  
+디자인 일관성과 반응형 사용자 경험을 강화했습니다.
+
+---
+
+🖥️ 실행 방법  
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# 1. 프로젝트 클론
+git clone https://github.com/your-repo/online-myungnyundang.git
+
+# 2. 의존성 설치
+pnpm install
+
+# 3. 개발 서버 실행
 pnpm dev
-# or
-bun dev
 ```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+📈 향후 계획
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+교내 계정 기반 로그인 및 즐겨찾기 기능
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+재생 목록(Playlist) 기능 추가
 
-## Learn More
+검색어 자동완성 및 추천 콘텐츠 기능
 
-To learn more about Next.js, take a look at the following resources:
+관리자용 대시보드 및 통계 시각화
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
