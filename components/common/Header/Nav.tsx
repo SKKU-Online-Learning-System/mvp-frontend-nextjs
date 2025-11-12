@@ -1,8 +1,8 @@
 import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
-import { NavigationMenuDemo } from './DemoNav';
 import { LoginButton } from './LoginButton';
 import Logo from './Logo';
 import { LogoutButton } from './LogoutButton';
+import { MyNavigationMenu } from './MyNavigationMenu';
 
 type Props = {
   refreshToken?: RequestCookie;
@@ -15,7 +15,7 @@ export default function Nav({ refreshToken, style = 'black' }: Props) {
       className={`flex w-full h-16 ${style == 'white' ? 'bg-white shadow-md' : 'bg-black/40'} fixed justify-between items-center px-6 z-50`}
     >
       <Logo />
-      <NavigationMenuDemo style={style} />
+      <MyNavigationMenu style={style} />
       {refreshToken ? (
         <LogoutButton style={style} />
       ) : (
