@@ -1,5 +1,6 @@
 'use client';
 
+import { SearchBar } from '@/components/common/Header';
 import { Badge } from '@/components/ui/badge';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ContentFilterSkeleton from '../../common/ContentFilterSkeleton';
@@ -83,6 +84,7 @@ export default function ContentFilter({
             ))}
       </div>
       <div className='flex gap-3'>
+        <SearchBar />
         <ComboBox
           defaultName='연도'
           frameworks={[{ value: 'all', label: '전체' }, ...yearFrameworks]}

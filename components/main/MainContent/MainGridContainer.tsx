@@ -3,6 +3,8 @@
 import NoResult from '@/components/common/NoResult';
 import useContent from '@/hooks/useContent';
 import useFilter, { Topic } from '@/hooks/useFilter';
+import { queryAtom } from '@/stores/atom';
+import { useAtomValue } from 'jotai';
 import { useSearchParams } from 'next/navigation';
 import MainContentSkeleton from '../../common/MainContentSkeleton';
 import ContentFilter from './ContentFilter';
@@ -15,6 +17,7 @@ type Props = {
 export function MainGridContainer({ topic }: Props) {
   const searchParams = useSearchParams();
   // const query = searchParams.get('query');
+  const query = useAtomValue(queryAtom);
 
   const {
     filters,
@@ -36,6 +39,12 @@ export function MainGridContainer({ topic }: Props) {
       }
 
       return new Date(publishedAt).getFullYear().toString() === year;
+    })
+    ?.filter(({ title }) => {
+      if (!query) {
+        return true;
+      }
+      return title.toLowerCase().includes(query.toLowerCase());
     })
     ?.sort((a, b) => {
       if (sort === 'view') {
