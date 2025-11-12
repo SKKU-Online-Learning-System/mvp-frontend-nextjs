@@ -18,7 +18,7 @@
 | **Styling** | TailwindCSS |
 | **UI Library** | Shadcn UI |
 | **Package Manager** | pnpm |
-| **Deployment** | Vercel / AWS S3 |
+| **Deployment** | OnPremise |
 
 ---
 
