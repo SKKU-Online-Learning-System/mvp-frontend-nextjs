@@ -1,32 +1,16 @@
 'use client';
 
-import { postContentLike } from '@/app/api/content';
 import { ContentDetailResponseType } from '@/types/content';
 import { BsPersonCircle } from 'react-icons/bs';
-import { useState } from 'react';
 import { TagIcon } from '../../main/TagIcon';
 import { VideoContentLike } from './VideoContentLike';
 
 type Props = {
   content: ContentDetailResponseType | undefined;
+  onClickLike: () => Promise<void>;
 };
 
-export function VideoInfo({ content }: Props) {
-  const [like, setLike] = useState(content?.isLike ?? false);
-
-  const onClickLike = async () => {
-    if (content?.id) {
-      try {
-        await postContentLike(content?.id);
-        setLike((prev) => !prev);
-      } catch (err) {
-        if (err instanceof Error) {
-          console.debug(err);
-        }
-      }
-    }
-  };
-
+export function VideoInfo({ content, onClickLike }: Props) {
   return (
     <div className='w-full px-8'>
       {/* 추후 변경 예정 w-[60vw] */}
@@ -36,7 +20,7 @@ export function VideoInfo({ content }: Props) {
           <BsPersonCircle size={30} color='gray' />
           <p className='ml-2 text-xl font-semibold'>{content?.author}</p>
         </div>
-        <VideoContentLike onClickLike={onClickLike} isLike={like} />
+        <VideoContentLike onClickLike={onClickLike} isLike={content?.isLike} />
       </div>
       <div className='my-4 flex flex-col rounded-lg bg-gray-100 p-3'>
         <div className='flex gap-3'>

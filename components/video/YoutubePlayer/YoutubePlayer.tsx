@@ -8,7 +8,7 @@ type Props = {
 
 export function YoutubePlayer({ youtubeId }: Props) {
   return (
-    <div className='h-[65vh] w-full overflow-hidden rounded-t-lg'>
+    <div className='h-[75vh] w-full overflow-hidden rounded-t-lg'>
       {/* 추후 변경 예정 w-[60vw] */}
       <YouTube
         videoId={youtubeId}

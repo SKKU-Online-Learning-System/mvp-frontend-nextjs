@@ -40,7 +40,7 @@ export function TextBookContainer({ id }: Props) {
       <div className='pt-logo px-48 mb-12 flex flex-row'>
         <div className='flex w-full flex-col border shadow-sm pb-12 rounded-lg'>
           <Image
-            className='h-[60vh] w-full overflow-hidden rounded-t-lg'
+            className='h-[75vh] w-full overflow-hidden rounded-t-lg'
             width={300}
             height={300}
             src={content.thumbnailUrl}
