@@ -14,7 +14,7 @@ type Props = {
   components: { title: string; href: string; description: string }[];
 };
 
-export default function DemoNavMenuItem({
+export default function MyNavMenuItem({
   style,
   triggerName,
   components,

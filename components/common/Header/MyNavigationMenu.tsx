@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/navigation-menu';
 import Link from 'next/link';
 import { categoryInfo } from '../../main/MainContent/category';
-import DemoNavMenuItem from './DemoNavMenuItem';
+import MyNavMenuItem from './MyNavMenuItem';
 
 type Props = { style: 'black' | 'white' };
 
@@ -89,12 +89,12 @@ const menuItems: {
   },
 ];
 
-export function NavigationMenuDemo({ style }: Props) {
+export function MyNavigationMenu({ style }: Props) {
   return (
     <NavigationMenu style={style}>
       <NavigationMenuList className='h-16'>
         {menuItems.map(({ triggerName, components }, idx) => (
-          <DemoNavMenuItem
+          <MyNavMenuItem
             key={idx}
             style={style}
             triggerName={triggerName}
