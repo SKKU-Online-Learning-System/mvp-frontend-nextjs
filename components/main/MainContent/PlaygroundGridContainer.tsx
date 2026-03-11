@@ -17,7 +17,7 @@ export function PlayGroundGridContainer() {
     searchParams,
   });
 
-  const { contents } = useContentById(1);
+  const { contents, loading } = useContentById(1);
 
   const filteredContents = contents
     ?.slice()
@@ -46,7 +46,7 @@ export function PlayGroundGridContainer() {
         changeYear={changeYear}
         setDefaultSortYear={setDefaultSortYear}
       />
-      {!contents ? (
+      {loading ? (
         <div className='my-grid'>
           {Array.from({ length: 12 }).map((_, idx) => (
             <MainContentSkeleton key={idx} />

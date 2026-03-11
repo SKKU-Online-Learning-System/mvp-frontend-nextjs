@@ -20,12 +20,18 @@ export const getContents = async (query: string = '') => {
 };
 
 export const getPlaylists = async (id: number) => {
-  const res = await api.get<PlaylistResonseType>(`/playlists/${id}`);
-  if (res.status !== 200) {
-    throw new Error('getPlaylist api 에러 발생');
+  try {
+    const res = await api.get<PlaylistResonseType>(`/playlists/${id}`);
+    return res.data;
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      if (err.response?.status === 404) {
+        return null; // 404면 null 반환
+      }
+      toast.error('오류가 발생하였습니다.');
+    }
+    return null;
   }
-  console.log(res.data);
-  return res.data;
 };
 
 export const getContent = async (id: number) => {

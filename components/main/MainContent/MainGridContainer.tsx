@@ -29,7 +29,7 @@ export function MainGridContainer({ topic }: Props) {
     setDefaultSortYear,
   } = useFilter({ topic, searchParams });
 
-  const { contents } = useContent(filters);
+  const { contents, loading } = useContent(filters);
 
   const filteredContents = contents
     ?.slice()
@@ -65,7 +65,7 @@ export function MainGridContainer({ topic }: Props) {
         changeYear={changeYear}
         setDefaultSortYear={setDefaultSortYear}
       />
-      {!contents ? (
+      {loading ? (
         <div className='my-grid'>
           {Array.from({ length: 12 }).map((_, idx) => (
             <MainContentSkeleton key={idx} />

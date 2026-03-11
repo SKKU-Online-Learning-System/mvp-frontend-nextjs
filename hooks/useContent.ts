@@ -23,23 +23,31 @@ const defaultTextBookDetailResponse: ContentResponseType = {
 
 export default function useContent(filters: Filter[] | undefined) {
   const [contents, setContents] = useState<ContentResponseType[]>();
+  const [loading, setLoading] = useState(true); // ✅ 추가
 
   useEffect(() => {
     const id = filters?.find(({ checked }) => checked)?.id;
     if (id == 11) {
       setContents([defaultTextBookDetailResponse]);
+      setLoading(false); // ✅ 추가
       return;
     }
 
     const fetchContents = async () => {
       if (!id) {
+        setLoading(false); // ✅ 추가
         return;
       }
 
-      const { contents } = await getPlaylists(id);
-      setContents(contents);
+      try {
+        const data = await getPlaylists(id); // ✅ null 체크
+        if (data) setContents(data.contents);
+      } finally {
+        setLoading(false); // ✅ 추가
+      }
     };
     fetchContents();
   }, [filters]);
-  return { contents };
+
+  return { contents, loading }; // ✅ loading 반환
 }

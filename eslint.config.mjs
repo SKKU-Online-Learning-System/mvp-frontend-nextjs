@@ -24,6 +24,7 @@ const eslintConfig = [
     rules: {
       'no-param-reassign': ['error', { props: false }],
       'no-multiple-empty-lines': ['warn', { max: 1, maxEOF: 0 }],
+      'prettier/prettier': ['error', { endOfLine: 'auto' }],
     },
   },
 ];
