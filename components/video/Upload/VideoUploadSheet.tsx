@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useRouter } from 'next/navigation';
 import {
   Sheet,
   SheetClose,
@@ -16,6 +17,7 @@ import {
 import useUploadForm from '@/hooks/useUploadForm';
 
 export default function VideoUploadSheet() {
+  const router = useRouter();
   const {
     link,
     title,
@@ -114,7 +116,13 @@ export default function VideoUploadSheet() {
         </div>
         <SheetFooter>
           <SheetClose asChild>
-            <Button type='submit' onClick={uploadVideo}>
+            <Button
+              type="submit"
+              onClick={async () => {
+                await uploadVideo();
+                window.location.reload();
+              }}
+            >
               업로드
             </Button>
           </SheetClose>

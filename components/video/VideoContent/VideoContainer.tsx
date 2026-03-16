@@ -6,25 +6,39 @@ import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { useState, useEffect } from 'react';
 import { YoutubePlayer } from '../YoutubePlayer';
 import { VideoInfo } from './VideoInfo';
+import { toast } from 'sonner';
 
 type Props = {
   id: number;
   refreshToken?: RequestCookie;
 };
 
-export function VideoContainer({ id }: Props) {
+export function VideoContainer({ id, refreshToken }: Props) {
   const [content, setContent] = useState<ContentDetailResponseType>();
-  const [like, setLike] = useState(content?.isLike ?? false);
 
   const onClickLike = async () => {
+    if (!refreshToken) {
+      toast.error('로그인이 필요한 서비스입니다.');
+      throw new Error('postContentLike api 에러 발생');
+    }
+
     if (content?.id) {
       try {
-        await postContentLike(content?.id);
-        setLike((prev) => !prev);
+        await postContentLike(content.id);
+
+        setContent((prev) => {
+          if (!prev) return prev;
+
+          const newIsLike = !prev.isLike;
+
+          return {
+            ...prev,
+            isLike: newIsLike,
+            likeCount: newIsLike ? prev.likeCount + 1 : prev.likeCount - 1,
+          };
+        });
       } catch (err) {
-        if (err instanceof Error) {
-          console.debug(err);
-        }
+        console.debug(err);
       }
     }
   };
@@ -38,7 +52,7 @@ export function VideoContainer({ id }: Props) {
     };
 
     fetchContent();
-  }, [id, like]);
+  }, [id]);
 
   return (
     <>

@@ -26,10 +26,17 @@ export default function useContent(filters: Filter[] | undefined) {
   const [loading, setLoading] = useState(true); // ✅ 추가
 
   useEffect(() => {
+    let cancelled = false;
     const id = filters?.find(({ checked }) => checked)?.id;
+    // 매번 필터 바뀔 때 로딩 시작 + 이전 데이터 초기화
+    setLoading(true);
+    setContents([]);
+
     if (id == 11) {
-      setContents([defaultTextBookDetailResponse]);
-      setLoading(false); // ✅ 추가
+      if (!cancelled) {
+        setContents([defaultTextBookDetailResponse]);
+        setLoading(false);
+      }
       return;
     }
 
@@ -41,12 +48,17 @@ export default function useContent(filters: Filter[] | undefined) {
 
       try {
         const data = await getPlaylists(id); // ✅ null 체크
-        if (data) setContents(data.contents);
+        if (!cancelled) {
+          setContents(data?.contents ?? []);
+        }
       } finally {
-        setLoading(false); // ✅ 추가
+        if (!cancelled) setLoading(false);
       }
     };
     fetchContents();
+    return () => {
+      cancelled = true; // 언마운트 or 필터 재변경 시 이전 요청 무시
+    };
   }, [filters]);
 
   return { contents, loading }; // ✅ loading 반환

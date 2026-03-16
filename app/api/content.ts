@@ -9,14 +9,17 @@ import {
 import { api, jwtApi } from './axios';
 
 export const getContents = async (query: string = '') => {
-  const res = await api.get<ContentResponseType[]>(
-    query ? `/contents?search_query=${query}` : '/contents'
-  );
-  if (res.status !== 200) {
-    throw new Error('getContents api 에러 발생');
+  try {
+    const res = await api.get<ContentResponseType[]>(
+      query ? `/contents?search_query=${query}` : '/contents'
+    );
+    return res.data;
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      toast.error('콘텐츠를 불러오는 중 오류가 발생하였습니다.');
+    }
+    return []; // 에러 시 빈 배열 반환으로 일관성 유지
   }
-  console.log(res.data);
-  return res.data;
 };
 
 export const getPlaylists = async (id: number) => {

@@ -47,6 +47,7 @@ export function PlayGroundGridContainer() {
         setDefaultSortYear={setDefaultSortYear}
       />
       {loading ? (
+        // 스켈레톤 UI
         <div className='my-grid'>
           {Array.from({ length: 12 }).map((_, idx) => (
             <MainContentSkeleton key={idx} />
