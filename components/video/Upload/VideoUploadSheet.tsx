@@ -15,6 +15,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import useUploadForm from '@/hooks/useUploadForm';
+import { toast } from 'sonner';
 
 export default function VideoUploadSheet() {
   const router = useRouter();
@@ -119,8 +120,10 @@ export default function VideoUploadSheet() {
             <Button
               type="submit"
               onClick={async () => {
-                await uploadVideo();
-                window.location.reload();
+                const success = await uploadVideo();
+                if (success) {
+                  window.location.reload();
+                }
               }}
             >
               업로드

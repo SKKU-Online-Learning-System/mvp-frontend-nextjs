@@ -27,12 +27,6 @@ export const getPlaylists = async (id: number) => {
     const res = await api.get<PlaylistResonseType>(`/playlists/${id}`);
     return res.data;
   } catch (err) {
-    if (axios.isAxiosError(err)) {
-      if (err.response?.status === 404) {
-        return null; // 404면 null 반환
-      }
-      toast.error('오류가 발생하였습니다.');
-    }
     return null;
   }
 };
@@ -43,6 +37,7 @@ export const getContent = async (id: number) => {
     return res.data;
   } catch (err) {
     if (axios.isAxiosError(err)) {
+      //?
       if (err.response?.status === 401) {
         toast.error('로그인이 필요한 서비스입니다.');
       } else {
@@ -56,14 +51,16 @@ export const createContent = async (content: ContentRequestType) => {
   try {
     await api.post('/contents', content);
     toast.success('동영상 업로드에 성공하였습니다.');
+    return true;
   } catch (err) {
     if (axios.isAxiosError(err)) {
       if (err.response?.status === 401) {
         toast.error('로그인이 필요한 서비스입니다.');
       } else {
-        toast.error('오류가 발생하였습니다.');
+        toast.error('오류가 발생했습니다.');
       }
     }
+    return false;
   }
 };
 

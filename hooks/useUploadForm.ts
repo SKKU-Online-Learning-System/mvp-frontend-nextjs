@@ -76,8 +76,7 @@ export default function useUploadForm() {
       thumbnailUrl: thumbnail,
       tags: tags.split(','),
     };
-    console.log(content);
-    createContent(content);
+    return await createContent(content);
   };
 
   return {
