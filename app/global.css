@@ -2,16 +2,19 @@
 @import 'tw-animate-css';
 @import 'pretendard/dist/web/variable/pretendardvariable.css';
 
-html {
+html,
+body {
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 @layer components {
   .my-container {
-    @apply px-48 flex w-full flex-col gap-4;
+    @apply px-4 sm:px-6 md:px-12 lg:px-24 xl:px-32 flex w-full flex-col gap-4;
   }
+
   .my-grid {
-    @apply mb-12 grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4;
+    @apply mb-12 grid gap-6 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5;
   }
 }
 
@@ -19,24 +22,31 @@ html {
   .pt-logo {
     @apply pt-[5rem];
   }
+
   .bg-my-background {
     @apply bg-transparent;
   }
+
   .bg-my-accent {
     @apply bg-black/40;
   }
+
   .bg-my-accent:hover {
     @apply bg-black/40;
   }
+
   .bg-my-accent:focus {
     @apply bg-black/40;
   }
+
   .bg-my-popover {
     @apply bg-black/70;
   }
+
   .text-my-popover-foreground {
     @apply text-white;
   }
+
   .text-my-accent-foreground {
     @apply text-white;
   }
@@ -157,6 +167,7 @@ html {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     font-family: 'Pretendard', sans-serif;
     @apply bg-background text-foreground;

@@ -21,7 +21,7 @@ export function SearchBar() {
   };
 
   return (
-    <div className='flex h-9 w-64 items-center rounded-md border px-2 shadow-xs'>
+    <div className="flex h-9 w-full min-w-0 items-center rounded-md border px-2 shadow-xs">
       <input
         type='text'
         value={inputValue}

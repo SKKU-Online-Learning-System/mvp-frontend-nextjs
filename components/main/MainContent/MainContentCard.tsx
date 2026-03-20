@@ -28,30 +28,37 @@ export function MainContentCard({ content }: Props) {
     <CardLink
       href={getLink()}
       target={`${content.type === 'INFLEARN' ? '_blank' : ''}`}
-      className='cursor-pointer hover:bg-accent relative rounded-lg z-0'
+      className="cursor-pointer hover:bg-accent relative rounded-lg z-0 transition flex flex-col"
     >
-      <div className='relative aspect-[16/9] w-full'>
+      {/* 썸네일 */}
+      <div className="relative aspect-video w-full">
         <Image
           src={content.thumbnailUrl}
-          alt='썸네일'
+          alt="썸네일"
           fill
-          sizes='100'
-          priority={true}
-          className='rounded-t-md bg-slate-300 object-cover object-center border-b-2'
+          sizes="(max-width: 640px) 50vw, 25vw"
+          className="rounded-t-md bg-slate-300 object-cover object-center"
         />
       </div>
-      <CardContent>
-        <p className='line-clamp-2 w-full break-words font-semibold text-sm'>
+
+      {/* 제목 */}
+      <CardContent className="px-2 py-2 sm:px-3">
+        <p className="break-words font-semibold text-xs sm:text-sm leading-tight">
           {content.title}
         </p>
       </CardContent>
-      <CardFooter>
-        <div className='flex flex-col gap-1'>
-          <p className='break-words text-sm text-gray-400'>{content.author}</p>
-          {content.type != 'BOOK' && (
-            <p className='break-words text-sm text-gray-400'>
-              약 {contentHour != 0 ? contentHour + '시간' : null}{' '}
-              {contentMinute}분 소요
+
+      {/* 하단 */}
+      <CardFooter className="px-2 pb-2 pt-0 sm:px-3">
+        <div className="flex flex-col gap-0.5">
+          <p className="text-[11px] sm:text-xs text-gray-400 break-words">
+            {content.author}
+          </p>
+
+          {content.type !== 'BOOK' && (
+            <p className="text-[11px] sm:text-xs text-gray-400">
+              {contentHour !== 0 ? `${contentHour}시간 ` : ''}
+              {contentMinute}분
             </p>
           )}
         </div>

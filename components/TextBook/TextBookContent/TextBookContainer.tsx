@@ -36,26 +36,33 @@ export function TextBookContainer({ id }: Props) {
   }, [id]);
 
   return content ? (
-    <>
-      <div className='pt-logo px-48 mb-12 flex flex-row'>
-        <div className='flex w-full flex-col border shadow-sm pb-12 rounded-lg'>
-          <Image
-            className='h-[75vh] w-full overflow-hidden rounded-t-lg'
-            width={300}
-            height={300}
-            src={content.thumbnailUrl}
-            alt='썸네일'
-          ></Image>
-          <TextBookInfo content={content} />
+    <div className="pt-logo px-4 md:px-8 lg:px-16 xl:px-24 mb-12 flex flex-col lg:flex-row gap-6 max-w-[1400px] mx-auto">
+
+      {/* 메인 카드 */}
+      <div className="flex w-full flex-col border shadow-sm pb-12 rounded-lg overflow-hidden">
+
+        {/* 썸네일 */}
+        <div className="w-full flex justify-center bg-gray-100">
+          <div className="relative w-full max-w-[400px] aspect-[3/4]">
+            <Image
+              src={content.thumbnailUrl}
+              alt="썸네일"
+              fill
+              className="object-cover rounded-t-lg"
+            />
+          </div>
         </div>
-        {/* <PlaylistBox>
-    {Array.from({ length: 10 }, (_, index) => (
-      <PlaylistCard key={index} />
-    ))}
-  </PlaylistBox> */}
+
+        <TextBookInfo content={content} />
       </div>
-    </>
-  ) : (
-    <></>
-  );
+
+      {/* 사이드 영역 (추후) */}
+      {/*
+      <div className="w-full lg:w-[350px]">
+        ...
+      </div>
+      */}
+
+    </div>
+  ) : null;
 }

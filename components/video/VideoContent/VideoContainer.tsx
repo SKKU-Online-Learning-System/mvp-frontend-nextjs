@@ -56,16 +56,21 @@ export function VideoContainer({ id, refreshToken }: Props) {
 
   return (
     <>
-      <div className='pt-logo px-48 mb-12 flex flex-row'>
-        <div className='flex w-full flex-col border shadow-sm pb-12 rounded-lg'>
+      <div className="pt-logo px-4 md:px-8 lg:px-16 xl:px-24 mb-12 flex flex-col lg:flex-row gap-6 max-w-[1400px] mx-auto">
+
+        {/* 메인 영상 */}
+        <div className="flex w-full flex-col border shadow-sm pb-12 rounded-lg overflow-hidden">
           <YoutubePlayer youtubeId={youtubeId} />
           <VideoInfo content={content} onClickLike={onClickLike} />
         </div>
-        {/* <PlaylistBox>
-    {Array.from({ length: 10 }, (_, index) => (
-      <PlaylistCard key={index} />
-    ))}
-  </PlaylistBox> */}
+
+        {/* 사이드 (나중에 플레이리스트) */}
+        {/* 
+  <div className="w-full lg:w-[350px]">
+    <PlaylistBox>...</PlaylistBox>
+  </div>
+  */}
+
       </div>
     </>
   );

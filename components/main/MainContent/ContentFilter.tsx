@@ -50,15 +50,12 @@ export default function ContentFilter({
 
   const changeCategory = (newCategory: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set('category', newCategory); // 기존 쿼리 유지하면서 category만 수정
-
+    params.set('category', newCategory);
     router.push(`?${params.toString()}`);
   };
 
   const onClick = (name: CategoryKey) => {
-    if (!filterList || !filterToggle) {
-      return;
-    }
+    if (!filterList || !filterToggle) return;
 
     setDefaultSortYear();
     filterToggle(name);
@@ -66,38 +63,46 @@ export default function ContentFilter({
   };
 
   return (
-    <div className='flex flex-wrap gap-2 justify-between'>
-      <div className='flex flex-wrap gap-3 justify-start'>
+    <div className="flex flex-col gap-4">
+
+
+      {/* 🏷 1. 카테고리 */}
+      <div className="flex flex-wrap gap-2">
         {filterList
           ? filterList.map(({ name, checked }, idx) => (
-              <Badge
-                key={idx}
-                variant={checked ? 'default' : 'secondary'}
-                className='cursor-pointer h-8 font-semibold'
-                onClick={() => onClick(name)}
-              >
-                {name}
-              </Badge>
-            ))
+            <Badge
+              key={idx}
+              variant={checked ? 'default' : 'secondary'}
+              className="cursor-pointer h-8 font-semibold"
+              onClick={() => onClick(name)}
+            >
+              {name}
+            </Badge>
+          ))
           : Array.from({ length: 3 }).map((_, idx) => (
-              <ContentFilterSkeleton key={idx} />
-            ))}
+            <ContentFilterSkeleton key={idx} />
+          ))}
       </div>
-      <div className='flex gap-3'>
-        <SearchBar />
+
+      {/* 🔍 2 . 검색창  */}
+      <SearchBar />
+
+      {/* ⚙️ 3. 옵션 */}
+      <div className="flex justify-end gap-2">
         <ComboBox
-          defaultName='연도'
+          defaultName="연도"
           frameworks={[{ value: 'all', label: '전체' }, ...yearFrameworks]}
           value={year}
           setValue={changeYear}
         />
         <ComboBox
-          defaultName='정렬기준'
+          defaultName="정렬기준"
           frameworks={sortFrameworks}
           value={sort}
           setValue={changeSort}
         />
       </div>
+
     </div>
   );
 }
