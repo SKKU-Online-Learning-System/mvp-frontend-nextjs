@@ -35,6 +35,11 @@ const menuItems = [
         items: ['인턴십 후기', 'IT 해외봉사', '글로벌 챌린지', '현직자 인터뷰'],
         type: 'activity',
     },
+    {
+        name: '데이터셋',
+        items: ['데이터셋 플랫폼', '대회 데이터셋'],
+        type: 'dataset',
+    }
 ];
 
 export function MobileMenu({ style, refreshToken, setOpen }: Props) {

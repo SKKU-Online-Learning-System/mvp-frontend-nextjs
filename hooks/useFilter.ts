@@ -3,7 +3,7 @@ import { Sort } from '@/types/content';
 import { ReadonlyURLSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-export type Topic = '성대한만남' | '기술교류회' | '공개형교육' | '성대한활동';
+export type Topic = '성대한만남' | '기술교류회' | '공개형교육' | '성대한활동' | '데이터셋';
 
 const groupedFilterList: {
   [key in Topic]: Filter[];
@@ -24,6 +24,10 @@ const groupedFilterList: {
     { id: 9, name: '글로벌 챌린지', checked: false },
     { id: 10, name: '현직자 인터뷰', checked: false },
   ],
+  데이터셋: [
+    { id: 12, name: '데이터셋 플랫폼', checked: false },
+    { id: 13, name: '대회 데이터셋', checked: false },
+  ]
 };
 
 type Props = {

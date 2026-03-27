@@ -34,7 +34,7 @@ export default function Nav({ refreshToken, style = 'black' }: Props) {
       const menuWidth = menuRef.current.scrollWidth;
 
       // 로고 + 로그인 영역 대략 width 확보 (여유값)
-      const RESERVED = 300;
+      const RESERVED = 350;
 
       const shouldCollapse = menuWidth + RESERVED > navWidth;
 

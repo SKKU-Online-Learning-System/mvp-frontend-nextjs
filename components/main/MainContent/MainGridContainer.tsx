@@ -12,11 +12,11 @@ import { MainContentCard } from './MainContentCard';
 
 type Props = {
   topic: Topic;
+  showBadge?: boolean;
 };
 
-export function MainGridContainer({ topic }: Props) {
+export function MainGridContainer({ topic, showBadge = true }: Props) {
   const searchParams = useSearchParams();
-  // const query = searchParams.get('query');
   const query = useAtomValue(queryAtom);
 
   const {
@@ -64,6 +64,7 @@ export function MainGridContainer({ topic }: Props) {
         year={year?.toString()}
         changeYear={changeYear}
         setDefaultSortYear={setDefaultSortYear}
+        showBadge={showBadge}
       />
       {loading ? (
         <div className='my-grid'>
