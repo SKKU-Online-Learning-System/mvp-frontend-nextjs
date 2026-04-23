@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { cookies } from 'next/headers';
 import Nav from '../components/common/Header/Nav';
 import MainVideo from '../components/main/MainVideo';

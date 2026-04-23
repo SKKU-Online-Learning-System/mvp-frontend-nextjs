@@ -10,6 +10,7 @@ export default async function Video({
 }) {
   const cookieStore = await cookies();
   const refreshToken = cookieStore.get('refresh-token');
+
   // const accessToken = cookieStore.get("access-token");
 
   const id = (await searchParams).id;

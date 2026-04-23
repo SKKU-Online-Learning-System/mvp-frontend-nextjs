@@ -7,14 +7,16 @@ type Dataset = {
     id: number;
     title: string;
     description: string;
-    descriptionDetail: string; // 추가
-    useCases: string[];        // 추가
+    descriptionDetail: string;
+    useCases: string[];
     tags: string[];
     type: string;
     image: string;
     year: number;
+    size: string;
     views: number;
-    downloads: number;         // 추가
+    likes: number;
+    downloads: number;
 };
 
 type Props = {
