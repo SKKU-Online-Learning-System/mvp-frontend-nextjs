@@ -5,10 +5,11 @@ import { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import DatasetPlatform from '@/components/dataset/DatasetPlatform';
 import CompetitionDataset from '@/components/dataset/CompetitionDataset';
+import QnABoard from '@/components/qna/QnABoard';
 
 export const dynamicParams = true;
 
-type EngType = 'conference' | 'forum' | 'education' | 'activity' | 'dataset';
+type EngType = 'conference' | 'forum' | 'education' | 'activity' | 'dataset' | 'qna';
 
 type Props = {
   params: Promise<{ topic: EngType }>;
@@ -26,6 +27,8 @@ const engToKorType = (engType: EngType): Topic => {
     return '성대한활동';
   } else if (engType == 'dataset') {
     return '데이터셋';
+  } else if (engType == 'qna') {
+    return 'qna';
   }
   return '성대한만남';
 };
@@ -48,38 +51,37 @@ export async function generateMetadata({
 }
 
 export default async function Content({ params, searchParams }: Props) {
-  const cookieStore = await cookies();
-  const refreshToken = cookieStore.get('refresh-token');
-  // const accessToken = cookieStore.get("access-token");
-
   const { topic } = await params;
   const { category } = await searchParams;
 
-  console.log('🚀 ~ Content ~ topic:', topic);
   const isDatasetPlatform =
     topic === 'dataset' && category === '데이터셋 플랫폼';
 
   const isCompetitionDataset =
     topic === 'dataset' && category === '대회 데이터셋';
 
-  const isDatasetPage = isDatasetPlatform || isCompetitionDataset;
+  const isQnA = topic === 'qna';
 
   return (
-    <div>
-      <Nav style='white' refreshToken={refreshToken} />
-
-      <div
-        className={`w-full ${isDatasetPage ? 'pt-10 px-6' : 'pt-logo'
-          }`}
-      >
-        {isDatasetPlatform ? (
-          <DatasetPlatform />
-        ) : isCompetitionDataset ? (
-          <CompetitionDataset />
-        ) : (
-          <MainGridContainer topic={engToKorType(topic)} showBadge={true} />
-        )}
-      </div>
+    <div
+      className={`w-full ${isDatasetPlatform || isCompetitionDataset
+        ? 'pt-10 px-6'
+        : 'pt-logo'
+        }`}
+    >
+      {isDatasetPlatform ? (
+        <DatasetPlatform />
+      ) : isCompetitionDataset ? (
+        <CompetitionDataset />
+      ) : isQnA ? (
+        <QnABoard />
+      ) : (
+        <MainGridContainer
+          topic={engToKorType(topic)}
+          showBadge={true}
+        />
+      )}
     </div>
   );
 }
+

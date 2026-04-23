@@ -10,7 +10,8 @@ export type CategoryKey =
   | 'IT 해외봉사'
   | '현직자 인터뷰'
   | '데이터셋 플랫폼'
-  | '대회 데이터셋';
+  | '대회 데이터셋'
+  | 'qna';
 
 type Category = {
   [key in CategoryKey]: string;
@@ -45,5 +46,7 @@ export const categoryInfo: Category = {
   '데이터셋 플랫폼':
     '공동의 AI 개발을 지원하기 위해, 다양한 분야의 고품질 데이터셋을 모아서 제공하는 사이트',
   '대회 데이터셋':
-    '역대 AI 경진대회 및 공모전에서 사용된 데이터셋'
+    '역대 AI 경진대회 및 공모전에서 사용된 데이터셋',
+  'qna':
+    'AI 및 SW 관련 질문과 답변을 공유하는 커뮤니티'
 };

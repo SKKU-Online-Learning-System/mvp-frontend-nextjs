@@ -102,6 +102,16 @@ const menuItems: {
         },
       ],
     },
+    {
+      triggerName: '질문 게시판',
+      components: [
+        {
+          title: 'Q&A',
+          href: '/content/qna?category=qna',
+          description: categoryInfo['qna'],
+        },
+      ],
+    },
   ];
 
 export function MyNavigationMenu({ style }: Props) {
