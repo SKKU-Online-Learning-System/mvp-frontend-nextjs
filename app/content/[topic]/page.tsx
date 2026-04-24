@@ -26,7 +26,7 @@ const engToKorType = (engType: EngType): Topic => {
   } else if (engType == 'activity') {
     return '성대한활동';
   } else if (engType == 'dataset') {
-    return '데이터셋';
+    return '성대한데이터';
   } else if (engType == 'qna') {
     return 'qna';
   }

@@ -7,8 +7,8 @@ export type Topic = string;
 
 const groupedFilterList: Record<string, Filter[]> = {
     '성대한만남': [
-        { id: 3, name: '강연자 특강 영상' as CategoryKey, checked: false },
-        { id: 4, name: '강연자 특강 스토리' as CategoryKey, checked: false },
+        { id: 3, name: '성대의 성대한 특강' as CategoryKey, checked: false },
+        { id: 4, name: '성대의 성대한 스토리' as CategoryKey, checked: false },
         {
             id: 5,
             name: '글로벌 IT전문가와 킹고인의 만남' as CategoryKey,
