@@ -3,95 +3,92 @@ import { Sort } from '@/types/content';
 import { ReadonlyURLSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-export type Topic = '성대한만남' | '기술교류회' | '공개형교육' | '성대한활동' | '데이터셋' | 'qna';
+export type Topic = string;
 
-const groupedFilterList: {
-  [key in Topic]: Filter[];
-} = {
-  성대한만남: [
-    { id: 3, name: '성대의 성대한 특강', checked: false },
-    { id: 4, name: '성대의 성대한 스토리', checked: false },
-    { id: 5, name: '글로벌 IT전문가와 킹고인의 만남', checked: false },
-  ],
-  기술교류회: [{ id: 2, name: 'S-TOP', checked: false }],
-  공개형교육: [
-    { id: 6, name: '공개형 온라인 강의', checked: false },
-    { id: 11, name: '공개형 교재', checked: false },
-  ],
-  성대한활동: [
-    { id: 7, name: '인턴십 후기', checked: false },
-    { id: 8, name: 'IT 해외봉사', checked: false },
-    { id: 9, name: '글로벌 챌린지', checked: false },
-    { id: 10, name: '현직자 인터뷰', checked: false },
-  ],
-  데이터셋: [
-    { id: 12, name: '데이터셋 플랫폼', checked: false },
-    { id: 13, name: '대회 데이터셋', checked: false },
-  ],
-  qna: [
-    { id: 14, name: 'qna', checked: false },
-  ]
+const groupedFilterList: Record<string, Filter[]> = {
+    '성대한만남': [
+        { id: 3, name: '강연자 특강 영상' as CategoryKey, checked: false },
+        { id: 4, name: '강연자 특강 스토리' as CategoryKey, checked: false },
+        {
+            id: 5,
+            name: '글로벌 IT전문가와 킹고인의 만남' as CategoryKey,
+            checked: false,
+        },
+    ],
+    '기술교류회': [{ id: 2, name: 'S-TOP' as CategoryKey, checked: false }],
+    '공개형교육': [
+        { id: 6, name: '공개형 온라인 강의' as CategoryKey, checked: false },
+        { id: 11, name: '공개형 교재' as CategoryKey, checked: false },
+    ],
+    '성대한활동': [
+        { id: 7, name: '해외 연수기' as CategoryKey, checked: false },
+        { id: 8, name: 'IT 대외행사' as CategoryKey, checked: false },
+        { id: 9, name: '글로벌 챌린지' as CategoryKey, checked: false },
+        { id: 10, name: '현직자 인터뷰' as CategoryKey, checked: false },
+    ],
+    데이터셋: [{ id: 12, name: '데이터셋 플랫폼' as CategoryKey, checked: false }],
+    qna: [{ id: 14, name: 'qna' as CategoryKey, checked: false }],
 };
 
 type Props = {
-  topic: Topic;
-  searchParams: ReadonlyURLSearchParams;
+    topic: Topic;
+    searchParams: ReadonlyURLSearchParams;
 };
 
 export default function useFilter({ topic, searchParams }: Props) {
-  const [filters, setFilters] = useState<Filter[]>();
-  const [sort, setSort] = useState<Sort>('upload');
-  const [year, setYear] = useState<string>();
+    const [filters, setFilters] = useState<Filter[]>();
+    const [sort, setSort] = useState<Sort>('upload');
+    const [year, setYear] = useState<string>();
 
-  const filterToggle = (name: CategoryKey) => {
-    setFilters((prev) =>
-      prev?.map((filter) =>
-        filter.name === name
-          ? { ...filter, checked: true }
-          : { ...filter, checked: false }
-      )
-    );
-  };
+    const filterToggle = (name: CategoryKey) => {
+        setFilters((prev) =>
+            prev?.map((filter) =>
+                filter.name === name
+                    ? { ...filter, checked: true }
+                    : { ...filter, checked: false }
+            )
+        );
+    };
 
-  const filterOn = (name: CategoryKey) => {
-    setFilters((prev) =>
-      prev?.map((filter) =>
-        filter.name === name ? { ...filter, checked: true } : filter
-      )
-    );
-  };
+    const filterOn = (name: CategoryKey) => {
+        setFilters((prev) =>
+            prev?.map((filter) =>
+                filter.name === name ? { ...filter, checked: true } : filter
+            )
+        );
+    };
 
-  const changeSort = (sortOption: string) =>
-    sortOption === 'upload' ? setSort('upload') : setSort('view');
+    const changeSort = (sortOption: string) =>
+        sortOption === 'upload' ? setSort('upload') : setSort('view');
 
-  const changeYear = (year: string) => {
-    setYear(year);
-  };
+    const changeYear = (nextYear: string) => {
+        setYear(nextYear);
+    };
 
-  const setDefaultSortYear = () => {
-    setYear('all');
-    setSort('upload');
-  };
+    const setDefaultSortYear = () => {
+        setYear('all');
+        setSort('upload');
+    };
 
-  useEffect(() => {
-    const category = (searchParams.get('category') ??
-      groupedFilterList[topic].at(0)?.name) as CategoryKey;
+    useEffect(() => {
+        const nextFilters = groupedFilterList[topic] ?? groupedFilterList.qna;
+        const category = (searchParams.get('category') ??
+            nextFilters.at(0)?.name) as CategoryKey;
 
-    setFilters(groupedFilterList[topic]);
+        setFilters(nextFilters);
+        filterOn(category);
+    }, [topic, searchParams]);
 
-    filterOn(category);
-  }, [topic, searchParams]);
-
-  return {
-    filters,
-    setFilters,
-    filterToggle,
-    filterOn,
-    groupedFilterList,
-    sort,
-    changeSort,
-    year,
-    changeYear,
-    setDefaultSortYear,
-  };
+    return {
+        filters,
+        setFilters,
+        filterToggle,
+        filterOn,
+        groupedFilterList,
+        sort,
+        changeSort,
+        year,
+        changeYear,
+        setDefaultSortYear,
+    };
 }

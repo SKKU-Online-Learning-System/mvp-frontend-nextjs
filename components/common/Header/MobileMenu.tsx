@@ -13,32 +13,32 @@ type Props = {
 
 const menuItems = [
     {
-        name: '강의 컨퍼런스',
+        name: '媛뺤쓽 而⑦띁?곗뒪',
         items: [
-            '강연자 특강 영상',
-            '강연자 특강 스토리',
-            '글로벌 IT 전문가와 성공인의 만남',
+            '媛뺤뿰???밴컯 ?곸긽',
+            '媛뺤뿰???밴컯 ?ㅽ넗由?',
+            '湲濡쒕쾶 IT ?꾨Ц媛? ?깃났?몄쓽 留뚮궓',
         ],
         type: 'conference',
     },
     {
-        name: '기술 교류회',
+        name: '湲곗닠 援먮쪟??',
         items: ['S-TOP'],
         type: 'forum',
     },
     {
-        name: '공개 교육',
-        items: ['공개 온라인 강의', '공개 교재'],
+        name: '怨듦컻 援먯쑁',
+        items: ['怨듦컻 ?⑤씪??媛뺤쓽', '怨듦컻 援먯옱'],
         type: 'education',
     },
     {
-        name: '학생 활동',
-        items: ['해외 연수기', 'IT 대외 행사', '글로벌 챌린지', '취업 인터뷰'],
+        name: '?숈깮 ?쒕룞',
+        items: ['?댁쇅 ?곗닔湲?', 'IT ????됱궗', '湲濡쒕쾶 梨뚮┛吏', '痍⑥뾽 ?명꽣酉?'],
         type: 'activity',
     },
     {
-        name: '데이터셋',
-        items: ['데이터셋 플랫폼', '공모전 데이터셋'],
+        name: '?곗씠?곗뀑',
+        items: ['?곗씠?곗뀑 ?뚮옯??'],
         type: 'dataset',
     },
 ];
@@ -46,7 +46,7 @@ const menuItems = [
 export function MobileMenu({ style, currentUser, setOpen }: Props) {
     return (
         <div className="flex flex-col h-full">
-            <div className="text-xl font-bold mb-6">메뉴</div>
+            <div className="text-xl font-bold mb-6">硫붾돱</div>
 
             <div className="flex flex-col gap-6 flex-1 overflow-y-auto">
                 {menuItems.map((menu) => (
@@ -78,7 +78,7 @@ export function MobileMenu({ style, currentUser, setOpen }: Props) {
                     onClick={() => setOpen(false)}
                     className="rounded-2xl border p-5 font-semibold hover:bg-accent transition"
                 >
-                    콘텐츠 업로드
+                    肄섑뀗痢??낅줈??
                 </Link>
             </div>
 
