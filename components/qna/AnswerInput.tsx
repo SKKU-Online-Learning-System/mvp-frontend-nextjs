@@ -44,28 +44,33 @@ export default function AnswerInput({
     };
 
     return (
-        <div className="border rounded-lg p-3 bg-white">
-            <input
-                type="text"
-                className="w-full border rounded p-2 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="작성자 닉네임"
-                value={author}
-                onChange={(e) => setAuthor(e.target.value)}
-            />
+        <div className="rounded-xl border border-gray-200 bg-white p-4 sm:p-5">
+            <div className="mb-3 grid gap-2">
+                <label className="text-sm font-medium text-slate-700">
+                    작성자 닉네임
+                </label>
+                <input
+                    type="text"
+                    className="min-h-10 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="작성자 닉네임"
+                    value={author}
+                    onChange={(e) => setAuthor(e.target.value)}
+                />
+            </div>
 
             <textarea
-                className="w-full border rounded p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                rows={3}
-                placeholder="댓글을 입력해주세요."
+                className="min-h-28 w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm leading-6 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                rows={4}
+                placeholder="댓글 내용을 입력해주세요."
                 value={text}
                 onChange={(e) => setText(e.target.value)}
             />
 
-            <div className="flex justify-end mt-2">
+            <div className="mt-3 flex justify-end">
                 <button
                     type="button"
                     onClick={submit}
-                    className="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700"
+                    className="inline-flex min-h-10 w-full items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 sm:w-auto"
                 >
                     댓글 등록
                 </button>

@@ -34,6 +34,15 @@ export type AnswerRequestType = {
     author: string;
 };
 
+export type QuestionUpdateRequestType = {
+    title: string;
+    content: string;
+};
+
+export type AnswerUpdateRequestType = {
+    content: string;
+};
+
 export type QuestionMutationResponse = Question & {
     ownerToken?: string;
 };

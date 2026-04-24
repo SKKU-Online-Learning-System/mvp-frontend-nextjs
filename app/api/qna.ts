@@ -5,9 +5,11 @@ import {
     Answer,
     AnswerMutationResponse,
     AnswerRequestType,
+    AnswerUpdateRequestType,
     Question,
     QuestionMutationResponse,
     QuestionRequestType,
+    QuestionUpdateRequestType,
 } from '@/types/qna';
 
 export const getQuestions = async () => {
@@ -101,6 +103,25 @@ export const updateQuestionStatus = async (
     }
 };
 
+export const updateQuestion = async (
+    id: number,
+    data: QuestionUpdateRequestType,
+    ownerToken: string
+) => {
+    try {
+        await api.post(`/questions/${id}/edit`, data, {
+            headers: {
+                'X-Owner-Token': ownerToken,
+            },
+        });
+        toast.success('게시글을 수정했습니다.');
+        return true;
+    } catch {
+        toast.error('게시글 수정에 실패했습니다.');
+        return false;
+    }
+};
+
 export const deleteQuestion = async (id: number, ownerToken: string) => {
     try {
         await api.post(
@@ -116,6 +137,26 @@ export const deleteQuestion = async (id: number, ownerToken: string) => {
         return true;
     } catch {
         toast.error('게시글 삭제에 실패했습니다.');
+        return false;
+    }
+};
+
+export const updateAnswer = async (
+    questionId: number,
+    answerId: number,
+    data: AnswerUpdateRequestType,
+    ownerToken: string
+) => {
+    try {
+        await api.post(`/questions/${questionId}/answers/${answerId}/edit`, data, {
+            headers: {
+                'X-Owner-Token': ownerToken,
+            },
+        });
+        toast.success('댓글을 수정했습니다.');
+        return true;
+    } catch {
+        toast.error('댓글 수정에 실패했습니다.');
         return false;
     }
 };

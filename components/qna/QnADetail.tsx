@@ -5,6 +5,7 @@ import {
     deleteQuestion,
     getAnswers,
     getQuestion,
+    updateQuestion,
     updateQuestionStatus,
 } from '@/app/api/qna';
 import useQnAOwnerTokens from '@/hooks/useQnAOwnerTokens';
@@ -16,10 +17,12 @@ import AnswerList from './AnswerList';
 
 export default function QnADetail({
     questionId,
+    onBack,
     onQuestionUpdated,
     onQuestionDeleted,
 }: {
     questionId: number;
+    onBack: () => void;
     onQuestionUpdated: () => void;
     onQuestionDeleted: () => void;
 }) {
@@ -32,6 +35,9 @@ export default function QnADetail({
     } = useQnAOwnerTokens();
     const [question, setQuestion] = useState<Question | null>(null);
     const [answers, setAnswers] = useState<Answer[]>([]);
+    const [isEditing, setIsEditing] = useState(false);
+    const [draftTitle, setDraftTitle] = useState('');
+    const [draftContent, setDraftContent] = useState('');
 
     const load = async () => {
         const [nextQuestion, nextAnswers] = await Promise.all([
@@ -41,6 +47,11 @@ export default function QnADetail({
 
         setQuestion(nextQuestion);
         setAnswers(nextAnswers);
+
+        if (nextQuestion) {
+            setDraftTitle(nextQuestion.title);
+            setDraftContent(nextQuestion.content);
+        }
     };
 
     useEffect(() => {
@@ -52,14 +63,26 @@ export default function QnADetail({
     const questionOwnerToken = getQuestionOwnerToken(question.id);
 
     return (
-        <div>
-            <div className="mb-6">
-                <div className="flex items-start justify-between gap-4 mb-2">
-                    <div>
-                        <div className="flex items-center gap-2 mb-2">
-                            <h2 className="text-xl font-bold">{question.title}</h2>
+        <div className="space-y-6">
+            <div className="lg:hidden">
+                <button
+                    type="button"
+                    onClick={onBack}
+                    className="inline-flex items-center rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-slate-600 transition hover:bg-gray-50"
+                >
+                    목록으로
+                </button>
+            </div>
+
+            <section className="rounded-xl border border-gray-200 bg-white p-4 sm:p-5">
+                <div className="mb-4 flex flex-col gap-4 border-b border-gray-100 pb-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0 flex-1">
+                        <div className="mb-3 flex flex-wrap items-center gap-2">
+                            <h2 className="break-words text-xl font-bold text-slate-900 sm:text-2xl">
+                                {question.title}
+                            </h2>
                             <span
-                                className={`text-xs px-2 py-0.5 rounded-full ${
+                                className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${
                                     question.status === 'OPEN'
                                         ? 'bg-red-100 text-red-600'
                                         : 'bg-green-100 text-green-600'
@@ -69,17 +92,30 @@ export default function QnADetail({
                             </span>
                         </div>
 
-                        <div className="text-sm text-gray-400">
-                            {getAuthorName(question.author)} ·{' '}
-                            {formatDateTime(question.createdAt)}
+                        <div className="flex flex-col gap-1 text-sm text-gray-400 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+                            <span>{getAuthorName(question.author)}</span>
+                            <span className="hidden sm:inline">•</span>
+                            <span>{formatDateTime(question.createdAt)}</span>
                         </div>
                     </div>
 
-                    {questionOwnerToken && (
-                        <div className="flex gap-2">
+                    {questionOwnerToken && !isEditing && (
+                        <div className="flex flex-wrap gap-2 sm:justify-end">
                             <button
                                 type="button"
-                                className="px-3 py-1.5 rounded border text-sm hover:bg-gray-50"
+                                className="inline-flex min-h-9 items-center justify-center rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-slate-700 transition hover:bg-gray-50"
+                                onClick={() => {
+                                    setDraftTitle(question.title);
+                                    setDraftContent(question.content);
+                                    setIsEditing(true);
+                                }}
+                            >
+                                게시글 수정
+                            </button>
+
+                            <button
+                                type="button"
+                                className="inline-flex min-h-9 items-center justify-center rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-slate-700 transition hover:bg-gray-50"
                                 onClick={async () => {
                                     const nextStatus =
                                         question.status === 'OPEN'
@@ -104,7 +140,7 @@ export default function QnADetail({
 
                             <button
                                 type="button"
-                                className="px-3 py-1.5 rounded border border-red-200 text-red-500 text-sm hover:bg-red-50"
+                                className="inline-flex min-h-9 items-center justify-center rounded-lg border border-red-200 px-3 py-1.5 text-sm text-red-500 transition hover:bg-red-50"
                                 onClick={async () => {
                                     const success = await deleteQuestion(
                                         question.id,
@@ -123,15 +159,70 @@ export default function QnADetail({
                     )}
                 </div>
 
-                <p className="text-gray-700 whitespace-pre-wrap">
-                    {question.content}
-                </p>
-            </div>
+                {isEditing ? (
+                    <div className="space-y-3">
+                        <input
+                            type="text"
+                            value={draftTitle}
+                            onChange={(e) => setDraftTitle(e.target.value)}
+                            className="min-h-10 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="질문 제목을 입력해주세요"
+                        />
+                        <textarea
+                            value={draftContent}
+                            onChange={(e) => setDraftContent(e.target.value)}
+                            className="min-h-48 w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm leading-7 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="질문 내용을 수정해주세요"
+                        />
+                        <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
+                            <button
+                                type="button"
+                                className="inline-flex min-h-10 items-center justify-center rounded-lg border border-gray-200 px-4 py-2 text-sm text-slate-700 transition hover:bg-gray-50"
+                                onClick={() => {
+                                    setDraftTitle(question.title);
+                                    setDraftContent(question.content);
+                                    setIsEditing(false);
+                                }}
+                            >
+                                취소
+                            </button>
+                            <button
+                                type="button"
+                                className="inline-flex min-h-10 items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+                                onClick={async () => {
+                                    if (!questionOwnerToken) return;
+
+                                    const success = await updateQuestion(
+                                        question.id,
+                                        {
+                                            title: draftTitle.trim(),
+                                            content: draftContent.trim(),
+                                        },
+                                        questionOwnerToken
+                                    );
+
+                                    if (success) {
+                                        setIsEditing(false);
+                                        await load();
+                                        onQuestionUpdated();
+                                    }
+                                }}
+                            >
+                                수정 저장
+                            </button>
+                        </div>
+                    </div>
+                ) : (
+                    <p className="whitespace-pre-wrap break-words text-sm leading-7 text-slate-700 sm:text-base">
+                        {question.content}
+                    </p>
+                )}
+            </section>
 
             <AnswerList
                 answers={answers}
                 getAnswerOwnerToken={getAnswerOwnerToken}
-                onDeleted={load}
+                onChanged={load}
                 questionId={questionId}
                 removeAnswerOwnerToken={removeAnswerOwnerToken}
             />

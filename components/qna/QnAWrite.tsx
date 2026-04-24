@@ -47,46 +47,63 @@ export default function QnAWrite() {
     };
 
     return (
-        <div className="max-w-3xl mx-auto px-6 py-8">
-            <h1 className="text-2xl font-bold mb-6">질문 작성</h1>
-
-            <div className="mb-4">
-                <label className="block text-sm mb-1">작성자</label>
-                <input
-                    type="text"
-                    className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="게시글에 표시될 닉네임을 입력해주세요"
-                    value={author}
-                    onChange={(e) => setAuthor(e.target.value)}
-                />
+        <div className="mx-auto flex w-full max-w-3xl flex-col gap-5 px-4 py-5 sm:px-6 sm:py-8">
+            <div>
+                <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">
+                    질문 작성
+                </h1>
+                <p className="mt-1 text-sm text-slate-500">
+                    제목과 내용을 입력해서 질문을 남겨주세요.
+                </p>
             </div>
 
-            <div className="mb-4">
-                <label className="block text-sm mb-1">제목</label>
-                <input
-                    type="text"
-                    className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="질문 제목을 입력해주세요"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                />
-            </div>
+            <section className="rounded-xl border border-gray-200 bg-white p-4 sm:p-6">
+                <div className="grid gap-5">
+                    <div className="grid gap-2">
+                        <label className="text-sm font-medium text-slate-700">
+                            작성자
+                        </label>
+                        <input
+                            type="text"
+                            className="min-h-10 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="게시글에 표시할 닉네임을 입력해주세요"
+                            value={author}
+                            onChange={(e) => setAuthor(e.target.value)}
+                        />
+                    </div>
 
-            <div className="mb-6">
-                <label className="block text-sm mb-1">내용</label>
-                <textarea
-                    className="w-full border rounded-lg p-3 h-40 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="질문 내용을 자세히 작성해주세요"
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                />
-            </div>
+                    <div className="grid gap-2">
+                        <label className="text-sm font-medium text-slate-700">
+                            제목
+                        </label>
+                        <input
+                            type="text"
+                            className="min-h-10 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="질문 제목을 입력해주세요"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                        />
+                    </div>
 
-            <div className="flex justify-end gap-2">
+                    <div className="grid gap-2">
+                        <label className="text-sm font-medium text-slate-700">
+                            내용
+                        </label>
+                        <textarea
+                            className="min-h-[240px] w-full rounded-lg border border-gray-200 px-3 py-3 text-sm leading-6 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:min-h-[320px]"
+                            placeholder="질문 내용을 자세히 작성해주세요"
+                            value={content}
+                            onChange={(e) => setContent(e.target.value)}
+                        />
+                    </div>
+                </div>
+            </section>
+
+            <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
                 <button
                     type="button"
                     onClick={() => router.back()}
-                    className="px-4 py-2 border rounded-lg"
+                    className="inline-flex min-h-10 items-center justify-center rounded-lg border border-gray-200 px-4 py-2 text-sm text-slate-700 transition hover:bg-gray-50"
                 >
                     취소
                 </button>
@@ -94,7 +111,7 @@ export default function QnAWrite() {
                 <button
                     type="button"
                     onClick={handleSubmit}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    className="inline-flex min-h-10 items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
                 >
                     등록
                 </button>

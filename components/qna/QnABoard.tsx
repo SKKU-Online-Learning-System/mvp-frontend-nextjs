@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import QnADetail from './QnADetail';
 import QnAList from './QnAList';
 
@@ -10,71 +10,124 @@ export default function QnABoard() {
     const [selectedId, setSelectedId] = useState<number | null>(null);
     const [filter, setFilter] = useState<'ALL' | 'OPEN' | 'RESOLVED'>('ALL');
     const [refreshKey, setRefreshKey] = useState(0);
+    const [mobileView, setMobileView] = useState<'list' | 'detail'>('list');
+
+    useEffect(() => {
+        if (selectedId) {
+            setMobileView('detail');
+        }
+    }, [selectedId]);
 
     return (
-        <div className="max-w-7xl mx-auto px-6 py-6">
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold">질문 게시판</h1>
+        <div className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6 sm:py-6">
+            <div className="mb-4 flex flex-col gap-4 sm:mb-6 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">
+                        질문 게시판
+                    </h1>
+                    <p className="mt-1 text-sm text-gray-500">
+                        궁금한 점을 남기고 답변을 주고받아보세요.
+                    </p>
+                </div>
+
                 <button
                     type="button"
                     onClick={() => router.push('/content/qna/write')}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                    className="inline-flex min-h-10 items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
                 >
-                    질문하기
+                    질문 작성하기
                 </button>
             </div>
 
-            <div className="flex gap-2 mb-4">
-                {['ALL', 'OPEN', 'RESOLVED'].map((value) => (
+            <div className="mb-4 flex flex-col gap-3 sm:mb-5">
+                <div className="flex flex-wrap gap-2">
+                    {['ALL', 'OPEN', 'RESOLVED'].map((value) => (
+                        <button
+                            key={value}
+                            type="button"
+                            onClick={() =>
+                                setFilter(value as 'ALL' | 'OPEN' | 'RESOLVED')
+                            }
+                            className={`rounded-full border px-3 py-1.5 text-sm transition ${
+                                filter === value
+                                    ? 'border-blue-600 bg-blue-600 text-white'
+                                    : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
+                            }`}
+                        >
+                            {value === 'ALL'
+                                ? '전체'
+                                : value === 'OPEN'
+                                  ? '미해결'
+                                  : '해결'}
+                        </button>
+                    ))}
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 rounded-xl border border-gray-200 bg-gray-50 p-1 lg:hidden">
                     <button
-                        key={value}
                         type="button"
-                        onClick={() =>
-                            setFilter(value as 'ALL' | 'OPEN' | 'RESOLVED')
-                        }
-                        className={`px-3 py-1 rounded-full text-sm border ${
-                            filter === value
-                                ? 'bg-blue-600 text-white'
-                                : 'bg-white hover:bg-gray-100'
+                        onClick={() => setMobileView('list')}
+                        className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
+                            mobileView === 'list'
+                                ? 'bg-white text-slate-900'
+                                : 'text-slate-500'
                         }`}
                     >
-                        {value === 'ALL'
-                            ? '전체'
-                            : value === 'OPEN'
-                              ? '미해결'
-                              : '해결'}
+                        목록
                     </button>
-                ))}
+                    <button
+                        type="button"
+                        onClick={() => selectedId && setMobileView('detail')}
+                        disabled={!selectedId}
+                        className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
+                            mobileView === 'detail' && selectedId
+                                ? 'bg-white text-slate-900'
+                                : 'text-slate-500'
+                        } ${!selectedId ? 'cursor-not-allowed opacity-50' : ''}`}
+                    >
+                        상세
+                    </button>
+                </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-6">
-                <div className="col-span-1 border rounded-xl p-3 bg-white h-[70vh] overflow-y-auto">
+            <div className="grid gap-4 lg:grid-cols-[minmax(320px,380px)_minmax(0,1fr)] lg:gap-6">
+                <section
+                    className={`rounded-xl border border-gray-200 bg-white p-3 lg:block lg:max-h-[72vh] lg:overflow-y-auto ${
+                        mobileView === 'detail' ? 'hidden' : 'block'
+                    }`}
+                >
                     <QnAList
                         filter={filter}
                         selectedId={selectedId}
                         onSelect={setSelectedId}
                         refreshKey={refreshKey}
                     />
-                </div>
+                </section>
 
-                <div className="col-span-2 border rounded-xl p-6 bg-white h-[70vh] overflow-y-auto">
+                <section
+                    className={`rounded-xl border border-gray-200 bg-white p-4 sm:p-6 lg:block lg:max-h-[72vh] lg:overflow-y-auto ${
+                        mobileView === 'list' ? 'hidden' : 'block'
+                    }`}
+                >
                     {selectedId ? (
                         <QnADetail
                             questionId={selectedId}
+                            onBack={() => setMobileView('list')}
                             onQuestionUpdated={() =>
                                 setRefreshKey((prev) => prev + 1)
                             }
                             onQuestionDeleted={() => {
                                 setSelectedId(null);
+                                setMobileView('list');
                                 setRefreshKey((prev) => prev + 1);
                             }}
                         />
                     ) : (
-                        <div className="text-gray-400 text-center mt-20">
-                            질문을 선택하세요
+                        <div className="flex min-h-[280px] items-center justify-center rounded-xl border border-dashed border-gray-200 bg-gray-50 px-6 text-center text-sm text-gray-400 sm:text-base">
+                            질문을 선택하면 자세한 내용을 볼 수 있습니다.
                         </div>
                     )}
-                </div>
+                </section>
             </div>
         </div>
     );
