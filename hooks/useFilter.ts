@@ -21,8 +21,8 @@ const groupedFilterList: Record<string, Filter[]> = {
         { id: 11, name: '공개형 교재' as CategoryKey, checked: false },
     ],
     '성대한활동': [
-        { id: 7, name: '해외 연수기' as CategoryKey, checked: false },
-        { id: 8, name: 'IT 대외행사' as CategoryKey, checked: false },
+        { id: 7, name: '인턴십 후기' as CategoryKey, checked: false },
+        { id: 8, name: 'IT 해외봉사' as CategoryKey, checked: false },
         { id: 9, name: '글로벌 챌린지' as CategoryKey, checked: false },
         { id: 10, name: '현직자 인터뷰' as CategoryKey, checked: false },
     ],
