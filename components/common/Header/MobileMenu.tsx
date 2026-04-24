@@ -83,7 +83,7 @@ export function MobileMenu({ style, currentUser, setOpen }: Props) {
                     onClick={() => setOpen(false)}
                     className="rounded-2xl border p-5 font-semibold hover:bg-accent transition"
                 >
-                    肄섑뀗痢??낅줈??
+                    콘텐츠 업로드
                 </Link>
             </div>
 
