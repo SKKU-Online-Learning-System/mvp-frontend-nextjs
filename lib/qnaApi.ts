@@ -17,7 +17,7 @@ export type Answer = {
 };
 
 // 🔥 더미 DB
-let questions: Question[] = [
+const questions: Question[] = [
     {
         id: 1,
         title: 'React useEffect 동작 원리 질문',
@@ -36,7 +36,7 @@ let questions: Question[] = [
     },
 ];
 
-let answers: Answer[] = [
+const answers: Answer[] = [
     {
         id: 1,
         questionId: 2,

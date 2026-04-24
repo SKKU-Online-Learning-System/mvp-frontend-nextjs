@@ -1,66 +1,63 @@
 'use client';
 
 import Link from 'next/link';
+import { AuthUser } from '@/types/auth';
 import { LoginButton } from './LoginButton';
 import { LogoutButton } from './LogoutButton';
 
 type Props = {
     style: 'black' | 'white';
-    refreshToken?: any;
+    currentUser: AuthUser | null;
     setOpen: (open: boolean) => void;
 };
 
 const menuItems = [
     {
-        name: '성대한만남',
+        name: '강의 컨퍼런스',
         items: [
-            '성대의 성대한 특강',
-            '성대의 성대한 스토리',
-            '글로벌 IT전문가와 킹고인의 만남',
+            '강연자 특강 영상',
+            '강연자 특강 스토리',
+            '글로벌 IT 전문가와 성공인의 만남',
         ],
         type: 'conference',
     },
     {
-        name: '기술교류회',
+        name: '기술 교류회',
         items: ['S-TOP'],
         type: 'forum',
     },
     {
-        name: '공개형교육',
-        items: ['공개형 온라인 강의', '공개형 교재'],
+        name: '공개 교육',
+        items: ['공개 온라인 강의', '공개 교재'],
         type: 'education',
     },
     {
-        name: '성대한활동',
-        items: ['인턴십 후기', 'IT 해외봉사', '글로벌 챌린지', '현직자 인터뷰'],
+        name: '학생 활동',
+        items: ['해외 연수기', 'IT 대외 행사', '글로벌 챌린지', '취업 인터뷰'],
         type: 'activity',
     },
     {
         name: '데이터셋',
-        items: ['데이터셋 플랫폼', '대회 데이터셋'],
+        items: ['데이터셋 플랫폼', '공모전 데이터셋'],
         type: 'dataset',
-    }
+    },
 ];
 
-export function MobileMenu({ style, refreshToken, setOpen }: Props) {
+export function MobileMenu({ style, currentUser, setOpen }: Props) {
     return (
         <div className="flex flex-col h-full">
-            {/* 🔥 상단 */}
             <div className="text-xl font-bold mb-6">메뉴</div>
 
-            {/* 🔥 메뉴 리스트 */}
             <div className="flex flex-col gap-6 flex-1 overflow-y-auto">
                 {menuItems.map((menu) => (
                     <div
                         key={menu.name}
                         className="rounded-xl border p-4 shadow-sm bg-white/5 backdrop-blur"
                     >
-                        {/* 카테고리 */}
                         <div className="font-semibold text-base mb-3">
                             {menu.name}
                         </div>
 
-                        {/* 항목들 */}
                         <div className="flex flex-col gap-2">
                             {menu.items.map((item) => (
                                 <Link
@@ -76,7 +73,6 @@ export function MobileMenu({ style, refreshToken, setOpen }: Props) {
                     </div>
                 ))}
 
-                {/* 콘텐츠 업로드 */}
                 <Link
                     href="/playground"
                     onClick={() => setOpen(false)}
@@ -86,10 +82,14 @@ export function MobileMenu({ style, refreshToken, setOpen }: Props) {
                 </Link>
             </div>
 
-            {/* 🔥 하단 로그인 */}
             <div className="pt-6 border-t mt-6">
-                {refreshToken ? (
-                    <LogoutButton style={style} />
+                {currentUser ? (
+                    <div className="flex flex-col items-end gap-2">
+                        <p className="text-sm text-muted-foreground">
+                            {currentUser.name}
+                        </p>
+                        <LogoutButton style={style} />
+                    </div>
                 ) : (
                     <LoginButton style={style} />
                 )}

@@ -1,11 +1,13 @@
 import axios from 'axios';
 import { toast } from 'sonner';
-import { api, jwtApi } from './axios';
+import { api } from './axios';
 import {
-    Question,
     Answer,
-    QuestionRequestType,
+    AnswerMutationResponse,
     AnswerRequestType,
+    Question,
+    QuestionMutationResponse,
+    QuestionRequestType,
 } from '@/types/qna';
 
 export const getQuestions = async () => {
@@ -16,6 +18,7 @@ export const getQuestions = async () => {
         if (axios.isAxiosError(err)) {
             toast.error('질문 목록을 불러오는 중 오류가 발생했습니다.');
         }
+
         return [];
     }
 };
@@ -28,72 +31,114 @@ export const getQuestion = async (id: number) => {
         if (axios.isAxiosError(err)) {
             toast.error('질문을 불러오는 중 오류가 발생했습니다.');
         }
+
         return null;
     }
 };
 
 export const getAnswers = async (questionId: number) => {
     try {
-        const res = await api.get<Answer[]>(
-            `/questions/${questionId}/answers`
-        );
+        const res = await api.get<Answer[]>(`/questions/${questionId}/answers`);
         return res.data;
-    } catch (err) {
-        toast.error('답변을 불러오는 중 오류가 발생했습니다.');
+    } catch {
+        toast.error('댓글을 불러오는 중 오류가 발생했습니다.');
         return [];
     }
 };
 
 export const createQuestion = async (data: QuestionRequestType) => {
-    if (process.env.NODE_ENV === 'development') {
-        console.log('[DEV] createQuestion bypass', data);
-        toast.success('개발 모드: 질문 등록을 건너뛰었습니다.');
-        return true;
-    }
-
     try {
-        await jwtApi.post('/questions', data);
+        const res = await api.post<QuestionMutationResponse>('/questions', data);
         toast.success('질문이 등록되었습니다.');
-        return true;
-    } catch (err) {
-        if (axios.isAxiosError(err)) {
-            if (err.response?.status === 401) {
-                toast.error('로그인이 필요합니다.');
-            } else {
-                toast.error('질문 등록 실패');
-            }
-        }
-        return false;
+        return res.data;
+    } catch {
+        toast.error('질문 등록에 실패했습니다.');
+        return null;
     }
 };
-
 
 export const createAnswer = async (
     questionId: number,
     data: AnswerRequestType
 ) => {
     try {
-        await jwtApi.post(
+        const res = await api.post<AnswerMutationResponse>(
             `/questions/${questionId}/answers`,
             data
         );
-        toast.success('답변이 등록되었습니다.');
+        toast.success('댓글이 등록되었습니다.');
+        return res.data;
+    } catch {
+        toast.error('댓글 등록에 실패했습니다.');
+        return null;
+    }
+};
+
+export const updateQuestionStatus = async (
+    id: number,
+    status: 'OPEN' | 'RESOLVED',
+    ownerToken: string
+) => {
+    try {
+        await api.post(
+            `/questions/${id}/status-change`,
+            { status },
+            {
+                headers: {
+                    'X-Owner-Token': ownerToken,
+                },
+            }
+        );
+        toast.success(
+            status === 'RESOLVED'
+                ? '질문이 해결 상태로 변경되었습니다.'
+                : '질문이 미해결 상태로 변경되었습니다.'
+        );
         return true;
-    } catch (err) {
-        if (axios.isAxiosError(err)) {
-            toast.error('답변 등록 실패');
-        }
+    } catch {
+        toast.error('질문 상태 변경에 실패했습니다.');
         return false;
     }
 };
 
-export const deleteQuestion = async (id: number) => {
+export const deleteQuestion = async (id: number, ownerToken: string) => {
     try {
-        await jwtApi.delete(`/questions/${id}`);
-        toast.success('삭제되었습니다.');
+        await api.post(
+            `/questions/${id}/delete`,
+            {},
+            {
+                headers: {
+                    'X-Owner-Token': ownerToken,
+                },
+            }
+        );
+        toast.success('게시글이 삭제되었습니다.');
         return true;
     } catch {
-        toast.error('삭제 실패');
+        toast.error('게시글 삭제에 실패했습니다.');
+        return false;
+    }
+};
+
+export const deleteAnswer = async (
+    questionId: number,
+    answerId: number,
+    ownerToken: string
+) => {
+    try {
+        await api.post(
+            `/questions/${questionId}/answers/${answerId}/delete`,
+            {},
+            {
+                headers: {
+                    'X-Owner-Token': ownerToken,
+                },
+            }
+        );
+        toast.success('댓글이 삭제되었습니다.');
+        return true;
+    } catch {
+        toast.error('댓글 삭제에 실패했습니다.');
         return false;
     }
 };

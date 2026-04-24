@@ -1,34 +1,35 @@
-import { FaBookOpen } from 'react-icons/fa';
-import { IoHome /*, IoTimeSharp, IoPerson*/ } from 'react-icons/io5';
-import { MdFileUpload } from 'react-icons/md';
+'use client';
+
 import Link from 'next/link';
-import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
+import { FaBookOpen } from 'react-icons/fa';
+import { IoHome } from 'react-icons/io5';
+import { MdFileUpload } from 'react-icons/md';
+import useCurrentUser from '@/hooks/useCurrentUser';
 import { SideBar } from './SideBar';
 import { SideBarButton } from './SideBarButton';
 
 type Props = {
-  refreshToken: RequestCookie | undefined;
+    refreshToken?: unknown;
 };
 
-export default function LeftSideBar({ refreshToken }: Props) {
-  return (
-    <SideBar>
-      <Link href='/'>
-        <SideBarButton icon={IoHome} text='홈' />
-      </Link>
-      {/* <SideBarButton icon={IoTimeSharp} text="수강하던 강의" /> */}
-      {/* <hr /> */}
-      {/* <SideBarButton icon={IoPerson} text="내 페이지" /> */}
-      {refreshToken ? (
-        <>
-          <Link href='/upload'>
-            <SideBarButton icon={MdFileUpload} text='업로드' />
-          </Link>
-        </>
-      ) : null}
-      <Link href='/textbook'>
-        <SideBarButton icon={FaBookOpen} text='교재' />
-      </Link>
-    </SideBar>
-  );
+export default function LeftSideBar(_: Props) {
+    const { currentUser } = useCurrentUser();
+
+    return (
+        <SideBar>
+            <Link href="/">
+                <SideBarButton icon={IoHome} text="홈" />
+            </Link>
+
+            {currentUser && (
+                <Link href="/upload">
+                    <SideBarButton icon={MdFileUpload} text="업로드" />
+                </Link>
+            )}
+
+            <Link href="/textbook">
+                <SideBarButton icon={FaBookOpen} text="교재" />
+            </Link>
+        </SideBar>
+    );
 }
