@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { DatasetItem, PreviewValue } from './data/types';
+import { DatasetItem, PreviewFile, PreviewValue } from './data/types';
 
 type Props = {
     dataset: DatasetItem;
@@ -22,6 +22,8 @@ const LABELS = {
     searchPlaceholder: '값, 키워드, 카테고리로 검색',
     filter: '컬럼 필터',
     filterPlaceholder: '필터',
+    file: '파일',
+    fileDescription: '샘플 파일 설명',
     downloadCsv: 'CSV 다운로드',
     rows: '행 수',
     columns: '열 수',
@@ -72,12 +74,7 @@ function buildHistogram(values: number[]) {
     const max = Math.max(...values);
 
     if (min === max) {
-        return [
-            {
-                label: `${min}`,
-                count: values.length,
-            },
-        ];
+        return [{ label: `${min}`, count: values.length }];
     }
 
     const step = (max - min) / HISTOGRAM_BINS;
@@ -100,17 +97,49 @@ function buildHistogram(values: number[]) {
 }
 
 export default function DatasetPreview({ dataset }: Props) {
+    const previewFiles = useMemo<PreviewFile[]>(
+        () =>
+            dataset.previewFiles?.length
+                ? dataset.previewFiles
+                : [
+                    {
+                        id: `${dataset.id}-default`,
+                        name: 'preview.csv',
+                        columns: dataset.previewColumns,
+                        rows: dataset.previewRows,
+                    },
+                ],
+        [dataset]
+    );
+
+    const [activeFileId, setActiveFileId] = useState(previewFiles[0]?.id ?? '');
     const [viewMode, setViewMode] = useState<ViewMode>('table');
     const [searchTerm, setSearchTerm] = useState('');
-    const [sortKey, setSortKey] = useState<string>(dataset.previewColumns[0]?.key ?? '');
+    const [sortKey, setSortKey] = useState<string>(previewFiles[0]?.columns[0]?.key ?? '');
     const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
     const [columnFilters, setColumnFilters] = useState<ColumnFilters>({});
     const [page, setPage] = useState(1);
 
+    const activeFile = useMemo(
+        () => previewFiles.find((file) => file.id === activeFileId) ?? previewFiles[0],
+        [activeFileId, previewFiles]
+    );
+
+    useEffect(() => {
+        setActiveFileId(previewFiles[0]?.id ?? '');
+    }, [previewFiles]);
+
+    useEffect(() => {
+        setSortKey(activeFile?.columns[0]?.key ?? '');
+        setSortDirection('asc');
+        setColumnFilters({});
+        setPage(1);
+    }, [activeFile?.id]);
+
     const csvText = useMemo(() => {
-        const header = dataset.previewColumns.map((column) => column.label).join(',');
-        const rows = dataset.previewRows.map((row) =>
-            dataset.previewColumns
+        const header = activeFile.columns.map((column) => column.label).join(',');
+        const rows = activeFile.rows.map((row) =>
+            activeFile.columns
                 .map((column) => {
                     const value = row[column.key];
                     const stringValue = value === undefined ? '' : String(value);
@@ -125,21 +154,21 @@ export default function DatasetPreview({ dataset }: Props) {
         );
 
         return [header, ...rows].join('\n');
-    }, [dataset.previewColumns, dataset.previewRows]);
+    }, [activeFile.columns, activeFile.rows]);
 
     const filteredRows = useMemo(() => {
         const normalized = searchTerm.trim().toLowerCase();
 
-        return dataset.previewRows.filter((row) => {
+        return activeFile.rows.filter((row) => {
             const matchesGlobal =
                 !normalized ||
-                dataset.previewColumns.some((column) =>
+                activeFile.columns.some((column) =>
                     String(row[column.key] ?? '')
                         .toLowerCase()
                         .includes(normalized)
                 );
 
-            const matchesColumnFilters = dataset.previewColumns.every((column) => {
+            const matchesColumnFilters = activeFile.columns.every((column) => {
                 const filterValue = columnFilters[column.key]?.trim().toLowerCase();
 
                 if (!filterValue) {
@@ -153,7 +182,7 @@ export default function DatasetPreview({ dataset }: Props) {
 
             return matchesGlobal && matchesColumnFilters;
         });
-    }, [columnFilters, dataset.previewColumns, dataset.previewRows, searchTerm]);
+    }, [activeFile.columns, activeFile.rows, columnFilters, searchTerm]);
 
     const sortedRows = useMemo(() => {
         const rows = [...filteredRows];
@@ -189,19 +218,19 @@ export default function DatasetPreview({ dataset }: Props) {
     const totalPages = Math.max(1, Math.ceil(sortedRows.length / PAGE_SIZE));
 
     const stats = useMemo(() => {
-        const totalRows = dataset.previewRows.length;
-        const totalColumns = dataset.previewColumns.length;
+        const totalRows = activeFile.rows.length;
+        const totalColumns = activeFile.columns.length;
         const totalCells = totalRows * totalColumns;
 
         let filledCells = 0;
 
-        const numericColumns = dataset.previewColumns
+        const numericColumns = activeFile.columns
             .map((column) => {
-                const values = dataset.previewRows
+                const values = activeFile.rows
                     .map((row) => row[column.key])
                     .filter((value): value is number => typeof value === 'number');
 
-                const missingCount = dataset.previewRows.filter(
+                const missingCount = activeFile.rows.filter(
                     (row) => row[column.key] === undefined || row[column.key] === ''
                 ).length;
 
@@ -235,9 +264,9 @@ export default function DatasetPreview({ dataset }: Props) {
                 } => column !== null
             );
 
-        const categoricalColumns = dataset.previewColumns
+        const categoricalColumns = activeFile.columns
             .map((column) => {
-                const values = dataset.previewRows
+                const values = activeFile.rows
                     .map((row) => row[column.key])
                     .filter((value): value is string => typeof value === 'string');
 
@@ -250,7 +279,7 @@ export default function DatasetPreview({ dataset }: Props) {
                     .sort((a, b) => b[1] - a[1])
                     .slice(0, 3);
 
-                const missingCount = dataset.previewRows.filter(
+                const missingCount = activeFile.rows.filter(
                     (row) => row[column.key] === undefined || row[column.key] === ''
                 ).length;
 
@@ -278,12 +307,12 @@ export default function DatasetPreview({ dataset }: Props) {
                 } => column !== null
             );
 
-        const columnProfiles = dataset.previewColumns.map((column) => {
-            const values = dataset.previewRows
+        const columnProfiles = activeFile.columns.map((column) => {
+            const values = activeFile.rows
                 .map((row) => row[column.key])
                 .filter((value): value is PreviewValue => value !== undefined && value !== '');
 
-            const missingCount = dataset.previewRows.filter(
+            const missingCount = activeFile.rows.filter(
                 (row) => row[column.key] === undefined || row[column.key] === ''
             ).length;
 
@@ -296,8 +325,8 @@ export default function DatasetPreview({ dataset }: Props) {
             };
         });
 
-        dataset.previewRows.forEach((row) => {
-            dataset.previewColumns.forEach((column) => {
+        activeFile.rows.forEach((row) => {
+            activeFile.columns.forEach((column) => {
                 if (row[column.key] !== undefined && row[column.key] !== '') {
                     filledCells += 1;
                 }
@@ -313,11 +342,11 @@ export default function DatasetPreview({ dataset }: Props) {
             completionRate:
                 totalCells === 0 ? 0 : Math.round((filledCells / totalCells) * 100),
         };
-    }, [dataset.previewColumns, dataset.previewRows]);
+    }, [activeFile.columns, activeFile.rows]);
 
     useEffect(() => {
         setPage(1);
-    }, [searchTerm, columnFilters, sortKey, sortDirection]);
+    }, [searchTerm, columnFilters, sortKey, sortDirection, activeFile.id]);
 
     useEffect(() => {
         if (page > totalPages) {
@@ -341,7 +370,7 @@ export default function DatasetPreview({ dataset }: Props) {
         const link = document.createElement('a');
 
         link.href = url;
-        link.download = `${dataset.title.replace(/\s+/g, '-').toLowerCase()}-preview.csv`;
+        link.download = `${dataset.title.replace(/\s+/g, '-').toLowerCase()}-${activeFile.name}`;
         link.click();
         URL.revokeObjectURL(url);
     };
@@ -410,6 +439,31 @@ export default function DatasetPreview({ dataset }: Props) {
                 </button>
             </div>
 
+            <div className="rounded-2xl border border-slate-200 bg-white px-4 py-4">
+                <div className="text-xs font-medium text-slate-400">{LABELS.file}</div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                    {previewFiles.map((file) => (
+                        <button
+                            key={file.id}
+                            type="button"
+                            onClick={() => setActiveFileId(file.id)}
+                            className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+                                activeFile.id === file.id
+                                    ? 'bg-slate-900 text-white'
+                                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                            }`}
+                        >
+                            {file.name}
+                        </button>
+                    ))}
+                </div>
+                {activeFile.description ? (
+                    <p className="mt-3 text-sm text-slate-500">
+                        {LABELS.fileDescription}: {activeFile.description}
+                    </p>
+                ) : null}
+            </div>
+
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
                 <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
                     <div className="text-xs font-medium text-slate-400">{LABELS.rows}</div>
@@ -459,7 +513,7 @@ export default function DatasetPreview({ dataset }: Props) {
                         <table className="min-w-full text-sm">
                             <thead className="bg-slate-50 text-slate-500">
                                 <tr>
-                                    {dataset.previewColumns.map((column) => (
+                                    {activeFile.columns.map((column) => (
                                         <th
                                             key={column.key}
                                             className="px-5 py-4 text-left font-semibold"
@@ -485,7 +539,7 @@ export default function DatasetPreview({ dataset }: Props) {
                                     ))}
                                 </tr>
                                 <tr className="border-t border-slate-200 bg-white">
-                                    {dataset.previewColumns.map((column) => (
+                                    {activeFile.columns.map((column) => (
                                         <th key={`${column.key}-filter`} className="px-3 py-3">
                                             <div className="text-[11px] font-medium text-slate-400">
                                                 {LABELS.filter}
@@ -506,7 +560,7 @@ export default function DatasetPreview({ dataset }: Props) {
                                 {pagedRows.length === 0 ? (
                                     <tr>
                                         <td
-                                            colSpan={dataset.previewColumns.length}
+                                            colSpan={activeFile.columns.length}
                                             className="px-5 py-8 text-center text-sm text-slate-500"
                                         >
                                             {LABELS.noRows}
@@ -515,17 +569,17 @@ export default function DatasetPreview({ dataset }: Props) {
                                 ) : (
                                     pagedRows.map((row, rowIndex) => (
                                         <tr
-                                            key={`${dataset.id}-${rowIndex}-${page}`}
+                                            key={`${activeFile.id}-${rowIndex}-${page}`}
                                             className="border-t border-slate-200 text-slate-700"
                                         >
-                                            {dataset.previewColumns.map((column, columnIndex) => {
+                                            {activeFile.columns.map((column, columnIndex) => {
                                                 const value = row[column.key];
                                                 const isMissing =
                                                     value === undefined || value === '';
 
                                                 return (
                                                     <td
-                                                        key={`${dataset.id}-${rowIndex}-${column.key}`}
+                                                        key={`${activeFile.id}-${rowIndex}-${column.key}`}
                                                         className={`px-5 py-4 ${
                                                             columnIndex === 0
                                                                 ? 'whitespace-nowrap font-medium'

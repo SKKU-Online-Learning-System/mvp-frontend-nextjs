@@ -1,4 +1,4 @@
-import { DatasetGroup, DatasetItem } from './types';
+import { DatasetGroup, DatasetItem, PreviewFile } from './types';
 
 const SAMPLE_NOTICE =
     '샘플 데이터는 데이터 구조와 컬럼 구성을 미리 확인하기 위한 예시입니다. 실제 원본 데이터와 일부 값이나 분포가 다를 수 있습니다.';
@@ -16,12 +16,46 @@ const createHistory = (year: number) => [
     },
 ];
 
+const buildPreviewFiles = (
+    dataset: Omit<DatasetItem, 'sampleNotice' | 'changeHistory'>
+): PreviewFile[] => {
+    const baseFile: PreviewFile = {
+        id: `${dataset.id}-main`,
+        name: 'train.csv',
+        description: '학습용 샘플 데이터',
+        columns: dataset.previewColumns,
+        rows: dataset.previewRows,
+    };
+
+    const secondaryColumns = dataset.previewColumns.slice(0, Math.min(4, dataset.previewColumns.length));
+    const secondaryRows = dataset.previewRows.slice(0, Math.min(4, dataset.previewRows.length)).map((row) => {
+        const nextRow: Record<string, string | number> = {};
+
+        secondaryColumns.forEach((column) => {
+            nextRow[column.key] = row[column.key];
+        });
+
+        return nextRow;
+    });
+
+    const secondaryFile: PreviewFile = {
+        id: `${dataset.id}-meta`,
+        name: 'metadata.csv',
+        description: '메타데이터 또는 검증용 샘플',
+        columns: secondaryColumns,
+        rows: secondaryRows,
+    };
+
+    return [baseFile, secondaryFile];
+};
+
 const createDataset = (
     dataset: Omit<DatasetItem, 'sampleNotice' | 'changeHistory'>
 ): DatasetItem => ({
     ...dataset,
     sampleNotice: SAMPLE_NOTICE,
     changeHistory: createHistory(dataset.year),
+    previewFiles: buildPreviewFiles(dataset),
 });
 
 export const rawData: DatasetGroup[] = [
@@ -63,6 +97,8 @@ export const rawData: DatasetGroup[] = [
                     { clipId: 'TS-1001', signalType: '직진 유도', cameraView: '정면', duration: 12.3, split: 'train' },
                     { clipId: 'TS-1002', signalType: '정지 유도', cameraView: '측면', duration: 8.9, split: 'train' },
                     { clipId: 'TS-1003', signalType: '우회 유도', cameraView: '원거리', duration: 15.7, split: 'valid' },
+                    { clipId: 'TS-1004', signalType: '좌회전 유도', cameraView: '정면', duration: 11.6, split: 'train' },
+                    { clipId: 'TS-1005', signalType: '속도 감속 유도', cameraView: '고가', duration: 9.8, split: 'test' },
                 ],
             }),
             createDataset({
@@ -100,6 +136,8 @@ export const rawData: DatasetGroup[] = [
                     { timestamp: '2025-04-12 08:00', intersection: '강남역 사거리', trafficVolume: 2840, avgSpeed: 23.4, congestion: '높음' },
                     { timestamp: '2025-04-12 08:15', intersection: '시청 앞', trafficVolume: 1930, avgSpeed: 28.1, congestion: '보통' },
                     { timestamp: '2025-04-12 08:30', intersection: '잠실역', trafficVolume: 3125, avgSpeed: 19.8, congestion: '매우 높음' },
+                    { timestamp: '2025-04-12 08:45', intersection: '서울역', trafficVolume: 2655, avgSpeed: 24.7, congestion: '높음' },
+                    { timestamp: '2025-04-12 09:00', intersection: '종로3가', trafficVolume: 1740, avgSpeed: 31.2, congestion: '보통' },
                 ],
             }),
             createDataset({
@@ -137,6 +175,8 @@ export const rawData: DatasetGroup[] = [
                     { imageId: 'XR-10231', patientSex: 'F', age: 54, finding: 'Atelectasis', split: 'train' },
                     { imageId: 'XR-19302', patientSex: 'M', age: 61, finding: 'No Finding', split: 'train' },
                     { imageId: 'XR-28771', patientSex: 'F', age: 47, finding: 'Effusion', split: 'valid' },
+                    { imageId: 'XR-30114', patientSex: 'M', age: 39, finding: 'Infiltration', split: 'train' },
+                    { imageId: 'XR-35502', patientSex: 'F', age: 68, finding: 'Cardiomegaly', split: 'test' },
                 ],
             }),
             createDataset({
@@ -174,6 +214,8 @@ export const rawData: DatasetGroup[] = [
                     { utteranceId: 'SE-1001', speaker: 'SPK_03', duration: 3.4, emotion: 'happy', samplingRate: '16kHz' },
                     { utteranceId: 'SE-1002', speaker: 'SPK_11', duration: 4.1, emotion: 'neutral', samplingRate: '16kHz' },
                     { utteranceId: 'SE-1003', speaker: 'SPK_08', duration: 2.8, emotion: 'sad', samplingRate: '16kHz' },
+                    { utteranceId: 'SE-1004', speaker: 'SPK_15', duration: 5.2, emotion: 'angry', samplingRate: '16kHz' },
+                    { utteranceId: 'SE-1005', speaker: 'SPK_19', duration: 3.7, emotion: 'fear', samplingRate: '16kHz' },
                 ],
             }),
             createDataset({
@@ -211,6 +253,8 @@ export const rawData: DatasetGroup[] = [
                     { userId: 'TR-0921', spotName: '북촌한옥마을', theme: '전통문화', rating: 4.7, visited: 'Y' },
                     { userId: 'TR-1832', spotName: '해운대 해수욕장', theme: '자연', rating: 4.5, visited: 'Y' },
                     { userId: 'TR-2092', spotName: '국립중앙박물관', theme: '전시', rating: 4.8, visited: 'N' },
+                    { userId: 'TR-3110', spotName: '경복궁', theme: '역사', rating: 4.9, visited: 'Y' },
+                    { userId: 'TR-4412', spotName: '제주 올레길', theme: '자연', rating: 4.6, visited: 'N' },
                 ],
             }),
         ],
@@ -253,6 +297,8 @@ export const rawData: DatasetGroup[] = [
                     { timestamp: '2025-03-02 13:00', ph: 7.1, turbidity: 0.26, chlorine: 0.58, anomaly: 0 },
                     { timestamp: '2025-03-02 13:15', ph: 6.7, turbidity: 0.91, chlorine: 0.22, anomaly: 1 },
                     { timestamp: '2025-03-02 13:30', ph: 6.8, turbidity: 0.83, chlorine: 0.25, anomaly: 1 },
+                    { timestamp: '2025-03-02 13:45', ph: 7.0, turbidity: 0.31, chlorine: 0.54, anomaly: 0 },
+                    { timestamp: '2025-03-02 14:00', ph: 6.6, turbidity: 1.02, chlorine: 0.19, anomaly: 1 },
                 ],
             }),
             createDataset({
@@ -290,6 +336,8 @@ export const rawData: DatasetGroup[] = [
                     { farmId: 'AG-3001', crop: '토마토', avgTemp: 24.1, rainfall: 138, yield: 2810 },
                     { farmId: 'AG-3002', crop: '파프리카', avgTemp: 22.3, rainfall: 124, yield: 2430 },
                     { farmId: 'AG-3003', crop: '딸기', avgTemp: 20.7, rainfall: 99, yield: 1975 },
+                    { farmId: 'AG-3004', crop: '오이', avgTemp: 23.5, rainfall: 116, yield: 2240 },
+                    { farmId: 'AG-3005', crop: '고추', avgTemp: 25.2, rainfall: 143, yield: 2685 },
                 ],
             }),
             createDataset({
@@ -327,6 +375,8 @@ export const rawData: DatasetGroup[] = [
                     { transactionId: 'CC-88211', merchantType: 'online', amount: 482000, country: 'US', fraud: 1 },
                     { transactionId: 'CC-88212', merchantType: 'offline', amount: 56000, country: 'KR', fraud: 0 },
                     { transactionId: 'CC-88213', merchantType: 'online', amount: 910000, country: 'SG', fraud: 1 },
+                    { transactionId: 'CC-88214', merchantType: 'offline', amount: 128000, country: 'KR', fraud: 0 },
+                    { transactionId: 'CC-88215', merchantType: 'online', amount: 731000, country: 'JP', fraud: 1 },
                 ],
             }),
             createDataset({
@@ -364,6 +414,8 @@ export const rawData: DatasetGroup[] = [
                     { studentId: 'ED-0102', courseId: 'C-ML101', progress: 74, quizScore: 82, activeDays: 12 },
                     { studentId: 'ED-0248', courseId: 'C-DS202', progress: 38, quizScore: 61, activeDays: 5 },
                     { studentId: 'ED-0309', courseId: 'C-AI303', progress: 91, quizScore: 95, activeDays: 18 },
+                    { studentId: 'ED-0411', courseId: 'C-PY110', progress: 57, quizScore: 74, activeDays: 9 },
+                    { studentId: 'ED-0582', courseId: 'C-NLP240', progress: 83, quizScore: 88, activeDays: 14 },
                 ],
             }),
         ],
@@ -406,6 +458,8 @@ export const rawData: DatasetGroup[] = [
                     { imageId: 'DS-1101', sceneType: 'fire', region: '대전', weather: 'sunny', split: 'train' },
                     { imageId: 'DS-1102', sceneType: 'flood', region: '부산', weather: 'rainy', split: 'train' },
                     { imageId: 'DS-1103', sceneType: 'collapse', region: '서울', weather: 'cloudy', split: 'valid' },
+                    { imageId: 'DS-1104', sceneType: 'smoke', region: '인천', weather: 'windy', split: 'train' },
+                    { imageId: 'DS-1105', sceneType: 'fire', region: '광주', weather: 'sunny', split: 'test' },
                 ],
             }),
             createDataset({
@@ -443,6 +497,8 @@ export const rawData: DatasetGroup[] = [
                     { clipId: 'CCTV-201', location: '지하주차장', eventType: 'fall_down', duration: 12.4, label: 'abnormal' },
                     { clipId: 'CCTV-202', location: '복도', eventType: 'loitering', duration: 18.7, label: 'abnormal' },
                     { clipId: 'CCTV-203', location: '로비', eventType: 'walking', duration: 9.2, label: 'normal' },
+                    { clipId: 'CCTV-204', location: '옥상', eventType: 'running', duration: 7.9, label: 'normal' },
+                    { clipId: 'CCTV-205', location: '출입구', eventType: 'intrusion', duration: 16.3, label: 'abnormal' },
                 ],
             }),
             createDataset({
@@ -480,6 +536,8 @@ export const rawData: DatasetGroup[] = [
                     { zone: '도심권', signalCycle: 110, flow: 1830, delay: 41.2, weather: '맑음' },
                     { zone: '동부권', signalCycle: 130, flow: 2210, delay: 53.1, weather: '비' },
                     { zone: '서부권', signalCycle: 95, flow: 1490, delay: 29.7, weather: '흐림' },
+                    { zone: '남부권', signalCycle: 105, flow: 1715, delay: 35.8, weather: '맑음' },
+                    { zone: '북부권', signalCycle: 125, flow: 2380, delay: 56.4, weather: '비' },
                 ],
             }),
         ],
@@ -522,6 +580,8 @@ export const rawData: DatasetGroup[] = [
                     { studentId: 'ST-0012', attendance: '96%', studyHours: 11.5, assignment: 88, gradeBand: '상' },
                     { studentId: 'ST-0184', attendance: '84%', studyHours: 6.3, assignment: 72, gradeBand: '중' },
                     { studentId: 'ST-0230', attendance: '71%', studyHours: 3.4, assignment: 59, gradeBand: '하' },
+                    { studentId: 'ST-0416', attendance: '89%', studyHours: 8.1, assignment: 79, gradeBand: '중' },
+                    { studentId: 'ST-0574', attendance: '98%', studyHours: 13.2, assignment: 94, gradeBand: '상' },
                 ],
             }),
             createDataset({
@@ -559,6 +619,8 @@ export const rawData: DatasetGroup[] = [
                     { eventId: 'CT-2011', eventType: '전시', region: '서울', preferenceScore: 0.84, bookmarked: 'Y' },
                     { eventId: 'CT-2012', eventType: '공연', region: '대구', preferenceScore: 0.67, bookmarked: 'N' },
                     { eventId: 'CT-2013', eventType: '축제', region: '전주', preferenceScore: 0.91, bookmarked: 'Y' },
+                    { eventId: 'CT-2014', eventType: '체험', region: '부여', preferenceScore: 0.73, bookmarked: 'N' },
+                    { eventId: 'CT-2015', eventType: '전시', region: '부산', preferenceScore: 0.88, bookmarked: 'Y' },
                 ],
             }),
         ],

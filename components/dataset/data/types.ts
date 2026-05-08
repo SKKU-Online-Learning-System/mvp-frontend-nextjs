@@ -5,6 +5,14 @@ export type PreviewColumn = {
     label: string;
 };
 
+export type PreviewFile = {
+    id: string;
+    name: string;
+    description?: string;
+    columns: PreviewColumn[];
+    rows: Array<Record<string, PreviewValue>>;
+};
+
 export type ChangeHistoryItem = {
     version: string;
     date: string;
@@ -38,6 +46,7 @@ export type DatasetItem = {
     changeHistory: ChangeHistoryItem[];
     previewColumns: PreviewColumn[];
     previewRows: Array<Record<string, PreviewValue>>;
+    previewFiles?: PreviewFile[];
 };
 
 export type DatasetGroup = {
