@@ -51,7 +51,7 @@ const menuItems = [
 export function MobileMenu({ style, currentUser, setOpen }: Props) {
     return (
         <div className="flex flex-col h-full">
-            <div className="text-xl font-bold mb-6">硫붾돱</div>
+            <div className="text-xl font-bold mb-6">메뉴</div>
 
             <div className="flex flex-col gap-6 flex-1 overflow-y-auto">
                 {menuItems.map((menu) => (
