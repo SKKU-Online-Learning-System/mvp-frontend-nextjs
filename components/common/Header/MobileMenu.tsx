@@ -38,7 +38,7 @@ const menuItems = [
     },
     {
         name: '성대한 데이터',
-        items: ['데이터셋 플랫폼'],
+        items: ['데이터셋 플랫폼', '대회 데이터셋'],
         type: 'dataset',
     },
     {

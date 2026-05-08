@@ -1,15 +1,19 @@
-import Nav from '@/components/common/Header/Nav';
 import { MainGridContainer } from '@/components/main/MainContent';
-import { Topic } from '@/hooks/useFilter';
-import { Metadata } from 'next';
-import { cookies } from 'next/headers';
 import DatasetPlatform from '@/components/dataset/DatasetPlatform';
 import CompetitionDataset from '@/components/dataset/CompetitionDataset';
 import QnABoard from '@/components/qna/QnABoard';
+import { Topic } from '@/hooks/useFilter';
+import { Metadata } from 'next';
 
 export const dynamicParams = true;
 
-type EngType = 'conference' | 'forum' | 'education' | 'activity' | 'dataset' | 'qna';
+type EngType =
+  | 'conference'
+  | 'forum'
+  | 'education'
+  | 'activity'
+  | 'dataset'
+  | 'qna';
 
 type Props = {
   params: Promise<{ topic: EngType }>;
@@ -17,17 +21,17 @@ type Props = {
 };
 
 const engToKorType = (engType: EngType): Topic => {
-  if (engType == 'conference') {
+  if (engType === 'conference') {
     return '성대한만남';
-  } else if (engType == 'forum') {
+  } else if (engType === 'forum') {
     return '기술교류회';
-  } else if (engType == 'education') {
+  } else if (engType === 'education') {
     return '공개형교육';
-  } else if (engType == 'activity') {
+  } else if (engType === 'activity') {
     return '성대한활동';
-  } else if (engType == 'dataset') {
+  } else if (engType === 'dataset') {
     return '성대한데이터';
-  } else if (engType == 'qna') {
+  } else if (engType === 'qna') {
     return 'qna';
   }
   return '성대한만남';
@@ -64,10 +68,9 @@ export default async function Content({ params, searchParams }: Props) {
 
   return (
     <div
-      className={`w-full ${isDatasetPlatform || isCompetitionDataset
-        ? 'pt-10 px-6'
-        : 'pt-logo'
-        }`}
+      className={`w-full ${
+        isDatasetPlatform || isCompetitionDataset ? 'pt-10 px-6' : 'pt-logo'
+      }`}
     >
       {isDatasetPlatform ? (
         <DatasetPlatform />
@@ -76,12 +79,8 @@ export default async function Content({ params, searchParams }: Props) {
       ) : isQnA ? (
         <QnABoard />
       ) : (
-        <MainGridContainer
-          topic={engToKorType(topic)}
-          showBadge={true}
-        />
+        <MainGridContainer topic={engToKorType(topic)} showBadge={true} />
       )}
     </div>
   );
 }
-

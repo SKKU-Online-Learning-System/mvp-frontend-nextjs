@@ -20,10 +20,10 @@ function PlaygroundGridFallback() {
 
 export async function generateMetadata() {
     return {
-        title: '콘텐츠 업로드 | 미라클 명당',
+        title: '콘텐츠 업로드 | 온라인 명륜당',
         description: '교육 목적에 부합하는 영상을 업로드할 수 있습니다.',
         openGraph: {
-            title: '콘텐츠 업로드 - 미라클 명당',
+            title: '콘텐츠 업로드 - 온라인 명륜당',
             url: 'https://mrdang.cs.skku.edu/playground',
         },
     };

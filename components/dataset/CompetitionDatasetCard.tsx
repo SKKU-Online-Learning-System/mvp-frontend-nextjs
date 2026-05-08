@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { Download, Eye, Heart } from 'lucide-react';
 
 type Dataset = {
     id: number;
@@ -22,53 +23,63 @@ type Props = {
     item: Dataset;
 };
 
+const LABELS = {
+    download: '\uB2E4\uC6B4\uB85C\uB4DC',
+    views: '\uC870\uD68C\uC218',
+    likes: '\uC88B\uC544\uC694',
+};
+
 export default function CompetitionDatasetCard({ item }: Props) {
     return (
-        <Link href={`/dataset/${item.id}`}>
-            <div className="relative w-full h-[260px] bg-white rounded-2xl border border-gray-100 hover:shadow-md transition-all duration-200 p-4 flex flex-col">
-
-                {/* 다운로드 버튼 */}
+        <Link href={`/dataset/${item.id}`} className="block h-full">
+            <article className="group relative flex h-full min-h-[290px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md">
                 <button
                     onClick={(e) => {
                         e.preventDefault();
                     }}
-                    className="absolute top-3 right-3 text-[11px] bg-gray-100 text-gray-600 px-2 py-1 rounded-full hover:bg-gray-200"
+                    className="absolute right-3 top-3 z-10 inline-flex items-center gap-1 rounded-full bg-[#ff6f5d] px-3 py-1 text-[11px] font-semibold text-white shadow-sm transition-transform duration-200 hover:scale-[1.02]"
                 >
-                    ⬇ 다운로드
+                    <Download className="h-3 w-3" />
+                    {LABELS.download}
                 </button>
 
-                {/* 상단 (아이콘 + 분야) */}
-                <div className="flex flex-col items-center mt-2 mb-2">
-                    <img
-                        src={item.image}
-                        alt={item.title}
-                        className="w-12 h-12 object-contain mb-1"
-                    />
-                    <p className="text-xs text-blue-500">{item.tags[0]}</p>
-                </div>
+                <div className="flex flex-1 flex-col items-center px-5 pb-4 pt-12 text-center">
+                    <div className="flex h-18 w-18 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-[0_8px_20px_rgba(15,23,42,0.05)]">
+                        <img
+                            src={item.image}
+                            alt={item.title}
+                            className="h-12 w-12 object-contain"
+                        />
+                    </div>
 
-                {/* 중단 (텍스트 영역) */}
-                <div className="flex-1 flex flex-col justify-center text-center px-1">
-                    <h3 className="text-sm font-semibold leading-tight line-clamp-2">
+                    <span className="mt-4 text-sm font-semibold text-[#556dff]">
+                        {item.tags[0] ?? item.type}
+                    </span>
+
+                    <h3 className="mt-5 line-clamp-3 text-[15px] font-semibold leading-6 text-slate-900 transition-colors group-hover:text-slate-700">
                         {item.title}
                     </h3>
 
-                    <p className="text-[11px] text-gray-400 mt-1">
+                    <p className="mt-4 text-xs font-medium text-[#b47854]">
                         {item.year} | {item.size}
                     </p>
-
-                    <p className="text-xs text-gray-500 mt-2 line-clamp-2">
-                        {item.description}
-                    </p>
                 </div>
 
-                {/* 하단 (통계) */}
-                <div className="flex justify-between text-[11px] text-gray-400 pt-3 border-t">
-                    <span>👁 {item.views.toLocaleString()}</span>
-                    <span>❤ {item.likes.toLocaleString()}</span>
-                    <span>⬇ {item.downloads.toLocaleString()}</span>
+                <div className="grid grid-cols-3 border-t border-slate-200 bg-slate-50/60 px-4 py-3 text-[12px] text-slate-500">
+                    <div className="flex items-center justify-center gap-1.5">
+                        <Eye className="h-3.5 w-3.5" />
+                        <span>{item.views.toLocaleString()}</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-1.5 border-x border-slate-200">
+                        <Heart className="h-3.5 w-3.5" />
+                        <span>{item.likes.toLocaleString()}</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-1.5">
+                        <Download className="h-3.5 w-3.5" />
+                        <span>{item.downloads.toLocaleString()}</span>
+                    </div>
                 </div>
-            </div>
+            </article>
         </Link>
     );
 }
