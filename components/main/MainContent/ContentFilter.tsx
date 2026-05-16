@@ -21,7 +21,8 @@ type Props = {
   setFields?: (fields: string[]) => void;
 };
 
-const yearFrameworks: Framework[] = Array.from({ length: 6 }, (_, i) => {
+const currentYear = new Date().getFullYear();
+const yearFrameworks: Framework[] = Array.from({ length: currentYear - 2020 + 1 }, (_, i) => {
   const year = (2020 + i).toString();
   return {
     value: year,

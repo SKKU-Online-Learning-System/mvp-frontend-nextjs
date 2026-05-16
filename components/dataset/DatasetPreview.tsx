@@ -137,6 +137,10 @@ export default function DatasetPreview({ dataset }: Props) {
     }, [activeFile?.id]);
 
     const csvText = useMemo(() => {
+        if (activeFile.rawText?.trim()) {
+            return activeFile.rawText;
+        }
+
         const header = activeFile.columns.map((column) => column.label).join(',');
         const rows = activeFile.rows.map((row) =>
             activeFile.columns
@@ -154,7 +158,7 @@ export default function DatasetPreview({ dataset }: Props) {
         );
 
         return [header, ...rows].join('\n');
-    }, [activeFile.columns, activeFile.rows]);
+    }, [activeFile.columns, activeFile.rawText, activeFile.rows]);
 
     const filteredRows = useMemo(() => {
         const normalized = searchTerm.trim().toLowerCase();
@@ -444,7 +448,7 @@ export default function DatasetPreview({ dataset }: Props) {
                 <div className="mt-3 flex flex-wrap gap-2">
                     {previewFiles.map((file) => (
                         <button
-                            key={file.id}
+                            key={String(file.id)}
                             type="button"
                             onClick={() => setActiveFileId(file.id)}
                             className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
