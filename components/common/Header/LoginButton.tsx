@@ -11,6 +11,24 @@ type Props = Style;
 const isDevelopment = process.env.NODE_ENV === 'development';
 const localLoginGlsId =
   process.env.NEXT_PUBLIC_LOCAL_LOGIN_GLS_ID ?? 'local-dev';
+const apiBaseUrl =
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? process.env.NEXT_PUBLIC_BASE_URL;
+
+const isLocalApiBaseUrl = (url?: string) => {
+  if (!url) {
+    return false;
+  }
+
+  try {
+    const hostname = new URL(url).hostname;
+
+    return ['localhost', '127.0.0.1', '::1'].includes(hostname);
+  } catch {
+    return false;
+  }
+};
+
+const shouldUseBackdoor = isDevelopment && isLocalApiBaseUrl(apiBaseUrl);
 
 export function LoginButton({ style }: Props) {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -27,6 +45,12 @@ export function LoginButton({ style }: Props) {
     }
 
     setIsLoggingIn(true);
+
+    if (!shouldUseBackdoor) {
+      setLocalDevUser();
+      window.location.reload();
+      return;
+    }
 
     try {
       const response = await fetch(

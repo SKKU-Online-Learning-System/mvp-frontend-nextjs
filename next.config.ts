@@ -1,10 +1,16 @@
 import type { NextConfig } from 'next';
 
-const apiBaseUrl =
+const normalizeApiBaseUrl = (url: string) => {
+  const normalized = url.replace(/\/+$/, '');
+
+  return normalized.endsWith('/api') ? normalized : `${normalized}/api`;
+};
+
+const apiBaseUrl = normalizeApiBaseUrl(
   process.env.NEXT_PUBLIC_API_BASE_URL ??
-  (process.env.NODE_ENV === 'development'
-    ? 'http://localhost:8080/api'
-    : 'https://mrdang.cs.skku.edu/api');
+    process.env.NEXT_PUBLIC_BASE_URL ??
+    'https://mrdang.cs.skku.edu'
+);
 
 const nextConfig: NextConfig = {
   async rewrites() {

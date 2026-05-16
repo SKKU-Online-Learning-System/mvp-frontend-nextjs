@@ -20,6 +20,8 @@ const getStoredLocalDevUser = () => {
   return localStorage.getItem(localDevUserKey) ? localDevUser : null;
 };
 
+export const hasLocalDevUser = () => getStoredLocalDevUser() !== null;
+
 export const setLocalDevUser = () => {
   if (typeof window !== 'undefined') {
     localStorage.setItem(localDevUserKey, 'true');

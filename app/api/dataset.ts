@@ -5,6 +5,7 @@ import {
 } from '@/components/dataset/data/types';
 import axios from 'axios';
 import { toast } from 'sonner';
+import { hasLocalDevUser } from './auth';
 import { api, jwtApi } from './axios';
 
 export type DatasetFileResponse = {
@@ -244,6 +245,10 @@ export const postDatasetLike = async (
     const res = await jwtApi.post<DatasetLikeResponse>(`/datasets/${id}/likes`);
     return res.data;
   } catch (err) {
+    if (hasLocalDevUser()) {
+      return { error: 'unavailable' };
+    }
+
     if (axios.isAxiosError(err) && err.response?.status === 401) {
       toast.error('좋아요는 로그인 후 이용할 수 있습니다.');
       return { error: 'unauthorized' };

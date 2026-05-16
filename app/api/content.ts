@@ -6,6 +6,7 @@ import {
   ContentResponseType,
   PlaylistResonseType,
 } from '../../types/content';
+import { hasLocalDevUser } from './auth';
 import { api, jwtApi } from './axios';
 
 export const getContents = async (query: string = '') => {
@@ -68,6 +69,10 @@ export const postContentLike = async (id: number) => {
   try {
     await jwtApi.post(`/contents/${id}/likes`);
   } catch (err) {
+    if (hasLocalDevUser()) {
+      return;
+    }
+
     if (axios.isAxiosError(err)) {
       if (err.response?.status === 401) {
         toast.error('로그인이 필요한 서비스입니다.');
