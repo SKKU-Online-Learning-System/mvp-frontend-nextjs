@@ -1,8 +1,11 @@
 'use client';
 
 import { downloadDatasetArchive } from '@/app/api/dataset';
+import useCurrentUser from '@/hooks/useCurrentUser';
 import { Download, Eye, Heart } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
+import { toast } from 'sonner';
 import { DatasetSummaryItem } from './data/types';
 
 type Props = {
@@ -12,11 +15,15 @@ type Props = {
 
 const LABELS = {
   download: '\uB2E4\uC6B4\uB85C\uB4DC',
+  loginRequired:
+    '\uB2E4\uC6B4\uB85C\uB4DC\uB294 \uB85C\uADF8\uC778 \uD6C4 \uC774\uC6A9\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.',
   views: '\uC870\uD68C\uC218',
   likes: '\uC88B\uC544\uC694',
 };
 
 export default function CompetitionDatasetCard({ item, onDownloaded }: Props) {
+  const { currentUser, isLoading: isUserLoading } = useCurrentUser();
+  const [isDownloading, setIsDownloading] = useState(false);
   const imageSrc = item.image || '/favicon.png';
   const year = item.year ?? '-';
   const size = item.size || '-';
@@ -24,10 +31,26 @@ export default function CompetitionDatasetCard({ item, onDownloaded }: Props) {
   const handleDownload = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    const isSuccess = await downloadDatasetArchive(item.id, item.title);
 
-    if (isSuccess) {
-      onDownloaded?.(item.id);
+    if (isDownloading || isUserLoading) {
+      return;
+    }
+
+    if (!currentUser) {
+      toast.error(LABELS.loginRequired);
+      return;
+    }
+
+    setIsDownloading(true);
+
+    try {
+      const isSuccess = await downloadDatasetArchive(item.id, item.title);
+
+      if (isSuccess) {
+        onDownloaded?.(item.id);
+      }
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -37,6 +60,7 @@ export default function CompetitionDatasetCard({ item, onDownloaded }: Props) {
         <button
           type='button'
           onClick={handleDownload}
+          disabled={isDownloading || isUserLoading}
           className='absolute right-3 top-3 z-10 inline-flex items-center gap-1 rounded-full bg-[#ff6f5d] px-3 py-1 text-[11px] font-semibold text-white shadow-sm transition-transform duration-200 hover:scale-[1.02]'
         >
           <Download className='h-3 w-3' />

@@ -12,7 +12,7 @@ type Props = {
   dataset: DatasetItem;
 };
 
-type SectionKey = 'overview' | 'intro' | 'useCases' | 'preview';
+type SectionKey = 'overview' | 'intro' | 'preview';
 type OpenSections = Record<SectionKey, boolean>;
 
 const LABELS = {
@@ -20,15 +20,11 @@ const LABELS = {
   field: '분야',
   type: '유형',
   source: '출처',
-  organization: '제공기관',
-  task: '과제 유형',
-  year: '구축년도',
   size: '용량',
   views: '조회수',
   likes: '관심',
   overview: '데이터 개요',
   intro: '소개',
-  useCases: '활용 예시',
   preview: '샘플 데이터',
   updateDate: '갱신년월',
   format: '데이터 형식',
@@ -36,7 +32,6 @@ const LABELS = {
   service: '활용 서비스',
   amount: '데이터 구축량',
   purpose: '활용 방향',
-  history: '변경 이력',
   alert: '다운로드가 시작되었습니다.',
   loginRequired: '좋아요는 로그인 후 이용할 수 있습니다.',
 };
@@ -57,9 +52,7 @@ const overviewRows = (dataset: DatasetItem) => [
   { label: LABELS.field, value: dataset.tags.join(', ') },
   { label: LABELS.type, value: dataset.type },
   { label: LABELS.source, value: dataset.source },
-  { label: LABELS.organization, value: dataset.organization },
-  { label: LABELS.task, value: dataset.task },
-  { label: LABELS.year, value: String(dataset.year) },
+  { label: LABELS.format, value: dataset.formats.join(', ') },
   { label: LABELS.updateDate, value: dataset.updatedAt },
   { label: LABELS.size, value: dataset.size },
 ];
@@ -138,7 +131,6 @@ export default function DatasetDetail({ dataset }: Props) {
   const [openSections, setOpenSections] = useState<OpenSections>({
     overview: true,
     intro: true,
-    useCases: true,
     preview: true,
   });
 
@@ -162,22 +154,32 @@ export default function DatasetDetail({ dataset }: Props) {
   ]);
 
   const handleDownload = async () => {
-    if (isDownloading) {
+    if (isDownloading || isUserLoading) {
+      return;
+    }
+
+    if (!currentUser) {
+      toast.error(
+        '\uB2E4\uC6B4\uB85C\uB4DC\uB294 \uB85C\uADF8\uC778 \uD6C4 \uC774\uC6A9\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.'
+      );
       return;
     }
 
     setIsDownloading(true);
-    const isSuccess = await downloadDatasetArchive(dataset.id, dataset.title);
 
-    if (isSuccess) {
-      const nextCount = downloads + 1;
+    try {
+      const isSuccess = await downloadDatasetArchive(dataset.id, dataset.title);
 
-      setDownloads(nextCount);
-      localStorage.setItem(downloadStorageKey(dataset.id), String(nextCount));
-      alert(LABELS.alert);
+      if (isSuccess) {
+        const nextCount = downloads + 1;
+
+        setDownloads(nextCount);
+        localStorage.setItem(downloadStorageKey(dataset.id), String(nextCount));
+        alert(LABELS.alert);
+      }
+    } finally {
+      setIsDownloading(false);
     }
-
-    setIsDownloading(false);
   };
 
   const persistLikeState = (nextLikes: number, nextIsLike: boolean) => {
@@ -271,9 +273,6 @@ export default function DatasetDetail({ dataset }: Props) {
 
               <div className='mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-slate-500'>
                 <span>
-                  {LABELS.year} : {dataset.year}
-                </span>
-                <span>
                   {LABELS.updateDate} : {dataset.updatedAt}
                 </span>
                 <span>
@@ -294,7 +293,7 @@ export default function DatasetDetail({ dataset }: Props) {
                 <button
                   type='button'
                   onClick={handleDownload}
-                  disabled={isDownloading}
+                  disabled={isDownloading || isUserLoading}
                   className='inline-flex rounded-xl bg-[#ff6f5d] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#f75e4a]'
                 >
                   {LABELS.download}
@@ -327,31 +326,16 @@ export default function DatasetDetail({ dataset }: Props) {
           isOpen={openSections.overview}
           onToggle={handleToggle}
         >
-          <div className='overflow-hidden rounded-2xl border border-slate-200'>
-            <div className='grid border-b border-slate-200 bg-slate-50 text-sm font-semibold text-slate-600 md:grid-cols-3'>
-              <div className='px-5 py-4'>{LABELS.field}</div>
-              <div className='px-5 py-4'>{LABELS.type}</div>
-              <div className='px-5 py-4'>{LABELS.size}</div>
-            </div>
-            <div className='grid text-sm text-slate-700 md:grid-cols-3'>
-              <div className='border-b border-slate-100 px-5 py-4 md:border-b-0 md:border-r'>
-                {dataset.tags.join(', ')}
-              </div>
-              <div className='border-b border-slate-100 px-5 py-4 md:border-b-0 md:border-r'>
-                {dataset.type}
-              </div>
-              <div className='px-5 py-4'>{dataset.size}</div>
-            </div>
-          </div>
-
-          <div className='mt-6 grid gap-3 md:grid-cols-2'>
+          <div className='grid gap-3 md:grid-cols-2'>
             {overviewRows(dataset).map((row) => (
               <div
                 key={row.label}
-                className='flex items-center justify-between rounded-2xl border border-slate-200 px-4 py-4'
+                className='flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-slate-50/60 px-4 py-4'
               >
-                <span className='text-sm text-slate-500'>{row.label}</span>
-                <span className='text-sm font-semibold text-slate-800'>
+                <span className='shrink-0 text-sm text-slate-500'>
+                  {row.label}
+                </span>
+                <span className='text-right text-sm font-semibold text-slate-800'>
                   {row.value}
                 </span>
               </div>
@@ -392,48 +376,6 @@ export default function DatasetDetail({ dataset }: Props) {
                 <div className='px-5 py-4 leading-7 text-slate-700'>
                   {row.value}
                 </div>
-              </div>
-            ))}
-          </div>
-
-          <h3 className='mt-8 text-lg font-semibold text-slate-900'>
-            {LABELS.history}
-          </h3>
-          <div className='mt-4 overflow-hidden rounded-2xl border border-slate-200'>
-            <div className='grid border-b border-slate-200 bg-slate-50 text-sm font-semibold text-slate-600 md:grid-cols-3'>
-              <div className='px-5 py-4'>버전</div>
-              <div className='px-5 py-4'>일자</div>
-              <div className='px-5 py-4'>변경내용</div>
-            </div>
-            {dataset.changeHistory.map((item) => (
-              <div
-                key={`${item.version}-${item.date}`}
-                className='grid border-t border-slate-100 text-sm text-slate-700 first:border-t-0 md:grid-cols-3'
-              >
-                <div className='px-5 py-4'>{item.version}</div>
-                <div className='px-5 py-4'>{item.date}</div>
-                <div className='px-5 py-4'>{item.description}</div>
-              </div>
-            ))}
-          </div>
-        </AccordionSection>
-
-        <AccordionSection
-          title={LABELS.useCases}
-          sectionKey='useCases'
-          isOpen={openSections.useCases}
-          onToggle={handleToggle}
-        >
-          <div className='space-y-3'>
-            {dataset.useCases.map((item, index) => (
-              <div
-                key={`${item}-${index}`}
-                className='rounded-2xl border border-slate-200 px-5 py-4'
-              >
-                <div className='text-sm font-semibold text-slate-400'>
-                  USE CASE {String(index + 1).padStart(2, '0')}
-                </div>
-                <p className='mt-2 text-sm leading-7 text-slate-600'>{item}</p>
               </div>
             ))}
           </div>
