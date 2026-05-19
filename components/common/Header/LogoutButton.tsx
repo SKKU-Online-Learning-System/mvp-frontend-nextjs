@@ -19,8 +19,8 @@ export function LogoutButton({ style }: Props) {
 
                     if (!success) return;
 
+                    router.replace('/');
                     router.refresh();
-                    router.push('/');
                 }}
                 className={cn(
                     'group inline-flex h-7 w-max items-center justify-center rounded-md bg-my-background px-4 py-2 text-xs font-extrabold focus-visible:ring-ring/50 outline-none transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1',

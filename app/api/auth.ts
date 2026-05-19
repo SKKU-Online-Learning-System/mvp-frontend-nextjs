@@ -5,6 +5,7 @@ import { jwtApi } from './axios';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 const localDevUserKey = 'local-dev-user';
+export const authLogoutEvent = 'mrdang:auth:logout';
 const localDevUser: AuthUser = {
   id: 'local-dev',
   name: 'Local Admin',
@@ -112,6 +113,12 @@ const clearStoredDatasetLikes = () => {
     .forEach((key) => localStorage.removeItem(key));
 };
 
+const notifyLoggedOut = () => {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event(authLogoutEvent));
+  }
+};
+
 export const getCurrentUser = async () => {
   try {
     const res = await jwtApi.get<AuthUser>('/auth/me');
@@ -140,6 +147,7 @@ export const logoutUser = async () => {
   clearLocalDevUser();
   clearKingoCookies();
   clearStoredDatasetLikes();
+  notifyLoggedOut();
 
   try {
     await jwtApi.post('/auth/logout');

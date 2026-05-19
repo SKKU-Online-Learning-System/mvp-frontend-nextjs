@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { getCurrentUser } from '@/app/api/auth';
+import { authLogoutEvent, getCurrentUser } from '@/app/api/auth';
 import { AuthUser } from '@/types/auth';
 
 export default function useCurrentUser() {
@@ -18,6 +18,17 @@ export default function useCurrentUser() {
 
     useEffect(() => {
         refreshCurrentUser();
+
+        const handleLogout = () => {
+            setCurrentUser(null);
+            setIsLoading(false);
+        };
+
+        window.addEventListener(authLogoutEvent, handleLogout);
+
+        return () => {
+            window.removeEventListener(authLogoutEvent, handleLogout);
+        };
     }, [refreshCurrentUser]);
 
     return {
