@@ -38,8 +38,10 @@ const LABELS = {
 
 const downloadStorageKey = (id: number) => `downloads-${id}`;
 const viewStorageKey = (id: number) => `views-${id}`;
-const likeStorageKey = (id: number) => `likes-${id}`;
-const likedStorageKey = (id: number) => `liked-${id}`;
+const datasetLikeStorageKey = (userId: number | string, id: number) =>
+  `dataset-like-${userId}-${id}`;
+const datasetLikeCountStorageKey = (userId: number | string, id: number) =>
+  `dataset-like-count-${userId}-${id}`;
 
 const readStoredNumber = (key: string, fallback: number) => {
   const saved = localStorage.getItem(key);
@@ -47,6 +49,15 @@ const readStoredNumber = (key: string, fallback: number) => {
 
   return Number.isNaN(savedCount) ? fallback : savedCount;
 };
+
+const readStoredLike = (userId: number | string, datasetId: number) =>
+  localStorage.getItem(datasetLikeStorageKey(userId, datasetId));
+
+const readStoredLikeCount = (
+  userId: number | string,
+  datasetId: number,
+  fallback: number
+) => readStoredNumber(datasetLikeCountStorageKey(userId, datasetId), fallback);
 
 const overviewRows = (dataset: DatasetItem) => [
   { label: LABELS.field, value: dataset.tags.join(', ') },
@@ -135,17 +146,24 @@ export default function DatasetDetail({ dataset }: Props) {
   });
 
   useEffect(() => {
-    const savedLike = localStorage.getItem(likedStorageKey(dataset.id));
-
     setViews(readStoredNumber(viewStorageKey(dataset.id), dataset.views));
-    setLikes(readStoredNumber(likeStorageKey(dataset.id), dataset.likes));
+    setLikes(
+      currentUser
+        ? readStoredLikeCount(currentUser.id, dataset.id, dataset.likes)
+        : dataset.likes
+    );
     setDownloads(
       readStoredNumber(downloadStorageKey(dataset.id), dataset.downloads)
     );
-    setIsLike(
-      savedLike === null ? Boolean(dataset.isLike) : savedLike === 'true'
-    );
+    if (!currentUser) {
+      setIsLike(false);
+    } else if (typeof dataset.isLike === 'boolean') {
+      setIsLike(dataset.isLike);
+    } else {
+      setIsLike(readStoredLike(currentUser.id, dataset.id) === 'true');
+    }
   }, [
+    currentUser,
     dataset.downloads,
     dataset.id,
     dataset.isLike,
@@ -185,8 +203,17 @@ export default function DatasetDetail({ dataset }: Props) {
   const persistLikeState = (nextLikes: number, nextIsLike: boolean) => {
     setLikes(nextLikes);
     setIsLike(nextIsLike);
-    localStorage.setItem(likeStorageKey(dataset.id), String(nextLikes));
-    localStorage.setItem(likedStorageKey(dataset.id), String(nextIsLike));
+
+    if (currentUser) {
+      localStorage.setItem(
+        datasetLikeStorageKey(currentUser.id, dataset.id),
+        String(nextIsLike)
+      );
+      localStorage.setItem(
+        datasetLikeCountStorageKey(currentUser.id, dataset.id),
+        String(nextLikes)
+      );
+    }
   };
 
   const handleLike = async () => {
@@ -203,7 +230,7 @@ export default function DatasetDetail({ dataset }: Props) {
     const result = await postDatasetLike(dataset.id);
 
     if ('error' in result) {
-      if (result.error === 'unavailable') {
+      if (result.error === 'local-only') {
         const nextIsLike = !isLike;
         const nextLikes = Math.max(0, likes + (nextIsLike ? 1 : -1));
         persistLikeState(nextLikes, nextIsLike);

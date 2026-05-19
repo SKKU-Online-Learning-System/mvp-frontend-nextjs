@@ -8,8 +8,6 @@ import { useParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
 const viewStorageKey = (id: number) => `views-${id}`;
-const likeStorageKey = (id: number) => `likes-${id}`;
-const likedStorageKey = (id: number) => `liked-${id}`;
 
 const readStoredNumber = (key: string, fallback: number) => {
   const saved = localStorage.getItem(key);
@@ -25,16 +23,14 @@ const applyDetailEngagement = (data: DatasetItem) => {
   );
   const hasBackendEngagement = typeof data.isLike === 'boolean';
   const views = hasBackendEngagement ? baseViews : baseViews + 1;
-  const likes = readStoredNumber(likeStorageKey(data.id), data.likes);
-  const savedLike = localStorage.getItem(likedStorageKey(data.id));
 
   localStorage.setItem(viewStorageKey(data.id), String(views));
 
   return {
     ...data,
     views,
-    likes,
-    isLike: savedLike === null ? data.isLike : savedLike === 'true',
+    likes: data.likes,
+    isLike: Boolean(data.isLike),
   };
 };
 

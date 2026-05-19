@@ -3,4 +3,5 @@ export type AuthUser = {
     name: string;
     email: string;
     profileImage?: string | null;
+    likedDatasetIds?: number[];
 };

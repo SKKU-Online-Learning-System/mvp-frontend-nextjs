@@ -3,6 +3,7 @@
 import { getDatasets } from '@/app/api/dataset';
 import CompetitionDatasetGrid from '@/components/dataset/CompetitionDatasetGrid';
 import ContentFilter from '@/components/main/MainContent/ContentFilter';
+import useCurrentUser from '@/hooks/useCurrentUser';
 import { queryAtom } from '@/stores/atom';
 import { useAtomValue } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
@@ -10,8 +11,10 @@ import { DatasetSummaryItem } from './data/types';
 
 const downloadStorageKey = (id: number) => `downloads-${id}`;
 const viewStorageKey = (id: number) => `views-${id}`;
-const likeStorageKey = (id: number) => `likes-${id}`;
-const likedStorageKey = (id: number) => `liked-${id}`;
+const datasetLikeStorageKey = (userId: number | string, id: number) =>
+  `dataset-like-${userId}-${id}`;
+const datasetLikeCountStorageKey = (userId: number | string, id: number) =>
+  `dataset-like-count-${userId}-${id}`;
 
 const readStoredNumber = (key: string, fallback: number) => {
   const saved = localStorage.getItem(key);
@@ -20,20 +23,28 @@ const readStoredNumber = (key: string, fallback: number) => {
   return Number.isNaN(savedCount) ? fallback : savedCount;
 };
 
-const withStoredEngagement = (dataset: DatasetSummaryItem) => {
-  const savedLike = localStorage.getItem(likedStorageKey(dataset.id));
-
-  return {
-    ...dataset,
-    views: readStoredNumber(viewStorageKey(dataset.id), dataset.views),
-    likes: readStoredNumber(likeStorageKey(dataset.id), dataset.likes),
-    downloads: readStoredNumber(
-      downloadStorageKey(dataset.id),
-      dataset.downloads
-    ),
-    isLike: savedLike === null ? dataset.isLike : savedLike === 'true',
-  };
-};
+const withStoredEngagement = (
+  dataset: DatasetSummaryItem,
+  userId: number | string | null
+) => ({
+  ...dataset,
+  views: readStoredNumber(viewStorageKey(dataset.id), dataset.views),
+  likes:
+    userId === null
+      ? dataset.likes
+      : readStoredNumber(
+          datasetLikeCountStorageKey(userId, dataset.id),
+          dataset.likes
+        ),
+  downloads: readStoredNumber(downloadStorageKey(dataset.id), dataset.downloads),
+  isLike:
+    userId === null
+      ? false
+      : typeof dataset.isLike === 'boolean'
+        ? dataset.isLike
+        : localStorage.getItem(datasetLikeStorageKey(userId, dataset.id)) ===
+          'true',
+});
 
 function DatasetGridSkeleton() {
   return (
@@ -55,6 +66,7 @@ function DatasetGridSkeleton() {
 }
 
 export default function CompetitionDataset() {
+  const { currentUser, isLoading: isUserLoading } = useCurrentUser();
   const [datasets, setDatasets] = useState<DatasetSummaryItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [fields, setFields] = useState<string[]>([]);
@@ -66,11 +78,16 @@ export default function CompetitionDataset() {
     let cancelled = false;
 
     const fetchDatasets = async () => {
+      if (isUserLoading) {
+        return;
+      }
+
       setIsLoading(true);
       const data = await getDatasets();
+      const userId = currentUser?.id ?? null;
 
       if (!cancelled) {
-        setDatasets(data.map(withStoredEngagement));
+        setDatasets(data.map((item) => withStoredEngagement(item, userId)));
         setIsLoading(false);
       }
     };
@@ -80,11 +97,14 @@ export default function CompetitionDataset() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [currentUser, isUserLoading]);
 
   useEffect(() => {
     const syncStoredEngagement = () => {
-      setDatasets((current) => current.map(withStoredEngagement));
+      const userId = currentUser?.id ?? null;
+      setDatasets((current) =>
+        current.map((item) => withStoredEngagement(item, userId))
+      );
     };
 
     window.addEventListener('focus', syncStoredEngagement);
@@ -94,7 +114,7 @@ export default function CompetitionDataset() {
       window.removeEventListener('focus', syncStoredEngagement);
       window.removeEventListener('pageshow', syncStoredEngagement);
     };
-  }, []);
+  }, [currentUser]);
 
   const handleSortChange = (value: string) => {
     setSort(value);

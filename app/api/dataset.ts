@@ -6,7 +6,8 @@ import {
 import axios from 'axios';
 import { toast } from 'sonner';
 import { hasLocalDevUser } from './auth';
-import { api, jwtApi } from './axios';
+import { api, apiBaseURL, jwtApi } from './axios';
+import { AuthUser } from '@/types/auth';
 
 export type DatasetFileResponse = {
   id: number;
@@ -68,7 +69,7 @@ export type DatasetLikeResponse = {
 export type DatasetLikeResult =
   | DatasetLikeResponse
   | {
-      error: 'unauthorized' | 'unavailable';
+      error: 'unauthorized' | 'unavailable' | 'local-only';
     };
 
 const zipFileName = (title: string) => {
@@ -115,6 +116,7 @@ const normalizeDatasetSummary = (
   views: toNumber(dataset.views),
   likes: toNumber(dataset.likes),
   downloads: toDownloads(dataset.id, dataset.downloads),
+  isLike: dataset.isLike ?? undefined,
 });
 
 const normalizeDatasetDetail = (
@@ -169,10 +171,14 @@ export const getDatasets = async () => {
     const res = await api.get<DatasetSummaryItem[]>('/datasets');
     return res.data.map(normalizeDatasetSummary);
   } catch (err) {
-    if (axios.isAxiosError(err)) {
-      toast.error('Failed to load datasets.');
+    if (axios.isAxiosError(err) && err.response?.status === 404) {
+      const data = await getPublicDatasetsWithoutCredentials();
+      if (data) {
+        return applyMyDatasetLikes(data);
+      }
     }
 
+    toast.error('Failed to load datasets.');
     return [];
   }
 };
@@ -182,12 +188,103 @@ export const getDataset = async (id: number) => {
     const res = await api.get<DatasetDetailResponse>(`/datasets/${id}`);
     return normalizeDatasetDetail(res.data);
   } catch (err) {
-    if (axios.isAxiosError(err)) {
-      toast.error('Failed to load dataset detail.');
+    if (axios.isAxiosError(err) && err.response?.status === 404) {
+      const data = await getPublicDatasetWithoutCredentials(id);
+      if (data) {
+        return applyMyDatasetLike(data);
+      }
     }
 
+    toast.error('Failed to load dataset detail.');
     return null;
   }
+};
+
+const getPublicDatasetsWithoutCredentials = async () => {
+  try {
+    const res = await fetch(`${apiBaseURL}/datasets`, {
+      cache: 'no-store',
+      credentials: 'omit',
+      headers: {
+        Accept: 'application/json',
+      },
+    });
+
+    if (!res.ok) {
+      return null;
+    }
+
+    const data = (await res.json()) as DatasetSummaryItem[];
+    return data.map(normalizeDatasetSummary);
+  } catch {
+    return null;
+  }
+};
+
+const getPublicDatasetWithoutCredentials = async (id: number) => {
+  try {
+    const res = await fetch(`${apiBaseURL}/datasets/${id}`, {
+      cache: 'no-store',
+      credentials: 'omit',
+      headers: {
+        Accept: 'application/json',
+      },
+    });
+
+    if (!res.ok) {
+      return null;
+    }
+
+    const data = (await res.json()) as DatasetDetailResponse;
+    return normalizeDatasetDetail(data);
+  } catch {
+    return null;
+  }
+};
+
+const getMyDatasetLikeIds = async () => {
+  if (hasLocalDevUser()) {
+    return null;
+  }
+
+  try {
+    const res = await jwtApi.get<AuthUser>('/auth/me');
+    return new Set((res.data.likedDatasetIds ?? []).map(Number));
+  } catch {
+    return null;
+  }
+};
+
+const applyMyDatasetLikes = async (datasets: DatasetSummaryItem[]) => {
+  const likedIds = await getMyDatasetLikeIds();
+
+  if (likedIds === null) {
+    return datasets.map((dataset) => ({
+      ...dataset,
+      isLike: undefined,
+    }));
+  }
+
+  return datasets.map((dataset) => ({
+    ...dataset,
+    isLike: likedIds.has(dataset.id),
+  }));
+};
+
+const applyMyDatasetLike = async (dataset: DatasetItem) => {
+  const likedIds = await getMyDatasetLikeIds();
+
+  if (likedIds === null) {
+    return {
+      ...dataset,
+      isLike: undefined,
+    };
+  }
+
+  return {
+    ...dataset,
+    isLike: likedIds.has(dataset.id),
+  };
 };
 
 export const getDatasetFiles = async (datasetId: number) => {
@@ -241,11 +338,18 @@ export const getDatasetFileProfile = async (
 export const postDatasetLike = async (
   id: number
 ): Promise<DatasetLikeResult> => {
+  if (hasLocalDevUser()) {
+    return { error: 'local-only' };
+  }
+
   try {
-    const res = await jwtApi.post<DatasetLikeResponse>(`/datasets/${id}/likes`);
+    const res = await jwtApi.post<DatasetLikeResponse>('/auth', {
+      datasetLikeId: id,
+    });
     return res.data;
   } catch (err) {
-    if (hasLocalDevUser()) {
+    if (axios.isAxiosError(err) && err.response?.status === 404) {
+      toast.error('Failed to update dataset like.');
       return { error: 'unavailable' };
     }
 
@@ -254,6 +358,7 @@ export const postDatasetLike = async (
       return { error: 'unauthorized' };
     }
 
+    toast.error('Failed to update dataset like.');
     return { error: 'unavailable' };
   }
 };
