@@ -4,15 +4,18 @@ import { useEffect, useState } from 'react';
 import { getQuestions } from '@/app/api/qna';
 import { formatDateTime } from '@/lib/date';
 import { getAuthorName } from '@/lib/qnaAuthor';
-import { Question } from '@/types/qna';
+import { getQuestionCategoryLabel } from '@/lib/qnaCategory';
+import { Question, QuestionCategoryFilter } from '@/types/qna';
 
 export default function QnAList({
-    filter,
+    statusFilter,
+    categoryFilter,
     selectedId,
     onSelect,
     refreshKey,
 }: {
-    filter: 'ALL' | 'OPEN' | 'RESOLVED';
+    statusFilter: 'ALL' | 'OPEN' | 'RESOLVED';
+    categoryFilter: QuestionCategoryFilter;
     selectedId: number | null;
     onSelect: (id: number) => void;
     refreshKey: number;
@@ -24,8 +27,12 @@ export default function QnAList({
     }, [refreshKey]);
 
     const filtered = questions.filter((question) => {
-        if (filter === 'ALL') return true;
-        return question.status === filter;
+        const matchesStatus =
+            statusFilter === 'ALL' || question.status === statusFilter;
+        const matchesCategory =
+            categoryFilter === 'ALL' || question.category === categoryFilter;
+
+        return matchesStatus && matchesCategory;
     });
 
     return (
@@ -56,15 +63,24 @@ export default function QnAList({
                                 </p>
                             </div>
 
-                            <span
-                                className={`inline-flex w-fit shrink-0 items-center rounded-full px-2.5 py-1 text-xs font-medium ${
-                                    question.status === 'OPEN'
-                                        ? 'bg-red-100 text-red-600'
-                                        : 'bg-green-100 text-green-600'
-                                }`}
-                            >
-                                {question.status === 'OPEN' ? '미해결' : '해결'}
-                            </span>
+                            <div className="flex shrink-0 flex-wrap gap-1.5">
+                                <span className="inline-flex w-fit items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+                                    {getQuestionCategoryLabel(
+                                        question.category
+                                    )}
+                                </span>
+                                <span
+                                    className={`inline-flex w-fit items-center rounded-full px-2.5 py-1 text-xs font-medium ${
+                                        question.status === 'OPEN'
+                                            ? 'bg-red-100 text-red-600'
+                                            : 'bg-green-100 text-green-600'
+                                    }`}
+                                >
+                                    {question.status === 'OPEN'
+                                        ? '미해결'
+                                        : '해결'}
+                                </span>
+                            </div>
                         </div>
 
                         <div className="mt-2 flex flex-col gap-1 text-xs text-gray-400 sm:flex-row sm:items-center sm:justify-between">

@@ -6,6 +6,8 @@ import { toast } from 'sonner';
 import { createQuestion } from '@/app/api/qna';
 import useQnAAuthor from '@/hooks/useQnAAuthor';
 import useQnAOwnerTokens from '@/hooks/useQnAOwnerTokens';
+import { QUESTION_CATEGORY_OPTIONS } from '@/lib/qnaCategory';
+import { QuestionCategory } from '@/types/qna';
 
 export default function QnAWrite() {
     const router = useRouter();
@@ -13,6 +15,7 @@ export default function QnAWrite() {
     const { setQuestionOwnerToken } = useQnAOwnerTokens();
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
+    const [category, setCategory] = useState<QuestionCategory>('GENERAL');
 
     const handleSubmit = async () => {
         if (!author.trim()) {
@@ -35,6 +38,7 @@ export default function QnAWrite() {
             content: content.trim(),
             author: author.trim(),
             status: 'OPEN',
+            category,
         });
 
         if (!createdQuestion) return;
@@ -70,6 +74,31 @@ export default function QnAWrite() {
                             value={author}
                             onChange={(e) => setAuthor(e.target.value)}
                         />
+                    </div>
+
+                    <div className="grid gap-2">
+                        <label
+                            htmlFor="question-category"
+                            className="text-sm font-medium text-slate-700"
+                        >
+                            분야
+                        </label>
+                        <select
+                            id="question-category"
+                            value={category}
+                            onChange={(event) =>
+                                setCategory(
+                                    event.target.value as QuestionCategory
+                                )
+                            }
+                            className="min-h-10 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                            {QUESTION_CATEGORY_OPTIONS.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
+                        </select>
                     </div>
 
                     <div className="grid gap-2">

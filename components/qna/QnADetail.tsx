@@ -11,6 +11,7 @@ import {
 import useQnAOwnerTokens from '@/hooks/useQnAOwnerTokens';
 import { formatDateTime } from '@/lib/date';
 import { getAuthorName } from '@/lib/qnaAuthor';
+import { getQuestionCategoryLabel } from '@/lib/qnaCategory';
 import { Answer, Question } from '@/types/qna';
 import AnswerInput from './AnswerInput';
 import AnswerList from './AnswerList';
@@ -81,6 +82,9 @@ export default function QnADetail({
                             <h2 className="break-words text-xl font-bold text-slate-900 sm:text-2xl">
                                 {question.title}
                             </h2>
+                            <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+                                {getQuestionCategoryLabel(question.category)}
+                            </span>
                             <span
                                 className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${
                                     question.status === 'OPEN'

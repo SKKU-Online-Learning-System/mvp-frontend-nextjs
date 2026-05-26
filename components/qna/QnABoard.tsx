@@ -2,13 +2,20 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { QUESTION_CATEGORY_OPTIONS } from '@/lib/qnaCategory';
+import { QuestionCategoryFilter } from '@/types/qna';
 import QnADetail from './QnADetail';
 import QnAList from './QnAList';
+
+type QuestionStatusFilter = 'ALL' | 'OPEN' | 'RESOLVED';
 
 export default function QnABoard() {
     const router = useRouter();
     const [selectedId, setSelectedId] = useState<number | null>(null);
-    const [filter, setFilter] = useState<'ALL' | 'OPEN' | 'RESOLVED'>('ALL');
+    const [statusFilter, setStatusFilter] =
+        useState<QuestionStatusFilter>('ALL');
+    const [categoryFilter, setCategoryFilter] =
+        useState<QuestionCategoryFilter>('ALL');
     const [refreshKey, setRefreshKey] = useState(0);
     const [mobileView, setMobileView] = useState<'list' | 'detail'>('list');
 
@@ -40,16 +47,19 @@ export default function QnABoard() {
             </div>
 
             <div className="mb-4 flex flex-col gap-3 sm:mb-5">
-                <div className="flex flex-wrap gap-2">
-                    {['ALL', 'OPEN', 'RESOLVED'].map((value) => (
+                <div className="flex flex-wrap items-center gap-2">
+                    <span className="mr-1 text-sm font-medium text-slate-500">
+                        상태
+                    </span>
+                    {(
+                        ['ALL', 'OPEN', 'RESOLVED'] as QuestionStatusFilter[]
+                    ).map((value) => (
                         <button
                             key={value}
                             type="button"
-                            onClick={() =>
-                                setFilter(value as 'ALL' | 'OPEN' | 'RESOLVED')
-                            }
+                            onClick={() => setStatusFilter(value)}
                             className={`rounded-full border px-3 py-1.5 text-sm transition ${
-                                filter === value
+                                statusFilter === value
                                     ? 'border-blue-600 bg-blue-600 text-white'
                                     : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
                             }`}
@@ -59,6 +69,29 @@ export default function QnABoard() {
                                 : value === 'OPEN'
                                   ? '미해결'
                                   : '해결'}
+                        </button>
+                    ))}
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                    <span className="mr-1 text-sm font-medium text-slate-500">
+                        분야
+                    </span>
+                    {[
+                        { label: '전체', value: 'ALL' as const },
+                        ...QUESTION_CATEGORY_OPTIONS,
+                    ].map((option) => (
+                        <button
+                            key={option.value}
+                            type="button"
+                            onClick={() => setCategoryFilter(option.value)}
+                            className={`rounded-full border px-3 py-1.5 text-sm transition ${
+                                categoryFilter === option.value
+                                    ? 'border-blue-600 bg-blue-600 text-white'
+                                    : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
+                            }`}
+                        >
+                            {option.label}
                         </button>
                     ))}
                 </div>
@@ -97,7 +130,8 @@ export default function QnABoard() {
                     }`}
                 >
                     <QnAList
-                        filter={filter}
+                        statusFilter={statusFilter}
+                        categoryFilter={categoryFilter}
                         selectedId={selectedId}
                         onSelect={setSelectedId}
                         refreshKey={refreshKey}

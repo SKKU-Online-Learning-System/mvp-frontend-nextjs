@@ -4,12 +4,17 @@ export type QnAAuthor =
     | string
     | (Partial<Pick<AuthUser, 'id' | 'profileImage'>> & { name: string });
 
+export type QuestionCategory = 'MILITARY' | 'ACADEMIC' | 'GENERAL';
+
+export type QuestionCategoryFilter = 'ALL' | QuestionCategory;
+
 export type Question = {
     id: number;
     title: string;
     content: string;
     author: QnAAuthor;
     status: 'OPEN' | 'RESOLVED';
+    category: QuestionCategory;
     createdAt: string;
 };
 
@@ -27,6 +32,7 @@ export type QuestionRequestType = {
     content: string;
     author: string;
     status?: 'OPEN' | 'RESOLVED';
+    category: QuestionCategory;
 };
 
 export type AnswerRequestType = {
