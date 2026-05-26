@@ -1,6 +1,6 @@
 'use client';
 
-import { setLocalDevUser } from '@/app/api/auth';
+import { clearLoggedOutMarker, setLocalDevUser } from '@/app/api/auth';
 import { Style } from '@/components/ui/navigation-menu';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -44,6 +44,7 @@ export function LoginButton({ style }: Props) {
       return;
     }
 
+    clearLoggedOutMarker();
     setIsLoggingIn(true);
 
     if (!shouldUseBackdoor) {
@@ -71,6 +72,10 @@ export function LoginButton({ style }: Props) {
     }
   };
 
+  const handleSsoLogin = () => {
+    clearLoggedOutMarker();
+  };
+
   return (
     <div className='flex h-full w-[150px] flex-col items-end justify-end pb-2'>
       {isDevelopment ? (
@@ -85,6 +90,7 @@ export function LoginButton({ style }: Props) {
       ) : (
         <Link
           href='https://login.skku.edu/?retUrl=i0u4a8g61ure5516k3z6'
+          onClick={handleSsoLogin}
           className={className}
         >
           LOGIN

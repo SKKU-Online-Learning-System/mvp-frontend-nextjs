@@ -3,11 +3,11 @@ import {
   DatasetSummaryItem,
   PreviewFile,
 } from '@/components/dataset/data/types';
+import { AuthUser } from '@/types/auth';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { hasLocalDevUser } from './auth';
 import { api, apiBaseURL, jwtApi } from './axios';
-import { AuthUser } from '@/types/auth';
 
 export type DatasetFileResponse = {
   id: number;
@@ -343,16 +343,9 @@ export const postDatasetLike = async (
   }
 
   try {
-    const res = await jwtApi.post<DatasetLikeResponse>('/auth', {
-      datasetLikeId: id,
-    });
+    const res = await jwtApi.post<DatasetLikeResponse>(`/datasets/${id}/likes`);
     return res.data;
   } catch (err) {
-    if (axios.isAxiosError(err) && err.response?.status === 404) {
-      toast.error('Failed to update dataset like.');
-      return { error: 'unavailable' };
-    }
-
     if (axios.isAxiosError(err) && err.response?.status === 401) {
       toast.error('좋아요는 로그인 후 이용할 수 있습니다.');
       return { error: 'unauthorized' };
@@ -362,7 +355,6 @@ export const postDatasetLike = async (
     return { error: 'unavailable' };
   }
 };
-
 export const downloadDatasetArchive = async (id: number, title: string) => {
   try {
     const res = await axios.get<Blob>(`/dataset-download/${id}`, {

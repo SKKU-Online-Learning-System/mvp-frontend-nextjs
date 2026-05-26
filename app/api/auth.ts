@@ -5,6 +5,7 @@ import { jwtApi } from './axios';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 const localDevUserKey = 'local-dev-user';
+const loggedOutKey = 'mrdang-auth-logged-out';
 export const authLogoutEvent = 'mrdang:auth:logout';
 const localDevUser: AuthUser = {
   id: 'local-dev',
@@ -39,6 +40,10 @@ const getCookieValue = (name: string) => {
 };
 
 const getKingoCookieUser = (): AuthUser | null => {
+  if (hasLoggedOutMarker()) {
+    return null;
+  }
+
   const loginUserID = getCookieValue('loginUserID');
   const uid = getCookieValue('uid');
 
@@ -58,6 +63,7 @@ const getKingoCookieUser = (): AuthUser | null => {
 
 export const setLocalDevUser = () => {
   if (typeof window !== 'undefined') {
+    localStorage.removeItem(loggedOutKey);
     localStorage.setItem(localDevUserKey, 'true');
   }
 
@@ -70,19 +76,47 @@ const clearLocalDevUser = () => {
   }
 };
 
+const hasLoggedOutMarker = () => {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  return localStorage.getItem(loggedOutKey) === 'true';
+};
+
+const markLoggedOut = () => {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(loggedOutKey, 'true');
+  }
+};
+
+export const clearLoggedOutMarker = () => {
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem(loggedOutKey);
+  }
+};
+
 const clearCookie = (name: string) => {
   if (typeof document === 'undefined') {
     return;
   }
 
   const hostname = window.location.hostname;
-  const base = `${name}=; Max-Age=0; path=/`;
+  const base = `${name}=; Max-Age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
   document.cookie = base;
-  document.cookie = `${base}; domain=${hostname}`;
 
-  if (hostname.split('.').length > 2) {
-    document.cookie = `${base}; domain=.${hostname.split('.').slice(-3).join('.')}`;
+  const parts = hostname.split('.');
+  const domainCandidates = new Set<string>();
+
+  for (let index = 0; index <= parts.length - 2; index += 1) {
+    const domain = parts.slice(index).join('.');
+    domainCandidates.add(domain);
+    domainCandidates.add(`.${domain}`);
   }
+
+  domainCandidates.forEach((domain) => {
+    document.cookie = `${base}; domain=${domain}`;
+  });
 };
 
 const clearKingoCookies = () => {
@@ -122,6 +156,7 @@ const notifyLoggedOut = () => {
 export const getCurrentUser = async () => {
   try {
     const res = await jwtApi.get<AuthUser>('/auth/me');
+    clearLoggedOutMarker();
     return res.data;
   } catch (err) {
     const fallbackUser = getStoredLocalDevUser() ?? getKingoCookieUser();
@@ -144,15 +179,16 @@ export const getCurrentUser = async () => {
 };
 
 export const logoutUser = async () => {
-  clearLocalDevUser();
-  clearKingoCookies();
-  clearStoredDatasetLikes();
-  notifyLoggedOut();
-
   try {
     await jwtApi.post('/auth/logout');
   } catch {
-    // Client-side cleanup above is enough to update the UI even if SSO logout fails.
+    // Client-side cleanup below keeps the UI logged out even if the network request fails.
+  } finally {
+    clearLocalDevUser();
+    clearKingoCookies();
+    clearStoredDatasetLikes();
+    markLoggedOut();
+    notifyLoggedOut();
   }
 
   return true;

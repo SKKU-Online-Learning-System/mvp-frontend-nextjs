@@ -5,6 +5,7 @@ import CompetitionDatasetGrid from '@/components/dataset/CompetitionDatasetGrid'
 import ContentFilter from '@/components/main/MainContent/ContentFilter';
 import useCurrentUser from '@/hooks/useCurrentUser';
 import { queryAtom } from '@/stores/atom';
+import { AuthUser } from '@/types/auth';
 import { useAtomValue } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
 import { DatasetSummaryItem } from './data/types';
@@ -25,26 +26,38 @@ const readStoredNumber = (key: string, fallback: number) => {
 
 const withStoredEngagement = (
   dataset: DatasetSummaryItem,
-  userId: number | string | null
-) => ({
-  ...dataset,
-  views: readStoredNumber(viewStorageKey(dataset.id), dataset.views),
-  likes:
-    userId === null
-      ? dataset.likes
-      : readStoredNumber(
-          datasetLikeCountStorageKey(userId, dataset.id),
-          dataset.likes
-        ),
-  downloads: readStoredNumber(downloadStorageKey(dataset.id), dataset.downloads),
-  isLike:
-    userId === null
-      ? false
-      : typeof dataset.isLike === 'boolean'
-        ? dataset.isLike
-        : localStorage.getItem(datasetLikeStorageKey(userId, dataset.id)) ===
-          'true',
-});
+  user: AuthUser | null
+) => {
+  const userId = user?.id ?? null;
+  const usesLocalLikeCache = userId === 'local-dev';
+  const likedDatasetIds = user?.likedDatasetIds?.map(Number);
+
+  return {
+    ...dataset,
+    views: readStoredNumber(viewStorageKey(dataset.id), dataset.views),
+    likes:
+      userId !== null && usesLocalLikeCache
+        ? readStoredNumber(
+            datasetLikeCountStorageKey(userId, dataset.id),
+            dataset.likes
+          )
+        : dataset.likes,
+    downloads: readStoredNumber(
+      downloadStorageKey(dataset.id),
+      dataset.downloads
+    ),
+    isLike:
+      userId === null
+        ? false
+        : Array.isArray(likedDatasetIds)
+          ? likedDatasetIds.includes(dataset.id)
+          : typeof dataset.isLike === 'boolean'
+            ? dataset.isLike
+            : localStorage.getItem(
+                datasetLikeStorageKey(userId, dataset.id)
+              ) === 'true',
+  };
+};
 
 function DatasetGridSkeleton() {
   return (
@@ -84,10 +97,11 @@ export default function CompetitionDataset() {
 
       setIsLoading(true);
       const data = await getDatasets();
-      const userId = currentUser?.id ?? null;
 
       if (!cancelled) {
-        setDatasets(data.map((item) => withStoredEngagement(item, userId)));
+        setDatasets(
+          data.map((item) => withStoredEngagement(item, currentUser))
+        );
         setIsLoading(false);
       }
     };
@@ -101,9 +115,8 @@ export default function CompetitionDataset() {
 
   useEffect(() => {
     const syncStoredEngagement = () => {
-      const userId = currentUser?.id ?? null;
       setDatasets((current) =>
-        current.map((item) => withStoredEngagement(item, userId))
+        current.map((item) => withStoredEngagement(item, currentUser))
       );
     };
 

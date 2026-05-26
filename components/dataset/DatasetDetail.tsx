@@ -59,6 +59,11 @@ const readStoredLikeCount = (
   fallback: number
 ) => readStoredNumber(datasetLikeCountStorageKey(userId, datasetId), fallback);
 
+const hasLikedDataset = (
+  likedDatasetIds: number[] | undefined,
+  datasetId: number
+) => likedDatasetIds?.map(Number).includes(datasetId) ?? false;
+
 const overviewRows = (dataset: DatasetItem) => [
   { label: LABELS.field, value: dataset.tags.join(', ') },
   { label: LABELS.type, value: dataset.type },
@@ -146,9 +151,11 @@ export default function DatasetDetail({ dataset }: Props) {
   });
 
   useEffect(() => {
+    const usesLocalLikeCache = currentUser?.id === 'local-dev';
+
     setViews(readStoredNumber(viewStorageKey(dataset.id), dataset.views));
     setLikes(
-      currentUser
+      currentUser && usesLocalLikeCache
         ? readStoredLikeCount(currentUser.id, dataset.id, dataset.likes)
         : dataset.likes
     );
@@ -157,6 +164,8 @@ export default function DatasetDetail({ dataset }: Props) {
     );
     if (!currentUser) {
       setIsLike(false);
+    } else if (Array.isArray(currentUser.likedDatasetIds)) {
+      setIsLike(hasLikedDataset(currentUser.likedDatasetIds, dataset.id));
     } else if (typeof dataset.isLike === 'boolean') {
       setIsLike(dataset.isLike);
     } else {
