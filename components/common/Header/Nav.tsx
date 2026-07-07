@@ -11,9 +11,9 @@ import {
 } from '@/components/ui/sheet';
 import { LoginButton } from './LoginButton';
 import Logo from './Logo';
-import { LogoutButton } from './LogoutButton';
 import { MobileMenu } from './MobileMenu';
 import { MyNavigationMenu } from './MyNavigationMenu';
+import { UserMenu } from './UserMenu';
 
 type Props = {
     refreshToken?: unknown;
@@ -99,16 +99,7 @@ export default function Nav({ style = 'black' }: Props) {
 
     const renderAuthControls = () =>
         currentUser ? (
-            <div className="flex items-center gap-3">
-                <span
-                    className={`hidden sm:block text-sm ${
-                        style === 'white' ? 'text-gray-600' : 'text-white'
-                    }`}
-                >
-                    {currentUser.name}
-                </span>
-                <LogoutButton style={style} />
-            </div>
+            <UserMenu currentUser={currentUser} style={style} />
         ) : (
             <LoginButton style={style} />
         );

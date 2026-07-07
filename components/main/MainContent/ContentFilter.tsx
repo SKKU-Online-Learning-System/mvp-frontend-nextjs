@@ -22,13 +22,16 @@ type Props = {
 };
 
 const currentYear = new Date().getFullYear();
-const yearFrameworks: Framework[] = Array.from({ length: currentYear - 2020 + 1 }, (_, i) => {
-  const year = (2020 + i).toString();
-  return {
-    value: year,
-    label: year,
-  };
-});
+const yearFrameworks: Framework[] = Array.from(
+  { length: currentYear - 2020 + 1 },
+  (_, i) => {
+    const year = (2020 + i).toString();
+    return {
+      value: year,
+      label: year,
+    };
+  }
+);
 
 const sortFrameworks: Framework[] = [
   {
@@ -58,7 +61,6 @@ const FIELD_TAGS = [
 
   { label: '시계열', icon: '⏱️' },
   { label: '이상탐지', icon: '🚨' },
-
 ];
 
 export default function ContentFilter({
@@ -78,6 +80,11 @@ export default function ContentFilter({
   const searchParams = useSearchParams();
 
   const changeCategory = (newCategory: string) => {
+    if (newCategory === '인턴십 참여 기업') {
+      router.push('/content/activity/internship-companies');
+      return;
+    }
+
     const params = new URLSearchParams(searchParams.toString());
     params.set('category', newCategory);
     router.push(`?${params.toString()}`);
@@ -116,11 +123,9 @@ export default function ContentFilter({
   };
 
   return (
-    <div className="flex flex-col gap-4">
-
+    <div className='flex flex-col gap-4'>
       {showFieldFilter && fields && setFields && (
-        <div className="grid grid-cols-[100px_1fr] gap-3">
-
+        <div className='grid grid-cols-[100px_1fr] gap-3'>
           {/* 🌐 전체 버튼 */}
           <button
             onClick={() => setFields([])}
@@ -128,65 +133,67 @@ export default function ContentFilter({
         flex flex-col items-center justify-center
         rounded-2xl border
         transition-all duration-200
-        ${fields.length === 0
-                ? 'bg-blue-500 text-white shadow-md border-blue-500'
-                : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
-              }
+        ${
+          fields.length === 0
+            ? 'bg-blue-500 text-white shadow-md border-blue-500'
+            : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
+        }
       `}
           >
-            <span className="text-lg mb-1">🌐</span>
-            <span className="text-sm font-semibold">ALL</span>
-            <span className="text-xs mt-1">전체</span>
+            <span className='text-lg mb-1'>🌐</span>
+            <span className='text-sm font-semibold'>ALL</span>
+            <span className='text-xs mt-1'>전체</span>
           </button>
 
           {/* 🧠 분야 버튼들 */}
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-            {FIELD_TAGS.filter(tag => tag.label !== '전체').map(({ label, icon }) => {
-              const isActive = fields.includes(label);
+          <div className='grid grid-cols-3 md:grid-cols-6 gap-3'>
+            {FIELD_TAGS.filter((tag) => tag.label !== '전체').map(
+              ({ label, icon }) => {
+                const isActive = fields.includes(label);
 
-              return (
-                <button
-                  key={label}
-                  onClick={() => toggleField(label)}
-                  className={`
+                return (
+                  <button
+                    key={label}
+                    onClick={() => toggleField(label)}
+                    className={`
               flex flex-col items-center justify-center
               rounded-2xl py-3 border
               transition-all duration-200
               hover:scale-105 active:scale-95
-              ${isActive
-                      ? 'bg-black text-white border-black shadow-md'
-                      : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
-                    }
+              ${
+                isActive
+                  ? 'bg-black text-white border-black shadow-md'
+                  : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
+              }
             `}
-                >
-                  <span className="text-xl mb-1">{icon}</span>
-                  <span className="text-xs font-medium">{label}</span>
-                </button>
-              );
-            })}
+                  >
+                    <span className='text-xl mb-1'>{icon}</span>
+                    <span className='text-xs font-medium'>{label}</span>
+                  </button>
+                );
+              }
+            )}
           </div>
-
         </div>
       )}
 
-
       {/* 🏷 1. 카테고리 */}
       {showBadge !== false && (
-        <div className="flex flex-wrap gap-2">
+        <div className='flex flex-wrap gap-2'>
           {filterList
             ? filterList.map(({ name, checked }, idx) => (
-              <Badge
-                key={idx}
-                variant={checked ? 'default' : 'secondary'}
-                className="cursor-pointer h-8 font-semibold"
-                onClick={() => onClick(name)}
-              >
-                {name}
-              </Badge>
-            ))
+                <Badge
+                  key={idx}
+                  variant={checked ? 'default' : 'secondary'}
+                  className='cursor-pointer h-8 font-semibold'
+                  onClick={() => onClick(name)}
+                >
+                  {name}
+                </Badge>
+              ))
             : Array.from({ length: 3 }).map((_, idx) => (
-              <ContentFilterSkeleton key={idx} />
-            ))}
+                <ContentFilterSkeleton key={idx} />
+              ))}
         </div>
       )}
 
@@ -194,21 +201,20 @@ export default function ContentFilter({
       <SearchBar />
 
       {/* ⚙️ 3. 옵션 */}
-      <div className="flex justify-end gap-2">
+      <div className='flex justify-end gap-2'>
         <ComboBox
-          defaultName="연도"
+          defaultName='연도'
           frameworks={[{ value: 'all', label: '전체' }, ...yearFrameworks]}
           value={year}
           setValue={changeYear}
         />
         <ComboBox
-          defaultName="정렬기준"
+          defaultName='정렬기준'
           frameworks={sortFrameworks}
           value={sort}
           setValue={changeSort}
         />
       </div>
-
     </div>
   );
 }

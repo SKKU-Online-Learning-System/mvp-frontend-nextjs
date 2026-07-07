@@ -81,3 +81,25 @@ export const postContentLike = async (id: number) => {
     }
   }
 };
+
+export type ContentWatchProgressPayload = {
+  progressSeconds: number;
+  durationSeconds?: number;
+  completed?: boolean;
+};
+
+export const postContentWatchProgress = async (
+  id: number,
+  payload: ContentWatchProgressPayload
+) => {
+  if (hasLocalDevUser()) {
+    return true;
+  }
+
+  try {
+    await jwtApi.post(`/contents/${id}/watch-progress`, payload);
+    return true;
+  } catch {
+    return false;
+  }
+};

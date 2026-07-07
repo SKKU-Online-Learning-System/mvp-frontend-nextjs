@@ -66,6 +66,10 @@ export type DatasetLikeResponse = {
   isLike: boolean;
 };
 
+export type DatasetDownloadResponse = {
+  downloads: number;
+};
+
 export type DatasetLikeResult =
   | DatasetLikeResponse
   | {
@@ -372,6 +376,7 @@ export const downloadDatasetArchive = async (id: number, title: string) => {
     link.click();
     link.remove();
     URL.revokeObjectURL(url);
+    await recordDatasetDownload(id);
 
     return true;
   } catch (err) {
@@ -380,5 +385,20 @@ export const downloadDatasetArchive = async (id: number, title: string) => {
     }
 
     return false;
+  }
+};
+
+const recordDatasetDownload = async (id: number) => {
+  if (hasLocalDevUser()) {
+    return null;
+  }
+
+  try {
+    const res = await jwtApi.post<DatasetDownloadResponse>(
+      `/datasets/${id}/downloads`
+    );
+    return res.data;
+  } catch {
+    return null;
   }
 };

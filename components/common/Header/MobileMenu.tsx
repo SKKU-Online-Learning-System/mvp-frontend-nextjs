@@ -33,7 +33,13 @@ const menuItems = [
     },
     {
         name: '성대한 활동',
-        items: ['인턴십 후기', 'IT 해외봉사', '글로벌 챌린지', '현직자 인터뷰'],
+        items: [
+            '인턴십 후기',
+            '인턴십 참여 기업',
+            'IT 해외봉사',
+            '글로벌 챌린지',
+            '현직자 인터뷰',
+        ],
         type: 'activity',
     },
     {
@@ -47,6 +53,14 @@ const menuItems = [
         type: 'qna',
     },
 ];
+
+const getMenuHref = (type: string, item: string) => {
+    if (item === '인턴십 참여 기업') {
+        return '/content/activity/internship-companies';
+    }
+
+    return `/content/${type}?category=${item}`;
+};
 
 export function MobileMenu({ style, currentUser, setOpen }: Props) {
     return (
@@ -67,7 +81,7 @@ export function MobileMenu({ style, currentUser, setOpen }: Props) {
                             {menu.items.map((item) => (
                                 <Link
                                     key={item}
-                                    href={`/content/${menu.type}?category=${item}`}
+                                    href={getMenuHref(menu.type, item)}
                                     onClick={() => setOpen(false)}
                                     className="rounded-lg px-4 py-3 text-sm text-muted-foreground hover:bg-accent transition"
                                 >
@@ -89,11 +103,18 @@ export function MobileMenu({ style, currentUser, setOpen }: Props) {
 
             <div className="pt-6 border-t mt-6">
                 {currentUser ? (
-                    <div className="flex flex-col items-end gap-2">
-                        <p className="text-sm text-muted-foreground">
+                    <div className="flex flex-col gap-2">
+                        <p className="mb-1 truncate px-3 text-sm font-semibold text-gray-700">
                             {currentUser.name}
                         </p>
-                        <LogoutButton style={style} />
+                        <Link
+                            href="/my"
+                            onClick={() => setOpen(false)}
+                            className="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-accent"
+                        >
+                            나의 명륜당
+                        </Link>
+                        <LogoutButton style={style} variant="menu-item" />
                     </div>
                 ) : (
                     <LoginButton style={style} />

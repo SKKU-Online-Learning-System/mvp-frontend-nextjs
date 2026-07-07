@@ -74,6 +74,11 @@ const menuItems: {
                 description: descriptions['인턴십 후기'] ?? '',
             },
             {
+                title: '인턴십 참여 기업',
+                href: '/content/activity/internship-companies',
+                description: descriptions['인턴십 참여 기업'] ?? '',
+            },
+            {
                 title: 'IT 해외봉사',
                 href: '/content/activity?category=IT 해외봉사',
                 description: descriptions['IT 해외봉사'] ?? '',

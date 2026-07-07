@@ -34,6 +34,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: 'https://mrdang.cs.skku.edu/content/activity/internship-companies',
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
       url: 'https://mrdang.cs.skku.edu/playground',
       lastModified: new Date(),
       changeFrequency: 'weekly',

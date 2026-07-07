@@ -2,10 +2,12 @@
 @import 'tw-animate-css';
 @import 'pretendard/dist/web/variable/pretendardvariable.css';
 
-html,
+html {
+  overflow-x: clip;
+}
+
 body {
-  overflow-y: scroll;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 @layer components {
