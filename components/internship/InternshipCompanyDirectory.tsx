@@ -20,9 +20,14 @@ import type { LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { cn } from '@/lib/utils';
-import { InternshipCompany, internshipCompanies } from './internshipCompanies';
+import useCurrentUser from '@/hooks/useCurrentUser';
+import { LoginButton } from '@/components/common/Header/LoginButton';
+import { getInternshipCompanies } from '@/app/api/internship';
+import axios from 'axios';
+import { InternshipCompany } from './internshipCompanies';
 
 type SearchMode = 'name' | 'field';
+type LoadState = 'loading' | 'ready' | 'denied' | 'error';
 type SortKey = 'latest' | 'rating' | 'views';
 
 const VIEW_STORAGE_KEY = 'mrdang-internship-company-views';
@@ -147,6 +152,45 @@ export function InternshipCompanyDirectory() {
   const [sortKey, setSortKey] = useState<SortKey>('latest');
   const [viewCounts, setViewCounts] = useState<Record<string, number>>({});
   const [selectedCompanyId, setSelectedCompanyId] = useState('');
+  const { currentUser, isLoading: isUserLoading } = useCurrentUser();
+  const [companies, setCompanies] = useState<InternshipCompany[]>([]);
+  const [loadState, setLoadState] = useState<LoadState>('loading');
+
+  useEffect(() => {
+    if (isUserLoading) {
+      return;
+    }
+
+    if (!currentUser) {
+      setCompanies([]);
+      setLoadState('denied');
+      return;
+    }
+
+    let cancelled = false;
+    setLoadState('loading');
+
+    getInternshipCompanies()
+      .then((data) => {
+        if (!cancelled) {
+          setCompanies(data);
+          setLoadState('ready');
+        }
+      })
+      .catch((error) => {
+        if (cancelled) {
+          return;
+        }
+
+        const status = axios.isAxiosError(error) ? error.response?.status : null;
+        setCompanies([]);
+        setLoadState(status === 401 || status === 403 ? 'denied' : 'error');
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [currentUser, isUserLoading]);
 
   useEffect(() => {
     setViewCounts(readViewCounts());
@@ -155,7 +199,7 @@ export function InternshipCompanyDirectory() {
   const visibleCompanies = useMemo(() => {
     const normalizedQuery = normalize(query.trim());
 
-    return internshipCompanies
+    return companies
       .filter((company) => {
         if (!normalizedQuery) {
           return true;
@@ -200,7 +244,7 @@ export function InternshipCompanyDirectory() {
           compareByName(a, b)
         );
       });
-  }, [query, searchMode, sortKey, viewCounts]);
+  }, [companies, query, searchMode, sortKey, viewCounts]);
 
   useEffect(() => {
     if (visibleCompanies.length === 0) {
@@ -222,6 +266,36 @@ export function InternshipCompanyDirectory() {
     visibleCompanies.find((company) => company.id === selectedCompanyId) ??
     visibleCompanies[0] ??
     null;
+
+  if (isUserLoading || loadState === 'loading') {
+    return (
+      <StatusPanel title='불러오는 중입니다.' />
+    );
+  }
+
+  if (!currentUser || loadState === 'denied') {
+    return (
+      <StatusPanel
+        title='킹고 로그인이 필요합니다.'
+        description='인턴십 참여 기업 정보는 로그인 후 확인할 수 있습니다.'
+      >
+        <LoginButton
+          style='white'
+          wrapperClassName='h-auto w-auto items-center justify-center pb-0'
+          className='h-10 rounded-md bg-gray-950 px-6 text-sm text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white'
+        />
+      </StatusPanel>
+    );
+  }
+
+  if (loadState === 'error') {
+    return (
+      <StatusPanel
+        title='기업 정보를 불러오지 못했습니다.'
+        description='잠시 후 다시 시도해 주세요.'
+      />
+    );
+  }
 
   const handleSelectCompany = (companyId: string) => {
     setSelectedCompanyId(companyId);
@@ -658,5 +732,27 @@ function RecordRow({ label, value }: { label: string; value: string }) {
       <dt className='font-semibold text-gray-500'>{label}</dt>
       <dd className='break-words'>{value || '미공개'}</dd>
     </div>
+  );
+}
+
+function StatusPanel({
+  title,
+  description,
+  children,
+}: {
+  title: string;
+  description?: string;
+  children?: ReactNode;
+}) {
+  return (
+    <main className='my-container pb-16'>
+      <div className='flex min-h-[420px] flex-col items-center justify-center gap-4 rounded-lg border bg-white p-8 text-center'>
+        <p className='text-lg font-bold text-gray-950'>{title}</p>
+        {description && (
+          <p className='text-sm text-gray-500'>{description}</p>
+        )}
+        {children}
+      </div>
+    </main>
   );
 }

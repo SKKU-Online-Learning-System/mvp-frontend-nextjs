@@ -5,8 +5,14 @@ import { Style } from '@/components/ui/navigation-menu';
 import Link from 'next/link';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { SSO_LOGIN_URL } from '@/lib/loginUrl';
 
-type Props = Style;
+type Props = Style & {
+  /** Extra classes for the LOGIN control itself. */
+  className?: string;
+  /** Extra classes for the wrapper; the header needs it right-aligned, panels do not. */
+  wrapperClassName?: string;
+};
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 const localLoginGlsId =
@@ -30,13 +36,14 @@ const isLocalApiBaseUrl = (url?: string) => {
 
 const shouldUseBackdoor = isDevelopment && isLocalApiBaseUrl(apiBaseUrl);
 
-export function LoginButton({ style }: Props) {
+export function LoginButton({ style, className: extraClassName, wrapperClassName }: Props) {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const className = cn(
     'group inline-flex h-7 w-max items-center justify-center rounded-md bg-my-background px-4 py-2 text-xs font-extrabold focus-visible:ring-ring/50 outline-none transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:cursor-not-allowed disabled:opacity-60',
     style === 'white'
       ? 'text-gray-500 hover:bg-accent hover:text-gray-700 focus:bg-accent focus:text-accent-foreground'
-      : 'text-white hover:bg-black/40 hover:text-my-accent-foreground focus:bg-my-accent focus:text-my-accent-foreground'
+      : 'text-white hover:bg-black/40 hover:text-my-accent-foreground focus:bg-my-accent focus:text-my-accent-foreground',
+    extraClassName
   );
 
   const handleLocalLogin = async () => {
@@ -77,7 +84,12 @@ export function LoginButton({ style }: Props) {
   };
 
   return (
-    <div className='flex h-full w-[150px] flex-col items-end justify-end pb-2'>
+    <div
+      className={cn(
+        'flex h-full w-[150px] flex-col items-end justify-end pb-2',
+        wrapperClassName
+      )}
+    >
       {isDevelopment ? (
         <button
           type='button'
@@ -89,7 +101,7 @@ export function LoginButton({ style }: Props) {
         </button>
       ) : (
         <Link
-          href='https://login.skku.edu/?retUrl=i0u4a8g61ure5516k3z6'
+          href={SSO_LOGIN_URL}
           onClick={handleSsoLogin}
           className={className}
         >
