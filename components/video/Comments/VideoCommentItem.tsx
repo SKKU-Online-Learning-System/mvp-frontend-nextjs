@@ -2,7 +2,6 @@
 
 import { deleteVideoComment, updateVideoComment } from '@/app/api/videoComment';
 import { VideoComment } from '@/types/videoComment';
-import { CornerDownRight } from 'lucide-react';
 import { useState } from 'react';
 import { formatDateTime } from '@/lib/date';
 import VideoCommentForm, {
@@ -84,7 +83,6 @@ export default function VideoCommentItem({
     >
       <div className='flex flex-wrap items-center justify-between gap-2'>
         <div className='flex min-w-0 items-center gap-2 text-xs text-gray-400'>
-          {isReply && <CornerDownRight className='size-3.5 text-gray-300' />}
           {comment.deleted ? (
             <span className='font-medium text-gray-400'>삭제된 댓글</span>
           ) : (

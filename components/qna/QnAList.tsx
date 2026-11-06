@@ -3,7 +3,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Question } from '@/types/qna';
-import { CheckCircle2, CircleDashed } from 'lucide-react';
 import { formatDateTime } from '@/lib/date';
 import { getAuthorName } from '@/lib/qnaAuthor';
 import { getQuestionCategoryLabel } from '@/lib/qnaCategory';
@@ -18,7 +17,6 @@ export function QuestionStatusBadge({
       variant='outline'
       className='border-amber-200 bg-amber-50 text-amber-700'
     >
-      <CircleDashed className='size-3' />
       미해결
     </Badge>
   ) : (
@@ -26,7 +24,6 @@ export function QuestionStatusBadge({
       variant='outline'
       className='border-emerald-200 bg-emerald-50 text-emerald-700'
     >
-      <CheckCircle2 className='size-3' />
       해결
     </Badge>
   );

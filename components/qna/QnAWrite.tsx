@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import useQnAAuthor from '@/hooks/useQnAAuthor';
 import useQnAOwnerTokens from '@/hooks/useQnAOwnerTokens';
 import { QuestionCategory } from '@/types/qna';
-import { PenLine } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -68,9 +67,6 @@ export default function QnAWrite() {
   return (
     <div className='mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 pb-16 sm:px-6'>
       <div className='flex items-start gap-3 border-b pb-6'>
-        <div className='rounded-lg border border-emerald-100 bg-emerald-50 p-2.5 text-emerald-700'>
-          <PenLine className='size-5' />
-        </div>
         <div>
           <h1 className='text-2xl font-bold text-gray-950 sm:text-3xl'>
             질문 작성

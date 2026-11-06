@@ -3,7 +3,6 @@
 import { getVideoComments } from '@/app/api/videoComment';
 import useVideoCommentOwnerTokens from '@/hooks/useVideoCommentOwnerTokens';
 import { VideoComment } from '@/types/videoComment';
-import { MessageSquareText } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import VideoCommentForm from './VideoCommentForm';
 import VideoCommentItem from './VideoCommentItem';
@@ -32,9 +31,6 @@ export default function VideoComments({ contentId }: { contentId: number }) {
   return (
     <section className='w-full'>
       <div className='mb-4 flex items-center gap-3 border-b pb-4'>
-        <div className='rounded-lg border border-emerald-100 bg-emerald-50 p-2 text-emerald-700'>
-          <MessageSquareText className='size-4' />
-        </div>
         <h2 className='text-lg font-bold text-gray-950 sm:text-xl'>댓글</h2>
         <span className='rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-semibold text-gray-600'>
           {commentCount.toLocaleString('ko-KR')}
@@ -57,7 +53,6 @@ export default function VideoComments({ contentId }: { contentId: number }) {
         </div>
       ) : comments.length === 0 ? (
         <div className='flex flex-col items-center gap-2 rounded-lg border border-dashed border-gray-200 bg-gray-50 px-4 py-10 text-center'>
-          <MessageSquareText className='size-5 text-gray-300' />
           <p className='text-sm font-semibold text-gray-600'>
             아직 댓글이 없습니다.
           </p>

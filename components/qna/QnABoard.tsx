@@ -4,13 +4,6 @@ import { getQuestions } from '@/app/api/qna';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Question, QuestionCategoryFilter } from '@/types/qna';
-import {
-  CheckCircle2,
-  CircleDashed,
-  MessageCircleQuestion,
-  MessagesSquare,
-  PenLine,
-} from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { QUESTION_CATEGORY_OPTIONS } from '@/lib/qnaCategory';
@@ -87,9 +80,6 @@ export default function QnABoard() {
       <section className='flex flex-col gap-5 border-b pb-6'>
         <div className='flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between'>
           <div className='flex items-start gap-3'>
-            <div className='rounded-lg border border-emerald-100 bg-emerald-50 p-2.5 text-emerald-700'>
-              <MessageCircleQuestion className='size-5' />
-            </div>
             <div>
               <h1 className='text-2xl font-bold text-gray-950 sm:text-3xl'>
                 질문 게시판
@@ -106,29 +96,14 @@ export default function QnABoard() {
             onClick={() => router.push('/content/qna/write')}
             className='h-10 shrink-0 px-5'
           >
-            <PenLine className='size-4' />
             질문 작성하기
           </Button>
         </div>
 
         <div className='grid grid-cols-3 gap-3 sm:max-w-md'>
-          <StatTile
-            icon={MessagesSquare}
-            label='전체 질문'
-            value={counts.total}
-          />
-          <StatTile
-            icon={CircleDashed}
-            label='미해결'
-            value={counts.open}
-            tone='amber'
-          />
-          <StatTile
-            icon={CheckCircle2}
-            label='해결'
-            value={counts.resolved}
-            tone='emerald'
-          />
+          <StatTile label='전체 질문' value={counts.total} />
+          <StatTile label='미해결' value={counts.open} tone='amber' />
+          <StatTile label='해결' value={counts.resolved} tone='emerald' />
         </div>
 
         <div className='flex flex-col gap-3'>
@@ -233,9 +208,6 @@ export default function QnABoard() {
             />
           ) : (
             <div className='flex min-h-[320px] flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-gray-200 bg-gray-50 px-6 text-center'>
-              <div className='rounded-full bg-white p-3 text-gray-400 shadow-xs'>
-                <MessageCircleQuestion className='size-6' />
-              </div>
               <p className='text-sm font-semibold text-gray-700'>
                 질문을 선택하면 자세한 내용을 볼 수 있습니다.
               </p>
@@ -268,12 +240,10 @@ function FilterRow({
 }
 
 function StatTile({
-  icon: Icon,
   label,
   value,
   tone = 'gray',
 }: {
-  icon: React.ComponentType<{ className?: string }>;
   label: string;
   value: number;
   tone?: 'gray' | 'amber' | 'emerald';
@@ -290,7 +260,6 @@ function StatTile({
       <div
         className={`flex items-center gap-1.5 text-xs font-semibold ${toneClass}`}
       >
-        <Icon className='size-3.5' />
         {label}
       </div>
       <p className='mt-1 text-lg font-bold text-gray-950'>
