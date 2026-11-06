@@ -2,9 +2,14 @@
 
 import { deleteVideoComment, updateVideoComment } from '@/app/api/videoComment';
 import { VideoComment } from '@/types/videoComment';
+import { CornerDownRight } from 'lucide-react';
 import { useState } from 'react';
 import { formatDateTime } from '@/lib/date';
-import VideoCommentForm from './VideoCommentForm';
+import VideoCommentForm, {
+  commentInputClass,
+  commentPrimaryButtonClass,
+  commentSecondaryButtonClass,
+} from './VideoCommentForm';
 
 type Props = {
   comment: VideoComment;
@@ -15,6 +20,19 @@ type Props = {
   removeOwnerToken: (commentId: number) => void;
   setOwnerToken: (commentId: number, token: string) => void;
 };
+
+function AuthorAvatar({ name }: { name: string }) {
+  const initial = name.trim().charAt(0) || '?';
+
+  return (
+    <span className='flex size-7 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-bold text-gray-600'>
+      {initial}
+    </span>
+  );
+}
+
+const actionButtonClass =
+  'rounded-md px-2 py-1 text-xs font-medium text-gray-600 transition hover:bg-gray-100';
 
 export default function VideoCommentItem({
   comment,
@@ -60,61 +78,34 @@ export default function VideoCommentItem({
     <article
       className={
         isReply
-          ? 'rounded-lg border border-gray-100 bg-slate-50 p-3 sm:p-4'
-          : 'rounded-xl border border-gray-200 bg-white p-4 sm:p-5'
+          ? 'rounded-lg border border-gray-100 bg-gray-50 p-3 sm:p-4'
+          : 'rounded-lg border border-gray-200 bg-white p-4 shadow-xs sm:p-5'
       }
     >
-      {comment.deleted ? (
-        <p className='text-sm italic text-gray-400'>삭제된 댓글입니다.</p>
-      ) : isEditing ? (
-        <div className='space-y-2'>
-          <textarea
-            rows={3}
-            maxLength={2000}
-            value={draft}
-            onChange={(event) => setDraft(event.target.value)}
-            className='min-h-24 w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm leading-6 focus:outline-none focus:ring-2 focus:ring-blue-500'
-          />
-          <div className='flex justify-end gap-2'>
-            <button
-              type='button'
-              onClick={() => {
-                setDraft(comment.content ?? '');
-                setIsEditing(false);
-              }}
-              className='min-h-9 rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-slate-600 hover:bg-gray-50'
-            >
-              취소
-            </button>
-            <button
-              type='button'
-              onClick={saveEdit}
-              className='min-h-9 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700'
-            >
-              저장
-            </button>
-          </div>
-        </div>
-      ) : (
-        <p className='whitespace-pre-wrap break-words text-sm leading-6 text-slate-700 sm:text-base'>
-          {comment.content}
-        </p>
-      )}
-
-      <div className='mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-gray-400'>
-        <div className='flex flex-wrap items-center gap-2'>
-          {!comment.deleted && <span>{comment.author}</span>}
-          {!comment.deleted && <span>•</span>}
+      <div className='flex flex-wrap items-center justify-between gap-2'>
+        <div className='flex min-w-0 items-center gap-2 text-xs text-gray-400'>
+          {isReply && <CornerDownRight className='size-3.5 text-gray-300' />}
+          {comment.deleted ? (
+            <span className='font-medium text-gray-400'>삭제된 댓글</span>
+          ) : (
+            <>
+              <AuthorAvatar name={comment.author} />
+              <span className='truncate text-sm font-semibold text-gray-800'>
+                {comment.author}
+              </span>
+            </>
+          )}
+          <span className='text-gray-300'>·</span>
           <span>{formatDateTime(comment.createdAt)}</span>
         </div>
 
         {!comment.deleted && !isEditing && (
-          <div className='flex items-center gap-1'>
+          <div className='flex items-center gap-0.5'>
             {!isReply && (
               <button
                 type='button'
                 onClick={() => setIsReplying((previous) => !previous)}
-                className='rounded-md px-2 py-1 font-medium text-slate-600 hover:bg-gray-100'
+                className={actionButtonClass}
               >
                 답글
               </button>
@@ -127,20 +118,59 @@ export default function VideoCommentItem({
                     setDraft(comment.content ?? '');
                     setIsEditing(true);
                   }}
-                  className='rounded-md px-2 py-1 font-medium text-slate-600 hover:bg-gray-100'
+                  className={actionButtonClass}
                 >
                   수정
                 </button>
                 <button
                   type='button'
                   onClick={remove}
-                  className='rounded-md px-2 py-1 font-medium text-red-500 hover:bg-red-50'
+                  className='rounded-md px-2 py-1 text-xs font-medium text-red-600 transition hover:bg-red-50'
                 >
                   삭제
                 </button>
               </>
             )}
           </div>
+        )}
+      </div>
+
+      <div className='mt-3'>
+        {comment.deleted ? (
+          <p className='text-sm italic text-gray-400'>삭제된 댓글입니다.</p>
+        ) : isEditing ? (
+          <div className='space-y-2'>
+            <textarea
+              rows={3}
+              maxLength={2000}
+              value={draft}
+              onChange={(event) => setDraft(event.target.value)}
+              className={`${commentInputClass} min-h-24 py-3 leading-6`}
+            />
+            <div className='flex justify-end gap-2'>
+              <button
+                type='button'
+                onClick={() => {
+                  setDraft(comment.content ?? '');
+                  setIsEditing(false);
+                }}
+                className={commentSecondaryButtonClass}
+              >
+                취소
+              </button>
+              <button
+                type='button'
+                onClick={saveEdit}
+                className={commentPrimaryButtonClass}
+              >
+                저장
+              </button>
+            </div>
+          </div>
+        ) : (
+          <p className='whitespace-pre-wrap break-words text-sm leading-6 text-gray-700 sm:text-[15px]'>
+            {comment.content}
+          </p>
         )}
       </div>
 
@@ -160,7 +190,7 @@ export default function VideoCommentItem({
       )}
 
       {!isReply && comment.replies.length > 0 && (
-        <div className='mt-3 space-y-2 border-l-2 border-slate-200 pl-3 sm:pl-5'>
+        <div className='mt-3 space-y-2 border-l-2 border-gray-200 pl-3 sm:pl-5'>
           {comment.replies.map((reply) => (
             <VideoCommentItem
               key={reply.id}

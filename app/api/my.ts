@@ -215,12 +215,15 @@ export const getMyRoadmap = async (): Promise<RoadmapDetail | null> => {
 };
 
 export const selectRoadmap = async (roadmapId: number) => {
-  const res = await jwtApi.put<RoadmapDetail>(`/me/roadmap/${roadmapId}`);
+  // 학교 보안장비가 PUT/DELETE 를 차단하므로 POST 엔드포인트를 사용한다.
+  const res = await jwtApi.post<RoadmapDetail>(
+    `/me/roadmap/${roadmapId}/select`
+  );
   return { ...res.data, steps: res.data.steps ?? [] };
 };
 
 export const clearRoadmap = async () => {
-  await jwtApi.delete('/me/roadmap');
+  await jwtApi.post('/me/roadmap/clear');
 };
 
 export const toggleRoadmapStep = async (stepId: number) => {

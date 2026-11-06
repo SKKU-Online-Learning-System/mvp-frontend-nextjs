@@ -107,7 +107,7 @@ function SectionShell({
           <h2 className='text-lg font-bold text-slate-900'>{title}</h2>
         </div>
         {badge ? (
-          <span className='rounded-full bg-green-50 px-2.5 py-1 text-xs font-semibold text-green-700'>
+          <span className='shrink-0 whitespace-nowrap rounded-full bg-green-50 px-2.5 py-1 text-xs font-semibold text-green-700'>
             {badge}
           </span>
         ) : null}
@@ -207,7 +207,13 @@ function LikedVideoCard({ item }: { item: ContentResponseType }) {
   );
 }
 
-function DatasetCard({ item }: { item: DatasetSummaryItem }) {
+function DatasetCard({
+  item,
+  note,
+}: {
+  item: DatasetSummaryItem;
+  note?: string;
+}) {
   return (
     <Link
       href={`/dataset/${item.id}`}
@@ -227,8 +233,9 @@ function DatasetCard({ item }: { item: DatasetSummaryItem }) {
         <p className='mt-1 text-xs text-slate-500'>
           {item.year ?? '-'} | {item.size || '-'}
         </p>
-        <p className='mt-2 text-xs font-medium text-green-700'>
-          좋아요 {item.likes.toLocaleString()}개
+        <p className='mt-2 flex flex-wrap gap-x-2 text-xs font-medium text-green-700'>
+          <span>좋아요 {item.likes.toLocaleString()}개</span>
+          {note ? <span className='text-slate-400'>{note}</span> : null}
         </p>
       </div>
     </Link>
@@ -237,14 +244,14 @@ function DatasetCard({ item }: { item: DatasetSummaryItem }) {
 
 function DownloadedDatasetCard({ item }: { item: DownloadedDatasetItem }) {
   return (
-    <div className='relative'>
-      <DatasetCard item={item.dataset} />
-      {item.downloadedAt ? (
-        <span className='absolute right-3 top-3 rounded-full bg-slate-100 px-2 py-1 text-[11px] font-semibold text-slate-500'>
-          {formatDate(item.downloadedAt)}
-        </span>
-      ) : null}
-    </div>
+    <DatasetCard
+      item={item.dataset}
+      note={
+        item.downloadedAt
+          ? `${formatDate(item.downloadedAt)} 다운로드`
+          : undefined
+      }
+    />
   );
 }
 
