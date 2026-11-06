@@ -1,95 +1,124 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { getQuestions } from '@/app/api/qna';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Question } from '@/types/qna';
+import { CheckCircle2, CircleDashed } from 'lucide-react';
 import { formatDateTime } from '@/lib/date';
 import { getAuthorName } from '@/lib/qnaAuthor';
 import { getQuestionCategoryLabel } from '@/lib/qnaCategory';
-import { Question, QuestionCategoryFilter } from '@/types/qna';
+
+export function QuestionStatusBadge({
+  status,
+}: {
+  status: Question['status'];
+}) {
+  return status === 'OPEN' ? (
+    <Badge
+      variant='outline'
+      className='border-amber-200 bg-amber-50 text-amber-700'
+    >
+      <CircleDashed className='size-3' />
+      미해결
+    </Badge>
+  ) : (
+    <Badge
+      variant='outline'
+      className='border-emerald-200 bg-emerald-50 text-emerald-700'
+    >
+      <CheckCircle2 className='size-3' />
+      해결
+    </Badge>
+  );
+}
+
+function AuthorAvatar({ name }: { name: string }) {
+  const initial = name.trim().charAt(0) || '?';
+
+  return (
+    <span className='flex size-6 shrink-0 items-center justify-center rounded-full bg-gray-100 text-[11px] font-bold text-gray-600'>
+      {initial}
+    </span>
+  );
+}
 
 export default function QnAList({
-    statusFilter,
-    categoryFilter,
-    selectedId,
-    onSelect,
-    refreshKey,
+  questions,
+  isLoading = false,
+  selectedId,
+  onSelect,
 }: {
-    statusFilter: 'ALL' | 'OPEN' | 'RESOLVED';
-    categoryFilter: QuestionCategoryFilter;
-    selectedId: number | null;
-    onSelect: (id: number) => void;
-    refreshKey: number;
+  questions: Question[];
+  isLoading?: boolean;
+  selectedId: number | null;
+  onSelect: (id: number) => void;
 }) {
-    const [questions, setQuestions] = useState<Question[]>([]);
-
-    useEffect(() => {
-        getQuestions().then(setQuestions);
-    }, [refreshKey]);
-
-    const filtered = questions.filter((question) => {
-        const matchesStatus =
-            statusFilter === 'ALL' || question.status === statusFilter;
-        const matchesCategory =
-            categoryFilter === 'ALL' || question.category === categoryFilter;
-
-        return matchesStatus && matchesCategory;
-    });
-
+  if (isLoading) {
     return (
-        <div className="space-y-2">
-            {filtered.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-gray-200 bg-gray-50 px-4 py-12 text-center text-sm text-gray-400">
-                    현재 조건에 맞는 질문이 없습니다.
-                </div>
-            ) : (
-                filtered.map((question) => (
-                    <button
-                        key={question.id}
-                        type="button"
-                        onClick={() => onSelect(question.id)}
-                        className={`block w-full rounded-xl border p-3 text-left transition ${
-                            selectedId === question.id
-                                ? 'border-blue-400 bg-blue-50'
-                                : 'border-gray-200 bg-white hover:bg-gray-50'
-                        }`}
-                    >
-                        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                            <div className="min-w-0 flex-1">
-                                <h3 className="break-words text-sm font-medium leading-6 text-slate-900 sm:text-base">
-                                    {question.title}
-                                </h3>
-                                <p className="mt-1 break-words text-xs leading-5 text-gray-500 sm:text-sm">
-                                    {question.content}
-                                </p>
-                            </div>
-
-                            <div className="flex shrink-0 flex-wrap gap-1.5">
-                                <span className="inline-flex w-fit items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
-                                    {getQuestionCategoryLabel(
-                                        question.category
-                                    )}
-                                </span>
-                                <span
-                                    className={`inline-flex w-fit items-center rounded-full px-2.5 py-1 text-xs font-medium ${
-                                        question.status === 'OPEN'
-                                            ? 'bg-red-100 text-red-600'
-                                            : 'bg-green-100 text-green-600'
-                                    }`}
-                                >
-                                    {question.status === 'OPEN'
-                                        ? '미해결'
-                                        : '해결'}
-                                </span>
-                            </div>
-                        </div>
-
-                        <div className="mt-2 flex flex-col gap-1 text-xs text-gray-400 sm:flex-row sm:items-center sm:justify-between">
-                            <span className="truncate">{getAuthorName(question.author)}</span>
-                            <span>{formatDateTime(question.createdAt)}</span>
-                        </div>
-                    </button>
-                ))
-            )}
-        </div>
+      <div className='space-y-2'>
+        {Array.from({ length: 4 }).map((_, index) => (
+          <div key={index} className='rounded-lg border border-gray-100 p-4'>
+            <Skeleton className='h-4 w-3/4 rounded-md' />
+            <Skeleton className='mt-2 h-3 w-full rounded-md' />
+            <Skeleton className='mt-3 h-3 w-1/3 rounded-md' />
+          </div>
+        ))}
+      </div>
     );
+  }
+
+  if (questions.length === 0) {
+    return (
+      <div className='rounded-lg border border-dashed border-gray-200 bg-gray-50 px-4 py-12 text-center text-sm text-gray-500'>
+        현재 조건에 맞는 질문이 없습니다.
+      </div>
+    );
+  }
+
+  return (
+    <div className='space-y-2'>
+      {questions.map((question) => {
+        const isSelected = selectedId === question.id;
+        const authorName = getAuthorName(question.author);
+
+        return (
+          <button
+            key={question.id}
+            type='button'
+            onClick={() => onSelect(question.id)}
+            aria-pressed={isSelected}
+            className={`block w-full rounded-lg border p-4 text-left transition ${
+              isSelected
+                ? 'border-gray-950 bg-gray-50 ring-2 ring-gray-950/10'
+                : 'border-gray-200 bg-white hover:border-gray-400 hover:bg-gray-50'
+            }`}
+          >
+            <div className='flex flex-wrap items-center gap-1.5'>
+              <Badge variant='secondary' className='font-semibold'>
+                {getQuestionCategoryLabel(question.category)}
+              </Badge>
+              <QuestionStatusBadge status={question.status} />
+            </div>
+
+            <h3 className='mt-2.5 line-clamp-2 break-words text-sm font-semibold leading-5 text-gray-950 sm:text-[15px]'>
+              {question.title}
+            </h3>
+            <p className='mt-1 line-clamp-2 break-words text-xs leading-5 text-gray-500'>
+              {question.content}
+            </p>
+
+            <div className='mt-3 flex items-center justify-between gap-2 text-xs text-gray-400'>
+              <span className='flex min-w-0 items-center gap-1.5'>
+                <AuthorAvatar name={authorName} />
+                <span className='truncate text-gray-600'>{authorName}</span>
+              </span>
+              <span className='shrink-0'>
+                {formatDateTime(question.createdAt)}
+              </span>
+            </div>
+          </button>
+        );
+      })}
+    </div>
+  );
 }

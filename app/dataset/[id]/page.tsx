@@ -36,13 +36,13 @@ const applyDetailEngagement = (data: DatasetItem) => {
 
 function DetailLoading() {
   return (
-    <div className='mx-auto max-w-6xl px-6 py-10'>
-      <div className='h-64 animate-pulse rounded-[28px] border border-slate-200 bg-white shadow-sm' />
+    <div className='mx-auto max-w-6xl px-4 pb-16 pt-2 sm:px-6'>
+      <div className='h-64 animate-pulse rounded-xl border border-slate-200 bg-white shadow-sm' />
       <div className='mt-6 space-y-4'>
         {Array.from({ length: 3 }).map((_, index) => (
           <div
             key={index}
-            className='h-24 animate-pulse rounded-[28px] border border-slate-200 bg-white shadow-sm'
+            className='h-24 animate-pulse rounded-xl border border-slate-200 bg-white shadow-sm'
           />
         ))}
       </div>

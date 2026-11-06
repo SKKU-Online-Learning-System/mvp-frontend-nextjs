@@ -61,17 +61,19 @@ const withStoredEngagement = (
 
 function DatasetGridSkeleton() {
   return (
-    <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4'>
+    <div className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4'>
       {Array.from({ length: 8 }).map((_, index) => (
         <div
           key={index}
-          className='h-[290px] animate-pulse rounded-2xl border border-slate-200 bg-white shadow-sm'
+          className='flex h-[218px] animate-pulse flex-col gap-4 rounded-lg border border-slate-200 bg-white p-5 shadow-xs'
         >
-          <div className='mx-auto mt-12 h-18 w-18 rounded-2xl bg-slate-100' />
-          <div className='mx-auto mt-6 h-3 w-20 rounded bg-slate-100' />
-          <div className='mx-auto mt-7 h-4 w-3/4 rounded bg-slate-100' />
-          <div className='mx-auto mt-3 h-4 w-2/3 rounded bg-slate-100' />
-          <div className='mt-16 h-12 border-t border-slate-100 bg-slate-50' />
+          <div className='flex items-start justify-between'>
+            <div className='size-14 rounded-lg bg-slate-100' />
+            <div className='h-5 w-16 rounded-md bg-slate-100' />
+          </div>
+          <div className='h-4 w-3/4 rounded bg-slate-100' />
+          <div className='h-4 w-1/2 rounded bg-slate-100' />
+          <div className='mt-auto h-8 rounded bg-slate-50' />
         </div>
       ))}
     </div>
@@ -192,7 +194,7 @@ export default function CompetitionDataset() {
   }, [datasets, fields, search, sort, year]);
 
   return (
-    <div className='space-y-6 px-6 py-10'>
+    <div className='my-container pb-16'>
       <ContentFilter
         sort={sort}
         changeSort={handleSortChange}

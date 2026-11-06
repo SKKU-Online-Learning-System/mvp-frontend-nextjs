@@ -159,7 +159,7 @@ const categories: Category[] = [
 
 export default function DatasetPlatform() {
     return (
-        <div className="my-container pt-6 pb-12">
+        <div className="my-container pb-12">
 
             {/* 카테고리 */}
             <div className="flex flex-col">
@@ -184,9 +184,9 @@ export default function DatasetPlatform() {
                                     href={platform.href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="group rounded-2xl border bg-background p-5 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+                                    className="group rounded-xl border border-slate-200 bg-white p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md"
                                 >
-                                    {/* 🔥 로고 박스 (핵심 개선) */}
+                                    {/* 로고 박스 */}
                                     <div className="h-14 w-full flex items-center justify-center mb-4 bg-white rounded-lg">
                                         <img
                                             src={platform.image}

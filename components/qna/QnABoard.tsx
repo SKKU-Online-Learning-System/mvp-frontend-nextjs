@@ -1,168 +1,301 @@
 'use client';
 
+import { getQuestions } from '@/app/api/qna';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Question, QuestionCategoryFilter } from '@/types/qna';
+import {
+  CheckCircle2,
+  CircleDashed,
+  MessageCircleQuestion,
+  MessagesSquare,
+  PenLine,
+} from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { QUESTION_CATEGORY_OPTIONS } from '@/lib/qnaCategory';
-import { QuestionCategoryFilter } from '@/types/qna';
 import QnADetail from './QnADetail';
 import QnAList from './QnAList';
 
 type QuestionStatusFilter = 'ALL' | 'OPEN' | 'RESOLVED';
 
+const statusOptions: { value: QuestionStatusFilter; label: string }[] = [
+  { value: 'ALL', label: '전체' },
+  { value: 'OPEN', label: '미해결' },
+  { value: 'RESOLVED', label: '해결' },
+];
+
 export default function QnABoard() {
-    const router = useRouter();
-    const [selectedId, setSelectedId] = useState<number | null>(null);
-    const [statusFilter, setStatusFilter] =
-        useState<QuestionStatusFilter>('ALL');
-    const [categoryFilter, setCategoryFilter] =
-        useState<QuestionCategoryFilter>('ALL');
-    const [refreshKey, setRefreshKey] = useState(0);
-    const [mobileView, setMobileView] = useState<'list' | 'detail'>('list');
+  const router = useRouter();
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [statusFilter, setStatusFilter] = useState<QuestionStatusFilter>('ALL');
+  const [categoryFilter, setCategoryFilter] =
+    useState<QuestionCategoryFilter>('ALL');
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [mobileView, setMobileView] = useState<'list' | 'detail'>('list');
 
-    useEffect(() => {
-        if (selectedId) {
-            setMobileView('detail');
-        }
-    }, [selectedId]);
+  useEffect(() => {
+    let cancelled = false;
+    setIsLoading(true);
 
-    return (
-        <div className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6 sm:py-6">
-            <div className="mb-4 flex flex-col gap-4 sm:mb-6 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">
-                        질문 게시판
-                    </h1>
-                    <p className="mt-1 text-sm text-gray-500">
-                        궁금한 점을 남기고 답변을 주고받아보세요.
-                    </p>
-                </div>
+    getQuestions().then((data) => {
+      if (!cancelled) {
+        setQuestions(data);
+        setIsLoading(false);
+      }
+    });
 
-                <button
-                    type="button"
-                    onClick={() => router.push('/content/qna/write')}
-                    className="inline-flex min-h-10 items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
-                >
-                    질문 작성하기
-                </button>
+    return () => {
+      cancelled = true;
+    };
+  }, [refreshKey]);
+
+  useEffect(() => {
+    if (selectedId) {
+      setMobileView('detail');
+    }
+  }, [selectedId]);
+
+  const counts = useMemo(
+    () => ({
+      total: questions.length,
+      open: questions.filter((question) => question.status === 'OPEN').length,
+      resolved: questions.filter((question) => question.status === 'RESOLVED')
+        .length,
+    }),
+    [questions]
+  );
+
+  const filtered = useMemo(
+    () =>
+      questions.filter((question) => {
+        const matchesStatus =
+          statusFilter === 'ALL' || question.status === statusFilter;
+        const matchesCategory =
+          categoryFilter === 'ALL' || question.category === categoryFilter;
+
+        return matchesStatus && matchesCategory;
+      }),
+    [categoryFilter, questions, statusFilter]
+  );
+
+  return (
+    <div className='my-container pb-16'>
+      {/* 헤더 */}
+      <section className='flex flex-col gap-5 border-b pb-6'>
+        <div className='flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between'>
+          <div className='flex items-start gap-3'>
+            <div className='rounded-lg border border-emerald-100 bg-emerald-50 p-2.5 text-emerald-700'>
+              <MessageCircleQuestion className='size-5' />
             </div>
-
-            <div className="mb-4 flex flex-col gap-3 sm:mb-5">
-                <div className="flex flex-wrap items-center gap-2">
-                    <span className="mr-1 text-sm font-medium text-slate-500">
-                        상태
-                    </span>
-                    {(
-                        ['ALL', 'OPEN', 'RESOLVED'] as QuestionStatusFilter[]
-                    ).map((value) => (
-                        <button
-                            key={value}
-                            type="button"
-                            onClick={() => setStatusFilter(value)}
-                            className={`rounded-full border px-3 py-1.5 text-sm transition ${
-                                statusFilter === value
-                                    ? 'border-blue-600 bg-blue-600 text-white'
-                                    : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
-                            }`}
-                        >
-                            {value === 'ALL'
-                                ? '전체'
-                                : value === 'OPEN'
-                                  ? '미해결'
-                                  : '해결'}
-                        </button>
-                    ))}
-                </div>
-
-                <div className="flex flex-wrap items-center gap-2">
-                    <span className="mr-1 text-sm font-medium text-slate-500">
-                        분야
-                    </span>
-                    {[
-                        { label: '전체', value: 'ALL' as const },
-                        ...QUESTION_CATEGORY_OPTIONS,
-                    ].map((option) => (
-                        <button
-                            key={option.value}
-                            type="button"
-                            onClick={() => setCategoryFilter(option.value)}
-                            className={`rounded-full border px-3 py-1.5 text-sm transition ${
-                                categoryFilter === option.value
-                                    ? 'border-blue-600 bg-blue-600 text-white'
-                                    : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
-                            }`}
-                        >
-                            {option.label}
-                        </button>
-                    ))}
-                </div>
-
-                <div className="grid grid-cols-2 gap-2 rounded-xl border border-gray-200 bg-gray-50 p-1 lg:hidden">
-                    <button
-                        type="button"
-                        onClick={() => setMobileView('list')}
-                        className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
-                            mobileView === 'list'
-                                ? 'bg-white text-slate-900'
-                                : 'text-slate-500'
-                        }`}
-                    >
-                        목록
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => selectedId && setMobileView('detail')}
-                        disabled={!selectedId}
-                        className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
-                            mobileView === 'detail' && selectedId
-                                ? 'bg-white text-slate-900'
-                                : 'text-slate-500'
-                        } ${!selectedId ? 'cursor-not-allowed opacity-50' : ''}`}
-                    >
-                        상세
-                    </button>
-                </div>
+            <div>
+              <h1 className='text-2xl font-bold text-gray-950 sm:text-3xl'>
+                질문 게시판
+              </h1>
+              <p className='mt-1 text-sm text-gray-500'>
+                AI·SW 공부와 진로, 학교 생활에서 궁금한 점을 남기고 함께 답을
+                찾아보세요.
+              </p>
             </div>
+          </div>
 
-            <div className="grid gap-4 lg:grid-cols-[minmax(320px,380px)_minmax(0,1fr)] lg:gap-6">
-                <section
-                    className={`rounded-xl border border-gray-200 bg-white p-3 lg:block lg:max-h-[72vh] lg:overflow-y-auto ${
-                        mobileView === 'detail' ? 'hidden' : 'block'
-                    }`}
-                >
-                    <QnAList
-                        statusFilter={statusFilter}
-                        categoryFilter={categoryFilter}
-                        selectedId={selectedId}
-                        onSelect={setSelectedId}
-                        refreshKey={refreshKey}
-                    />
-                </section>
-
-                <section
-                    className={`rounded-xl border border-gray-200 bg-white p-4 sm:p-6 lg:block lg:max-h-[72vh] lg:overflow-y-auto ${
-                        mobileView === 'list' ? 'hidden' : 'block'
-                    }`}
-                >
-                    {selectedId ? (
-                        <QnADetail
-                            questionId={selectedId}
-                            onBack={() => setMobileView('list')}
-                            onQuestionUpdated={() =>
-                                setRefreshKey((prev) => prev + 1)
-                            }
-                            onQuestionDeleted={() => {
-                                setSelectedId(null);
-                                setMobileView('list');
-                                setRefreshKey((prev) => prev + 1);
-                            }}
-                        />
-                    ) : (
-                        <div className="flex min-h-[280px] items-center justify-center rounded-xl border border-dashed border-gray-200 bg-gray-50 px-6 text-center text-sm text-gray-400 sm:text-base">
-                            질문을 선택하면 자세한 내용을 볼 수 있습니다.
-                        </div>
-                    )}
-                </section>
-            </div>
+          <Button
+            type='button'
+            onClick={() => router.push('/content/qna/write')}
+            className='h-10 shrink-0 px-5'
+          >
+            <PenLine className='size-4' />
+            질문 작성하기
+          </Button>
         </div>
-    );
+
+        <div className='grid grid-cols-3 gap-3 sm:max-w-md'>
+          <StatTile
+            icon={MessagesSquare}
+            label='전체 질문'
+            value={counts.total}
+          />
+          <StatTile
+            icon={CircleDashed}
+            label='미해결'
+            value={counts.open}
+            tone='amber'
+          />
+          <StatTile
+            icon={CheckCircle2}
+            label='해결'
+            value={counts.resolved}
+            tone='emerald'
+          />
+        </div>
+
+        <div className='flex flex-col gap-3'>
+          <FilterRow label='상태'>
+            {statusOptions.map((option) => (
+              <Badge
+                key={option.value}
+                variant={
+                  statusFilter === option.value ? 'default' : 'secondary'
+                }
+                className='h-8 cursor-pointer px-3 font-semibold'
+                onClick={() => setStatusFilter(option.value)}
+              >
+                {option.label}
+              </Badge>
+            ))}
+          </FilterRow>
+
+          <FilterRow label='분야'>
+            {[
+              { label: '전체', value: 'ALL' as const },
+              ...QUESTION_CATEGORY_OPTIONS,
+            ].map((option) => (
+              <Badge
+                key={option.value}
+                variant={
+                  categoryFilter === option.value ? 'default' : 'secondary'
+                }
+                className='h-8 cursor-pointer px-3 font-semibold'
+                onClick={() => setCategoryFilter(option.value)}
+              >
+                {option.label}
+              </Badge>
+            ))}
+          </FilterRow>
+        </div>
+      </section>
+
+      {/* 모바일 목록/상세 전환 */}
+      <div className='grid grid-cols-2 gap-1 rounded-md border bg-white p-1 shadow-xs lg:hidden'>
+        <button
+          type='button'
+          onClick={() => setMobileView('list')}
+          className={`h-9 rounded-md text-sm font-semibold transition ${
+            mobileView === 'list'
+              ? 'bg-gray-950 text-white'
+              : 'text-gray-600 hover:bg-gray-100'
+          }`}
+        >
+          목록
+        </button>
+        <button
+          type='button'
+          onClick={() => selectedId && setMobileView('detail')}
+          disabled={!selectedId}
+          className={`h-9 rounded-md text-sm font-semibold transition ${
+            mobileView === 'detail' && selectedId
+              ? 'bg-gray-950 text-white'
+              : 'text-gray-600 hover:bg-gray-100'
+          } ${!selectedId ? 'cursor-not-allowed opacity-50' : ''}`}
+        >
+          상세
+        </button>
+      </div>
+
+      <div className='grid gap-6 lg:grid-cols-[minmax(320px,400px)_minmax(0,1fr)] xl:gap-8'>
+        <section
+          className={`flex flex-col gap-3 lg:block ${
+            mobileView === 'detail' ? 'hidden' : 'block'
+          }`}
+        >
+          <div className='flex items-center justify-between'>
+            <p className='text-sm font-semibold text-gray-700'>
+              질문 {filtered.length.toLocaleString('ko-KR')}개
+            </p>
+          </div>
+          <div className='rounded-lg border bg-white p-3 shadow-xs lg:max-h-[72vh] lg:overflow-y-auto'>
+            <QnAList
+              questions={filtered}
+              isLoading={isLoading}
+              selectedId={selectedId}
+              onSelect={setSelectedId}
+            />
+          </div>
+        </section>
+
+        <section
+          className={`rounded-lg border bg-white p-4 shadow-xs sm:p-6 lg:block lg:max-h-[72vh] lg:overflow-y-auto ${
+            mobileView === 'list' ? 'hidden' : 'block'
+          }`}
+        >
+          {selectedId ? (
+            <QnADetail
+              questionId={selectedId}
+              onBack={() => setMobileView('list')}
+              onQuestionUpdated={() => setRefreshKey((prev) => prev + 1)}
+              onQuestionDeleted={() => {
+                setSelectedId(null);
+                setMobileView('list');
+                setRefreshKey((prev) => prev + 1);
+              }}
+            />
+          ) : (
+            <div className='flex min-h-[320px] flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-gray-200 bg-gray-50 px-6 text-center'>
+              <div className='rounded-full bg-white p-3 text-gray-400 shadow-xs'>
+                <MessageCircleQuestion className='size-6' />
+              </div>
+              <p className='text-sm font-semibold text-gray-700'>
+                질문을 선택하면 자세한 내용을 볼 수 있습니다.
+              </p>
+              <p className='text-xs text-gray-500'>
+                왼쪽 목록에서 질문을 고르거나, 새 질문을 남겨보세요.
+              </p>
+            </div>
+          )}
+        </section>
+      </div>
+    </div>
+  );
+}
+
+function FilterRow({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className='flex flex-wrap items-center gap-2'>
+      <span className='w-9 shrink-0 text-xs font-semibold text-gray-500'>
+        {label}
+      </span>
+      {children}
+    </div>
+  );
+}
+
+function StatTile({
+  icon: Icon,
+  label,
+  value,
+  tone = 'gray',
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  value: number;
+  tone?: 'gray' | 'amber' | 'emerald';
+}) {
+  const toneClass =
+    tone === 'amber'
+      ? 'text-amber-600'
+      : tone === 'emerald'
+        ? 'text-emerald-600'
+        : 'text-gray-500';
+
+  return (
+    <div className='min-w-0 rounded-lg border bg-white px-3.5 py-3 shadow-xs'>
+      <div
+        className={`flex items-center gap-1.5 text-xs font-semibold ${toneClass}`}
+      >
+        <Icon className='size-3.5' />
+        {label}
+      </div>
+      <p className='mt-1 text-lg font-bold text-gray-950'>
+        {value.toLocaleString('ko-KR')}
+      </p>
+    </div>
+  );
 }

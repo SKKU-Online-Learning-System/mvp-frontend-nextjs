@@ -116,13 +116,13 @@ function AccordionSection({
   children,
 }: AccordionSectionProps) {
   return (
-    <section className='rounded-[28px] border border-slate-200 bg-white shadow-sm'>
+    <section className='rounded-xl border border-slate-200 bg-white shadow-sm'>
       <button
         type='button'
         onClick={() => onToggle(sectionKey)}
-        className='flex w-full items-center justify-between px-7 py-6 text-left'
+        className='flex w-full items-center justify-between px-6 py-5 text-left'
       >
-        <h2 className='text-xl font-semibold text-slate-900'>{title}</h2>
+        <h2 className='text-lg font-bold text-slate-900'>{title}</h2>
         {isOpen ? (
           <ChevronUp className='h-5 w-5 text-slate-400' />
         ) : (
@@ -130,7 +130,7 @@ function AccordionSection({
         )}
       </button>
       {isOpen ? (
-        <div className='border-t border-slate-200 p-7'>{children}</div>
+        <div className='border-t border-slate-200 p-6'>{children}</div>
       ) : null}
     </section>
   );
@@ -202,7 +202,7 @@ export default function DatasetDetail({ dataset }: Props) {
 
         setDownloads(nextCount);
         localStorage.setItem(downloadStorageKey(dataset.id), String(nextCount));
-        alert(LABELS.alert);
+        toast.success(LABELS.alert);
       }
     } finally {
       setIsDownloading(false);
@@ -261,8 +261,8 @@ export default function DatasetDetail({ dataset }: Props) {
   };
 
   return (
-    <div className='mx-auto max-w-6xl px-6 py-10'>
-      <section className='rounded-[28px] border border-slate-200 bg-white shadow-sm'>
+    <div className='mx-auto max-w-6xl px-4 pb-16 pt-2 sm:px-6'>
+      <section className='rounded-xl border border-slate-200 bg-white shadow-sm'>
         <div className='border-b border-slate-200 px-6 py-5 md:px-8'>
           <h1 className='text-3xl font-bold leading-tight text-slate-900 md:text-[34px]'>
             {dataset.title}
@@ -271,7 +271,7 @@ export default function DatasetDetail({ dataset }: Props) {
 
         <div className='px-6 py-7 md:px-8'>
           <div className='flex flex-col gap-6 md:flex-row md:items-start'>
-            <div className='flex h-32 w-32 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50'>
+            <div className='flex h-28 w-28 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-50'>
               <img
                 src={dataset.image}
                 alt={dataset.title}
@@ -281,7 +281,7 @@ export default function DatasetDetail({ dataset }: Props) {
 
             <div className='min-w-0 flex-1'>
               <div className='grid gap-3 md:grid-cols-3'>
-                <div className='rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4'>
+                <div className='rounded-lg border border-slate-200 bg-slate-50 px-4 py-3.5'>
                   <div className='text-xs font-semibold text-slate-400'>
                     {LABELS.field}
                   </div>
@@ -289,7 +289,7 @@ export default function DatasetDetail({ dataset }: Props) {
                     {dataset.tags.join(', ')}
                   </div>
                 </div>
-                <div className='rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4'>
+                <div className='rounded-lg border border-slate-200 bg-slate-50 px-4 py-3.5'>
                   <div className='text-xs font-semibold text-slate-400'>
                     {LABELS.type}
                   </div>
@@ -297,7 +297,7 @@ export default function DatasetDetail({ dataset }: Props) {
                     {dataset.type}
                   </div>
                 </div>
-                <div className='rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4'>
+                <div className='rounded-lg border border-slate-200 bg-slate-50 px-4 py-3.5'>
                   <div className='text-xs font-semibold text-slate-400'>
                     {LABELS.source}
                   </div>
@@ -330,7 +330,7 @@ export default function DatasetDetail({ dataset }: Props) {
                   type='button'
                   onClick={handleDownload}
                   disabled={isDownloading || isUserLoading}
-                  className='inline-flex rounded-xl bg-[#ff6f5d] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#f75e4a]'
+                  className='inline-flex items-center gap-2 rounded-md bg-gray-950 px-5 py-2.5 text-sm font-semibold text-white shadow-xs transition-colors hover:bg-gray-800 disabled:pointer-events-none disabled:opacity-50'
                 >
                   {LABELS.download}
                 </button>
@@ -338,9 +338,9 @@ export default function DatasetDetail({ dataset }: Props) {
                   type='button'
                   onClick={handleLike}
                   disabled={isLiking || isUserLoading}
-                  className={`inline-flex items-center gap-2 rounded-xl border px-5 py-3 text-sm font-semibold transition-colors ${
+                  className={`inline-flex items-center gap-2 rounded-md border px-5 py-2.5 text-sm font-semibold shadow-xs transition-colors disabled:pointer-events-none disabled:opacity-50 ${
                     isLike
-                      ? 'border-[#ff6f5d] bg-[#fff3f0] text-[#f75e4a]'
+                      ? 'border-rose-200 bg-rose-50 text-rose-600'
                       : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
                   }`}
                 >
@@ -366,7 +366,7 @@ export default function DatasetDetail({ dataset }: Props) {
             {overviewRows(dataset).map((row) => (
               <div
                 key={row.label}
-                className='flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-slate-50/60 px-4 py-4'
+                className='flex items-center justify-between gap-4 rounded-lg border border-slate-200 bg-slate-50/60 px-4 py-3.5'
               >
                 <span className='shrink-0 text-sm text-slate-500'>
                   {row.label}
@@ -396,7 +396,7 @@ export default function DatasetDetail({ dataset }: Props) {
             {dataset.purpose}
           </p>
 
-          <div className='mt-8 overflow-hidden rounded-2xl border border-slate-200'>
+          <div className='mt-8 overflow-hidden rounded-lg border border-slate-200'>
             {metadataRows(dataset).map((row, index) => (
               <div
                 key={row.label}

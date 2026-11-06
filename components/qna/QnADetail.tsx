@@ -13,8 +13,10 @@ import { formatDateTime } from '@/lib/date';
 import { getAuthorName } from '@/lib/qnaAuthor';
 import { getQuestionCategoryLabel } from '@/lib/qnaCategory';
 import { Answer, Question } from '@/types/qna';
+import { Badge } from '@/components/ui/badge';
 import AnswerInput from './AnswerInput';
 import AnswerList from './AnswerList';
+import { QuestionStatusBadge } from './QnAList';
 
 export default function QnADetail({
     questionId,
@@ -69,31 +71,23 @@ export default function QnADetail({
                 <button
                     type="button"
                     onClick={onBack}
-                    className="inline-flex items-center rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-slate-600 transition hover:bg-gray-50"
+                    className="inline-flex items-center rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-xs transition hover:bg-gray-50"
                 >
                     목록으로
                 </button>
             </div>
 
-            <section className="rounded-xl border border-gray-200 bg-white p-4 sm:p-5">
+            <section className="rounded-lg border border-gray-200 bg-white p-4 sm:p-5">
                 <div className="mb-4 flex flex-col gap-4 border-b border-gray-100 pb-4 sm:flex-row sm:items-start sm:justify-between">
                     <div className="min-w-0 flex-1">
                         <div className="mb-3 flex flex-wrap items-center gap-2">
                             <h2 className="break-words text-xl font-bold text-slate-900 sm:text-2xl">
                                 {question.title}
                             </h2>
-                            <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+                            <Badge variant="secondary" className="font-semibold">
                                 {getQuestionCategoryLabel(question.category)}
-                            </span>
-                            <span
-                                className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${
-                                    question.status === 'OPEN'
-                                        ? 'bg-red-100 text-red-600'
-                                        : 'bg-green-100 text-green-600'
-                                }`}
-                            >
-                                {question.status === 'OPEN' ? '미해결' : '해결'}
-                            </span>
+                            </Badge>
+                            <QuestionStatusBadge status={question.status} />
                         </div>
 
                         <div className="flex flex-col gap-1 text-sm text-gray-400 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
@@ -107,7 +101,7 @@ export default function QnADetail({
                         <div className="flex flex-wrap gap-2 sm:justify-end">
                             <button
                                 type="button"
-                                className="inline-flex min-h-9 items-center justify-center rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-slate-700 transition hover:bg-gray-50"
+                                className="inline-flex min-h-9 items-center justify-center rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-xs transition hover:bg-gray-50"
                                 onClick={() => {
                                     setDraftTitle(question.title);
                                     setDraftContent(question.content);
@@ -119,7 +113,7 @@ export default function QnADetail({
 
                             <button
                                 type="button"
-                                className="inline-flex min-h-9 items-center justify-center rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-slate-700 transition hover:bg-gray-50"
+                                className="inline-flex min-h-9 items-center justify-center rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-xs transition hover:bg-gray-50"
                                 onClick={async () => {
                                     const nextStatus =
                                         question.status === 'OPEN'
@@ -144,7 +138,7 @@ export default function QnADetail({
 
                             <button
                                 type="button"
-                                className="inline-flex min-h-9 items-center justify-center rounded-lg border border-red-200 px-3 py-1.5 text-sm text-red-500 transition hover:bg-red-50"
+                                className="inline-flex min-h-9 items-center justify-center rounded-md border border-red-200 bg-white px-3 py-1.5 text-sm font-medium text-red-600 shadow-xs transition hover:bg-red-50"
                                 onClick={async () => {
                                     const success = await deleteQuestion(
                                         question.id,
@@ -169,19 +163,19 @@ export default function QnADetail({
                             type="text"
                             value={draftTitle}
                             onChange={(e) => setDraftTitle(e.target.value)}
-                            className="min-h-10 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="min-h-10 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm shadow-xs transition focus:border-gray-400 focus:outline-none focus:ring-[3px] focus:ring-gray-950/10"
                             placeholder="질문 제목을 입력해주세요"
                         />
                         <textarea
                             value={draftContent}
                             onChange={(e) => setDraftContent(e.target.value)}
-                            className="min-h-48 w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm leading-7 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="min-h-48 w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm leading-7 shadow-xs transition focus:border-gray-400 focus:outline-none focus:ring-[3px] focus:ring-gray-950/10"
                             placeholder="질문 내용을 수정해주세요"
                         />
                         <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
                             <button
                                 type="button"
-                                className="inline-flex min-h-10 items-center justify-center rounded-lg border border-gray-200 px-4 py-2 text-sm text-slate-700 transition hover:bg-gray-50"
+                                className="inline-flex min-h-10 items-center justify-center rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-xs transition hover:bg-gray-50"
                                 onClick={() => {
                                     setDraftTitle(question.title);
                                     setDraftContent(question.content);
@@ -192,7 +186,7 @@ export default function QnADetail({
                             </button>
                             <button
                                 type="button"
-                                className="inline-flex min-h-10 items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+                                className="inline-flex min-h-10 items-center justify-center rounded-lg bg-gray-950 px-4 py-2 text-sm font-semibold text-white shadow-xs transition hover:bg-gray-800"
                                 onClick={async () => {
                                     if (!questionOwnerToken) return;
 

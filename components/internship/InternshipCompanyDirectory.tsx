@@ -387,8 +387,8 @@ export function InternshipCompanyDirectory() {
           </div>
         </section>
 
-        <div className='grid gap-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(380px,0.8fr)] xl:grid-cols-[minmax(0,0.95fr)_minmax(420px,0.8fr)]'>
-          <section className='flex flex-col gap-3'>
+        <div className='grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.72fr)] xl:grid-cols-[minmax(0,1fr)_minmax(400px,0.66fr)] xl:gap-8'>
+          <section className='flex flex-col gap-4'>
             <div className='flex items-center justify-between gap-3'>
               <p className='text-sm font-semibold text-gray-700'>
                 검색 결과 {visibleCompanies.length.toLocaleString('ko-KR')}개
@@ -403,7 +403,7 @@ export function InternshipCompanyDirectory() {
                 일치하는 기업이 없습니다.
               </div>
             ) : (
-              <div className='grid gap-3 md:grid-cols-2'>
+              <div className='grid gap-4 md:grid-cols-2 xl:gap-5'>
                 {visibleCompanies.map((company) => (
                   <CompanyCard
                     key={company.id}
@@ -454,32 +454,43 @@ function CompanyCard({
       aria-pressed={selected}
       onClick={onClick}
       className={cn(
-        'flex min-h-[176px] flex-col gap-3 rounded-lg border bg-white p-4 text-left shadow-xs transition hover:-translate-y-0.5 hover:border-gray-400 hover:shadow-md',
+        'flex min-h-[208px] w-full min-w-0 flex-col gap-4 overflow-hidden rounded-lg border bg-white p-5 text-left shadow-xs transition hover:-translate-y-0.5 hover:border-gray-400 hover:shadow-md',
         selected && 'border-gray-950 ring-2 ring-gray-950/10'
       )}
     >
       <div className='flex items-start justify-between gap-3'>
-        <div className='min-w-0'>
-          <h2 className='break-words text-lg font-bold leading-6 text-gray-950'>
+        <div className='min-w-0 flex-1'>
+          <h2
+            className='line-clamp-2 break-words text-lg font-bold leading-6 text-gray-950'
+            title={company.name}
+          >
             {company.name}
           </h2>
-          <p className='mt-1 text-sm text-gray-500'>
+          <p
+            className='mt-1 truncate text-sm text-gray-500'
+            title={topItems(company.industries, 1)[0]}
+          >
             {topItems(company.industries, 1)[0] ?? '업종 미공개'}
           </p>
         </div>
         <Badge
           variant='secondary'
-          className='border-amber-200 bg-amber-50 text-amber-800'
+          className='shrink-0 border-amber-200 bg-amber-50 text-amber-800'
         >
           <Star className='size-3 fill-amber-400 text-amber-500' />
           {formatRating(company.averageRating)}
         </Badge>
       </div>
 
-      <div className='flex flex-wrap gap-2'>
+      <div className='flex min-w-0 flex-wrap gap-2'>
         {topItems(company.roles, 3).map((role) => (
-          <Badge key={role} variant='outline' className='bg-white'>
-            {role}
+          <Badge
+            key={role}
+            variant='outline'
+            className='max-w-full bg-white'
+            title={role}
+          >
+            <span className='min-w-0 truncate'>{role}</span>
           </Badge>
         ))}
         {company.roles.length > 3 && (
@@ -487,7 +498,7 @@ function CompanyCard({
         )}
       </div>
 
-      <div className='mt-auto grid grid-cols-2 gap-2 text-xs text-gray-600'>
+      <div className='mt-auto grid grid-cols-2 gap-x-3 gap-y-2 border-t border-gray-100 pt-3 text-xs text-gray-600'>
         <InfoLine icon={CalendarDays} text={formatYears(company)} />
         <InfoLine
           icon={Users}

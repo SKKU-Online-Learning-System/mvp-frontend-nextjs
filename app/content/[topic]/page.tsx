@@ -67,11 +67,7 @@ export default async function Content({ params, searchParams }: Props) {
   const isQnA = topic === 'qna';
 
   return (
-    <div
-      className={`w-full ${
-        isDatasetPlatform || isCompetitionDataset ? 'pt-10 px-6' : 'pt-logo'
-      }`}
-    >
+    <div className='w-full pt-logo'>
       {isDatasetPlatform ? (
         <DatasetPlatform />
       ) : isCompetitionDataset ? (
